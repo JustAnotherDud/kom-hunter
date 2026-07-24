@@ -180,17 +180,22 @@ def main():
                   key=lambda x: (x["score"] is None, x["score"]))
     plano_subida = sorted((x for x in resto if x["grupo"] == "especulativa-plano_subida"),
                            key=lambda x: (x["score"] is None, x["score"]))
-    descida = [x for x in resto if x["grupo"] == "especulativa-descida"]  # sem ordenar, sem confiança
+    # descida e fora_alcance_curva ficam por ordenar de propósito — sem confiança, não são ranking
+    descida = [x for x in resto if x["grupo"] == "especulativa-descida"]
+    fora_alcance = [x for x in resto if x["grupo"] == "fora_alcance_curva"]
 
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump({
             "confianca_alta": alta,
             "confianca_especulativa_plano_subida": plano_subida,
             "confianca_especulativa_descida_SEM_CONFIANCA": descida,
+            "fora_alcance_curva_SEM_CONFIANCA": fora_alcance,
             "revisao_manual": revisao_manual,
         }, f, ensure_ascii=False, indent=1)
     print(f"-> {args.out} ({len(alta)} alta, {len(plano_subida)} especulativa-plano/subida, "
-          f"{len(descida)} especulativa-descida SEM CONFIANÇA, {len(revisao_manual)} p/ revisão manual, "
+          f"{len(descida)} especulativa-descida SEM CONFIANÇA, "
+          f"{len(fora_alcance)} fora do alcance da curva SEM CONFIANÇA, "
+          f"{len(revisao_manual)} p/ revisão manual, "
           f"{len(novos)} novo/actualizado, {len(reaproveitados)} do cache) | "
           f"histórico -> {args.historico}")
 

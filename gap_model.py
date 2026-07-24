@@ -77,6 +77,7 @@ INTERVALS_BASE = "https://intervals.icu/api/v1"
 FILTRO_VELOCIDADE_MAX_KMH = 24.0  # teto plausível para pace sustentado, mesmo curto
 MIN_DISTANCIA_EFETIVA_M = 1000.0  # abaixo disto, sem dados credíveis na tabela (ver acima)
 MARGEM_SUSPEITA_PCT = 15.0  # vantagem sobre o KOM acima disto, nunca corrido, -> revisão manual
+FATOR_EXTRAPOLACAO_MAX = 1.5  # cs_model além disto × o máximo da tabela -> fora_alcance_curva
 
 
 def carregar_env(path=".env"):
@@ -195,6 +196,19 @@ def _modelo_cs(distancia_efetiva_m, curva):
     return (distancia_efetiva_m - d_prime) / cs
 
 
+def extrapolado_demais(distancia_efetiva_m, curva, fator_max=FATOR_EXTRAPOLACAO_MAX):
+    """True se a distância efectiva ultrapassa fator_max× o máximo real
+    observado na tabela da curva. O modelo CS/D' é uma extrapolação linear
+    de 2 parâmetros — válida perto do alcance ajustado, não numa ultra de
+    4-5h quando a tabela só viu até ~18km (visto em produção: 62km efectivo
+    vs máximo de tabela ~18km, 3.4× — critical speed não se mantém
+    constante nessa escala, fadiga/glicogénio quebram a assunção)."""
+    dists = curva.get("distance") or []
+    if not dists:
+        return False
+    return distancia_efetiva_m > dists[-1] * fator_max
+
+
 def prever_tempo(distancia_efetiva_m, curva):
     """Previsão de confiança alta (segundos): só chamar com
     distancia_efetiva_m >= MIN_DISTANCIA_EFETIVA_M (ver avaliar_segmento).
@@ -252,12 +266,20 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
     """Ponto único de decisão: grupo (alta / especulativa-plano_subida /
     especulativa-descida) + guarda-rail de suspeita.
 
-    especulativa-descida sai sempre com sem_confianca=True e suspeito=False
-    (não faz sentido aplicar o guarda-rail de suspeita a um número que já
-    sabemos estar inflacionado por falta de calibração — ver docstring do
-    módulo)."""
+    especulativa-descida e fora_alcance_curva saem sempre com
+    sem_confianca=True e suspeito=False (não faz sentido aplicar o
+    guarda-rail de suspeita a um número que já sabemos não ter base válida
+    — ver docstring do módulo). fora_alcance_curva é distinto de
+    revisao_manual: aqui o problema é a distância estar fora do domínio do
+    modelo, não a previsão em si (dentro do domínio) parecer implausível —
+    critérios diferentes, grupos diferentes."""
     if distancia_efetiva_m >= MIN_DISTANCIA_EFETIVA_M:
         previsto, metodo = prever_tempo(distancia_efetiva_m, curva)
+        if metodo == "cs_model" and extrapolado_demais(distancia_efetiva_m, curva):
+            return {"grupo": "fora_alcance_curva", "sem_confianca": True,
+                    "previsto_s": previsto, "metodo_previsao": metodo,
+                    "heuristica_s": None, "heuristica_metodo": None,
+                    "suspeito": False, "suspeito_motivo": None}
         suspeito, motivo = _suspeito(previsto, kom_tempo_s, ja_corri)
         return {"grupo": "alta", "sem_confianca": False,
                 "previsto_s": previsto, "metodo_previsao": metodo,
@@ -312,7 +334,7 @@ def main():
           f"r2={curva['paceModels'][0]['r2']:.4f}")
 
     detalhes = json.load(open(args.entrada, encoding="utf-8"))
-    alta, plano_subida, descida, revisao_manual = [], [], [], []
+    alta, plano_subida, descida, fora_alcance, revisao_manual = [], [], [], [], []
     for d in detalhes:
         streams = d.get("streams") or {}
         dist_s, elev_s = streams.get("distance"), streams.get("elevation")
@@ -354,23 +376,28 @@ def main():
             alta.append(base)
         elif av["grupo"] == "especulativa-plano_subida":
             plano_subida.append(base)
+        elif av["grupo"] == "fora_alcance_curva":
+            fora_alcance.append(base)
         else:
             descida.append(base)
 
     alta.sort(key=lambda x: (x["gap_para_kom_s"] is None, x["gap_para_kom_s"]))
     plano_subida.sort(key=lambda x: (x["gap_para_kom_s"] is None, x["gap_para_kom_s"]))
-    # descida fica por ordenar de propósito — não é ranking, é "sem confiança, olha lá isto"
+    # descida e fora_alcance ficam por ordenar de propósito — não é ranking, é "sem confiança, olha lá isto"
 
     saida = {
         "confianca_alta": alta,
         "confianca_especulativa_plano_subida": plano_subida,
         "confianca_especulativa_descida_SEM_CONFIANCA": descida,
+        "fora_alcance_curva_SEM_CONFIANCA": fora_alcance,
         "revisao_manual": revisao_manual,
     }
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(saida, f, ensure_ascii=False, indent=1)
     print(f"-> {args.out} ({len(alta)} alta, {len(plano_subida)} especulativa-plano/subida, "
-          f"{len(descida)} especulativa-descida SEM CONFIANÇA, {len(revisao_manual)} p/ revisão manual)")
+          f"{len(descida)} especulativa-descida SEM CONFIANÇA, "
+          f"{len(fora_alcance)} fora do alcance da curva SEM CONFIANÇA, "
+          f"{len(revisao_manual)} p/ revisão manual)")
 
 
 if __name__ == "__main__":
