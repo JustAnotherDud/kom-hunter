@@ -3,5 +3,6 @@ candidatos*.json
 detalhes*.json
 previsoes*.json
 ranking*.json
+sem_kom*.json
 historico.json
 .env

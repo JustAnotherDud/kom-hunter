@@ -24,8 +24,23 @@ várias buscas com centros diferentes, não subas o raio — ver README.
 filtra a menos de 2/3 do que qualquer outro valor devolve no mesmo tile).
 
 Escreve candidatos.json, ordenado por gap_grosseiro_s (mais exequíveis
-primeiro) e já cortado a --top — é isso que o segment_detail.py (Fase 2)
-deve consumir, para não gastar um pedido por segmento em toda a zona.
+primeiro) e já cortado a --top — é isso que o rank.py (Fase 2-4) deve
+consumir, para não gastar um pedido por segmento em toda a zona.
+
+`gap_grosseiro_s` SÓ ORDENA a fila, nunca exclui (25 Jul 2026 — testado em
+Rio Maior: a versão antiga, que excluía com --margem, cortou 2 candidatos
+que o modelo bom (gap_model.py) depois mostrou estarem a ~2s do KOM —
+`previsto_grosseiro_s` usa só grade média, é fraco demais para decidir
+quem fica de fora). Quem entra em candidatos.json é só decidido por --top
+(cap de pedidos que a Fase 2+ vai gastar), nunca pela estimativa grosseira.
+
+Segmentos sem komElapsedTime no tile (raro, ~1% observado) NÃO são
+"oportunidade livre" — confirmado (25 Jul 2026) que é falha de cache no
+backend da Strava, não falta de tentativas: um caso testado tinha 485
+tentativas/200 atletas e um KOM real e confirmado (via segment_detail.py e
+a página web) que simplesmente não veio no tile. Ficam à parte em
+--out-sem-kom, marcados como dados em falta, nunca descartados em
+silêncio.
 """
 import argparse
 import json
@@ -64,13 +79,15 @@ def main():
                           "NUNCA 'popular', filtra muito)")
     ap.add_argument("--pace-flat", required=True, dest="pace_flat",
                      help="pace de referência em plano, mm:ss/km")
-    ap.add_argument("--margem", type=float, default=1.15,
-                     help="descarta candidatos com previsão > KOM * margem (default 1.15)")
     ap.add_argument("--athlete-id",
                      default=os.environ.get("STRAVA_ATHLETE_ID", ATHLETE_ID_DEFAULT))
     ap.add_argument("--top", type=int, default=40,
-                     help="máx. de candidatos no output (default 40 — é o que a Fase 2 vai processar)")
+                     help="máx. de candidatos no output (default 40 — é o que a Fase 2 vai "
+                          "processar; único critério de corte, gap_grosseiro_s só ordena)")
     ap.add_argument("--out", default="candidatos.json")
+    ap.add_argument("--out-sem-kom", default="sem_kom.json",
+                     help="segmentos sem komElapsedTime no tile — dados em falta, "
+                          "para inspecção manual, nunca 'oportunidade livre'")
     args = ap.parse_args()
 
     cookie = os.environ.get("STRAVA_SESSION", "").strip()
@@ -115,13 +132,22 @@ def main():
           "sobe --zoom ou baixa --raio para confirmar)")
 
     candidatos = []
-    sem_kom = 0
+    sem_kom = []
     for sid, p in vistos.items():
         kom = p.get("komElapsedTime")
         if not kom:
-            # a zoom fino (z15+) aparecem segmentos raramente/nunca corridos —
-            # sem esforços não há KOM a bater, não são candidatos válidos aqui
-            sem_kom += 1
+            # dados em falta no tile, não "ninguém tentou" — ver docstring
+            # do módulo (caso confirmado: 485 tentativas, KOM real existente
+            # na página, ausente só no tile). Fica à parte p/ inspecção.
+            sem_kom.append({
+                "segmentId": sid,
+                "nome": p["name"],
+                "distancia_m": p["distance"],
+                "attemptsAllTime": p.get("attemptsAllTime"),
+                "athletesAllTime": p.get("athletesAllTime"),
+                "qomElapsedTime": p.get("qomElapsedTime"),
+                "url": f"https://www.strava.com/segments/{sid}",
+            })
             continue
         previsto = tempo_previsto_grosseiro(p["distance"], p["avgGrade"], pace_flat)
         candidatos.append({
@@ -136,19 +162,29 @@ def main():
             "gap_grosseiro_s": round(previsto - kom, 1),
         })
 
-    antes = len(candidatos)
-    candidatos = [c for c in candidatos
-                  if c["previsto_grosseiro_s"] <= c["komElapsedTime"] * args.margem]
+    total_com_kom = len(candidatos)
+    # gap_grosseiro_s só ordena a fila (mais prometedor primeiro) — quem
+    # fica de fora é decidido só por --top, nunca pela estimativa grosseira
+    # (testado: ela erra candidatos que o modelo bom mostra estarem perto).
     candidatos.sort(key=lambda c: c["gap_grosseiro_s"])
     candidatos = candidatos[:args.top]
 
-    print(f"{len(vistos)} segmentos Run na zona ({sem_kom} sem KOM, ignorados; "
-          f"{antes} com KOM) -> {len(candidatos)} candidatos após filtro grosseiro "
-          f"(margem {args.margem}) e cap top {args.top}")
+    print(f"{len(vistos)} segmentos Run na zona ({len(sem_kom)} com dados em falta — "
+          f"ver {args.out_sem_kom}, NÃO tratar como oportunidade livre; "
+          f"{total_com_kom} com KOM) -> {len(candidatos)} candidatos "
+          f"(ordenados por gap_grosseiro_s, cortados a --top {args.top})")
 
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(candidatos, f, ensure_ascii=False, indent=1)
     print(f"-> {args.out}")
+
+    if sem_kom:
+        with open(args.out_sem_kom, "w", encoding="utf-8") as f:
+            json.dump(sem_kom, f, ensure_ascii=False, indent=1)
+        print(f"-> {args.out_sem_kom} ({len(sem_kom)} segmento(s) — inspeccionar manualmente)")
+        for x in sem_kom:
+            print(f"   [dados em falta] {x['nome']}: {x['attemptsAllTime']} tentativas, "
+                  f"{x['athletesAllTime']} atletas -> {x['url']}")
 
 
 if __name__ == "__main__":

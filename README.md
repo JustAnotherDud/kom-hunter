@@ -9,9 +9,15 @@ mim, sob pedido, não um ranking diário multi-atleta).
 ## Fases
 
 1. `explore.py` — tiles de segmentos (Mapbox Vector Tile) num raio à volta
-   de um ponto, filtra Run, aplica um filtro GAP grosseiro (grade média +
-   pace de referência fixo) para descartar candidatos claramente fora de
-   alcance, escreve `candidatos.json` já ordenado e cortado a `--top`.
+   de um ponto, filtra Run, calcula um GAP grosseiro (grade média + pace
+   de referência fixo) só para **ordenar** a fila (mais prometedores
+   primeiro) — nunca para excluir; testado (25 Jul 2026) que uma versão
+   anterior que excluía por margem cortou candidatos que o modelo bom
+   depois mostrou estarem a ~2s do KOM. Escreve `candidatos.json` já
+   ordenado e cortado só por `--top`. Segmentos sem `komElapsedTime` no
+   tile (raro, dados em falta no backend da Strava — confirmado, não é
+   "ninguém tentou") vão à parte para `sem_kom.json`, para inspecção
+   manual via link.
 2. `segment_detail.py` — para cada candidato, página `/segments/<id>`:
    distância/grade/elevação exactas, leaderboard top 10 (KOM incluído),
    `athleteEffortCount` (já corri?), streams de elevação/distância. Cap
