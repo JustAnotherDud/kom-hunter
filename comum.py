@@ -104,11 +104,26 @@ def tiles_no_raio(lat, lon, raio_km, zoom):
             for y in range(min(y0, y1), max(y0, y1) + 1)]
 
 
-def obter_tile_segmentos(sessao, athlete_id, zoom, x, y):
+def largura_tile_km(lat, zoom):
+    """Largura aproximada (km, na longitude) de um tile a este zoom/latitude.
+    Serve só para reportar cobertura ao utilizador — ver explore.py. Medido
+    empiricamente (25 Jul 2026): a densidade real de segmentos só estabiliza
+    a partir de z15 (~19/km² em Rio Maior); a z10 media-se ~170x menos —
+    não é bug de filtro, é decimação normal de tile piramidal."""
+    n = 2 ** zoom
+    return (360.0 / n) * 111.32 * math.cos(math.radians(lat))
+
+
+INTENT_DEFAULT = "explore"  # NUNCA "popular" — testado (25 Jul 2026): "popular" filtra
+# a menos de 2/3 dos segmentos devolvidos por qualquer outro valor ("explore", "browse",
+# "nearby", "top", "recent" deram todos o mesmo resultado, maior) no mesmo tile/zoom.
+
+
+def obter_tile_segmentos(sessao, athlete_id, zoom, x, y, intent=INTENT_DEFAULT):
     """Pede um tile de segmentos e devolve a lista de features (dicts).
     Termina o processo (SystemExit) se a sessão expirou."""
     url = (f"{TILE_BASE}/{athlete_id}/{zoom}/{x}/{y}"
-           "?intent=popular&elevation_filter=all&surface_types=0&distance_min=0"
+           f"?intent={intent}&elevation_filter=all&surface_types=0&distance_min=0"
            "&creator=false&starred=false&top_10=false&overall=false&verified=false")
     r = sessao.get(url, headers=HEADERS, timeout=30)
     if r.status_code == 401:

@@ -35,28 +35,57 @@ mim, sob pedido, não um ranking diário multi-atleta).
 
 ## Uso
 
+Caminho normal (2 comandos — `rank.py` já chama a Fase 2 internamente por
+segmento, não precisa de `segment_detail.py` à parte):
+
 ```bash
 STRAVA_SESSION=<cookie _strava4_session> python explore.py \
-    --lat 39.36 --lon -8.95 --raio 8 --pace-flat 3:40
+    --lat 39.36 --lon -8.95 --pace-flat 3:40
 
-STRAVA_SESSION=<cookie _strava4_session> python segment_detail.py \
-    --in candidatos.json --out detalhes.json --so-nao-corridos
-
-python gap_model.py --in detalhes.json --out previsoes.json --pace-flat 3:40
-
-# orquestrador Fase 4 — faz Fase 2+3 só para o que precisa, persiste em historico.json
 STRAVA_SESSION=<cookie _strava4_session> python rank.py \
     --in candidatos.json --out ranking.json --pace-flat 3:40
 ```
+
+`segment_detail.py` e `gap_model.py` continuam úteis correndo à parte só
+para inspeccionar o `detalhes.json`/`previsoes.json` brutos de um lote sem
+tocar no histórico persistente — não fazem parte do caminho normal.
 
 `STRAVA_SESSION` — cookie de sessão autenticada (DevTools → Application →
 Cookies → strava.com → `_strava4_session`). Confirmado por teste: o
 endpoint de tiles devolve 401 sem ele, mesmo com outro `athleteId` na URL —
 não é só "security by obscurity".
 
-`--pace-flat` (explore.py e gap_model.py) é um pace de referência em plano
-(mm:ss/km) usado só nas heurísticas grosseiras — nunca no modelo de
-confiança alta (esse vem da curva GAP real, sem input manual).
+`--pace-flat` (explore.py e gap_model.py/rank.py) é um pace de referência
+em plano (mm:ss/km) usado só nas heurísticas grosseiras — nunca no modelo
+de confiança alta (esse vem da curva GAP real, sem input manual). Usa um
+pace de esforço a sério (curto, a perseguir um KOM), não o teu pace de
+treino normal — só validado, até agora, contra `3:40/km`.
+
+## Zoom e raio (explore.py) — medido, não escolhido às cegas
+
+A densidade real de segmentos só estabiliza a partir de **z15** (~19/km²
+em Rio Maior, testado 25 Jul 2026); a z10 (default antigo) media-se
+**~170× menos** — não é falta de segmentos na zona, é decimação normal de
+tile piramidal a zoom baixo (o mapa mostra menos detalhe a zoom
+afastado, como qualquer mapa vectorial). Por isso:
+
+- default `--zoom 15`, default `--raio 1.5` (km) — a área cresce com o
+  quadrado do raio, então zoom fino só é sustentável em raios pequenos
+  dentro de um número razoável de pedidos (`MAX_TILES=40`, cobre até
+  ~2.5km de raio).
+- **Para áreas maiores que ~2km: corre várias buscas com centros
+  diferentes, não subas `--raio`.** Subir o raio a zoom=15 cresce o
+  número de tiles ao quadrado (raio 3km já passa de 40 tiles); baixar o
+  zoom para caber num raio maior volta a sub-amostrar. Não há automação
+  disto ainda (scope novo, por decidir se vale a pena).
+- `explore.py` imprime sempre a cobertura real (tiles pedidos, km²
+  cobertos vs pedidos, densidade observada) — para nunca teres de
+  adivinhar se um número baixo de candidatos é "zona pobre em segmentos"
+  ou "busca incompleta".
+- `intent=explore` no pedido ao tile, nunca `intent=popular` — testado:
+  `popular` filtra a menos de 2/3 do que qualquer outro valor (`explore`,
+  `browse`, `nearby`, `top`, `recent` deram todos o mesmo resultado maior)
+  devolve no mesmo tile/zoom.
 
 ## Quatro grupos no output (gap_model.py e rank.py)
 
