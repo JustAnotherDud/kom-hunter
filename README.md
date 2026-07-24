@@ -22,9 +22,16 @@ mim, sob pedido, não um ranking diário multi-atleta).
    calculada ponto-a-ponto sobre os streams. Duas confianças distintas no
    output (ver "Duas confianças" abaixo) — não finge precisão que o
    modelo não tem para segmentos curtos.
-4. Fase 4 (por escrever) — persistência (histórico de score/KOM por
-   segmento, recalcular só quando o KOM muda ou de X em X semanas) +
-   ranking final, output JSON.
+4. `rank.py` — orquestrador final com `historico.json` persistente por
+   segmento. Só refaz Fase 2+3 para um segmento se: ainda não está no
+   histórico, o KOM mudou (comparado de graça — já vem no
+   `candidatos.json` da Fase 1, sem pedido extra), ou passaram
+   `--revisao-semanas` desde a última análise (default 4 — a minha
+   capacidade evolui, não só o KOM dos outros). Caso contrário reaproveita
+   o score guardado, zero pedidos novos. Output `ranking.json` nos mesmos
+   dois grupos (`confianca_alta` / `confianca_especulativa`) do
+   `gap_model.py`, cada um ordenado por `score` (previsto/heurística −
+   KOM) ascendente — mais exequíveis primeiro.
 
 ## Uso
 
@@ -36,6 +43,10 @@ STRAVA_SESSION=<cookie _strava4_session> python segment_detail.py \
     --in candidatos.json --out detalhes.json --so-nao-corridos
 
 python gap_model.py --in detalhes.json --out previsoes.json --pace-flat 3:40
+
+# orquestrador Fase 4 — faz Fase 2+3 só para o que precisa, persiste em historico.json
+STRAVA_SESSION=<cookie _strava4_session> python rank.py \
+    --in candidatos.json --out ranking.json --pace-flat 3:40
 ```
 
 `STRAVA_SESSION` — cookie de sessão autenticada (DevTools → Application →
