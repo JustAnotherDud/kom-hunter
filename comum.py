@@ -137,7 +137,17 @@ def obter_next_data(sessao, url):
 # perfil de elevação completo) — a Fase 3 substitui isto por streams reais
 # + curva de critical pace do Intervals.icu.
 
+GRADE_MAX_PLAUSIVEL_PCT = 45.0  # fora disto só pode ser ruído de GPS/altímetro, não corrida real
+
+
 def custo_minetti(grade_pct):
+    # o polinómio de Minetti é de 5º grau — fora do intervalo em que foi
+    # ajustado (grades reais de corrida), explode sem sentido físico. Um
+    # passo de stream com pouca distância + ruído de elevação facilmente
+    # implica grades de centenas de %; sem isto, um único ponto ruidoso
+    # infla a distância efectiva de todo o segmento (visto em produção
+    # num segmento de 14.8km/5571 pontos, ver kom_hunter/gap_model.py).
+    grade_pct = max(-GRADE_MAX_PLAUSIVEL_PCT, min(GRADE_MAX_PLAUSIVEL_PCT, grade_pct))
     i = grade_pct / 100.0
     custo = 155.4 * i**5 - 30.4 * i**4 - 43.3 * i**3 + 46.3 * i**2 + 19.5 * i + 3.6
     custo_plano = 3.6

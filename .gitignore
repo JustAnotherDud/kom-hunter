@@ -1,4 +1,5 @@
 __pycache__/
-candidatos.json
-detalhes.json
+candidatos*.json
+detalhes*.json
+previsoes*.json
 .env
