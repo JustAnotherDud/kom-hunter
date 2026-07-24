@@ -58,27 +58,41 @@ não é só "security by obscurity".
 (mm:ss/km) usado só nas heurísticas grosseiras — nunca no modelo de
 confiança alta (esse vem da curva GAP real, sem input manual).
 
-## Duas confianças (gap_model.py)
+## Quatro grupos no output (gap_model.py e rank.py)
 
-Validação (24 Jul 2026) mostrou que a curva de pace GAP do Intervals.icu só
-é fiável acima de ~1000m de distância efectiva — ver "Notas técnicas".
-Por isso o output separa:
+Validação (24-25 Jul 2026) mostrou que a curva de pace GAP do Intervals.icu
+só é fiável acima de ~1000m de distância efectiva, e que a heurística curta
+sobrevaloriza descidas — ver "Notas técnicas". Por isso o output tem 4
+grupos, não 2:
 
-- **`confianca: "alta"`** (efectiva ≥ 1000m) — `previsto_s` vem do modelo
-  GAP real (tabela da curva ou critical-speed CS/D'), sem correcção. Testado
+- **`confianca_alta`** (efectiva ≥ 1000m) — `previsto_s` vem do modelo GAP
+  real (tabela da curva ou critical-speed CS/D'), sem correcção. Testado
   contra 5 segmentos reais: erro de -15% a -35%, sempre na mesma direcção —
   decisão explícita de não corrigir, porque o modelo mede o tecto de
   capacidade (melhor esforço), não o ritmo casual de treino, e essa é a
   pergunta da ferramenta ("se for a sério, consigo bater o KOM?").
-- **`confianca: "especulativa"`** (efectiva < 1000m) — sem cobertura real
-  na curva GAP (treino de fundo não gera dados de sprint estruturado).
-  `heuristica_s` usa, por ordem: pontos reais da curva que sobrevivam ao
-  filtro de velocidade nessa gama (raro), senão grade efectiva ×
-  `--pace-flat`, senão o `previsto_grosseiro_s` já vindo da Fase 1.
-  `heuristica_metodo` diz sempre qual foi usado. Testado contra os únicos 2
-  segmentos curtos com tempo real conhecido (94s, 64s — onde já sou o KOM):
-  erro de -4% a -8% com `--pace-flat 3:40` — mas é heurística, não física;
-  não generalizar a precisão para outros paces/segmentos sem novo teste.
+- **`confianca_especulativa_plano_subida`** (efectiva < 1000m, grade média
+  ≥ 0) — sem cobertura real na curva GAP (treino de fundo não gera dados de
+  sprint estruturado). `heuristica_s` usa, por ordem: pontos reais da curva
+  que sobrevivam ao filtro de velocidade nessa gama (raro), senão grade
+  efectiva × `--pace-flat`, senão `previsto_grosseiro_s` da Fase 1. Testado
+  contra os únicos 2 segmentos curtos com tempo real conhecido (94s, 64s —
+  onde já sou o KOM): erro de -4% a -8% com `--pace-flat 3:40` — mas é
+  heurística, não física, e só testada com este pace; não generalizar sem
+  novo teste.
+- **`confianca_especulativa_descida_SEM_CONFIANCA`** (efectiva < 1000m,
+  grade média < 0) — **NÃO ordenado, não entra na decisão de onde caçar.**
+  A distância efectiva reduzida pelo Minetti numa descida, combinada com um
+  `--pace-flat` único (pensado para plano, não para velocidade de descida),
+  sobrevalorizou visivelmente estes segmentos nos testes: um nunca corrido
+  saiu "mais batível" que dois onde já sou o KOM. Zero esforço de descida
+  real no histórico para calibrar — fica à parte até haver.
+- **`revisao_manual`** — qualquer segmento nunca corrido cuja previsão bata
+  o KOM por mais de `MARGEM_SUSPEITA_PCT` (15%, `gap_model.py`) sai do
+  ranking normal para aqui. Guarda-rail de sanidade automático, não
+  específico de descidas — bater um KOM alheio por uma margem grande num
+  segmento desconhecido é mais provável ser erro do modelo do que talento
+  súbito.
 
 ## Env vars / secrets
 

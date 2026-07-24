@@ -44,6 +44,23 @@ descarta pontos da tabela cuja velocidade implícita ultrapasse um teto
 fisiologicamente plausível, ANTES de qualquer cálculo — se outra corrida
 futura tiver ruído GPS parecido, isto evita engolir o ponto em silêncio
 (fica um aviso na consola).
+
+Dois guarda-rails adicionais (25 Jul 2026), depois de olhar para os números
+reais da camada especulativa:
+- A camada especulativa divide-se em "especulativa-plano_subida" (algo
+  calibrado — os 2 casos de teste com tempo real, ambos planos/subida,
+  deram -4% e -8%) e "especulativa-descida" (ZERO calibração — nenhum
+  esforço de descida real no histórico para testar, e a distância efectiva
+  reduzida pelo Minetti + --pace-flat único sobrevalorizou visivelmente
+  descidas curtas nos testes: um segmento nunca corrido saiu "mais
+  batível" que dois onde já sou o KOM). especulativa-descida NUNCA entra
+  no ranking ordenado — fica à parte, sem_confianca=True, até haver
+  esforço real de descida para calibrar.
+- MARGEM_SUSPEITA_PCT: em qualquer segmento NUNCA corrido (ja_corri=False),
+  se a previsão/heurística bater o KOM por mais dessa margem, sai do
+  ranking normal para "revisao_manual" — teste de sanidade barato, não
+  específico de descidas, para apanhar este tipo de erro automaticamente
+  da próxima vez.
 """
 import argparse
 import json
@@ -59,6 +76,7 @@ INTERVALS_BASE = "https://intervals.icu/api/v1"
 
 FILTRO_VELOCIDADE_MAX_KMH = 24.0  # teto plausível para pace sustentado, mesmo curto
 MIN_DISTANCIA_EFETIVA_M = 1000.0  # abaixo disto, sem dados credíveis na tabela (ver acima)
+MARGEM_SUSPEITA_PCT = 15.0  # vantagem sobre o KOM acima disto, nunca corrido, -> revisão manual
 
 
 def carregar_env(path=".env"):
@@ -216,19 +234,50 @@ def heuristica_curta(distancia_efetiva_m, curva, avg_grade_pct=None, pace_flat_s
     return None, "sem_dados"
 
 
-def avaliar_segmento(distancia_efetiva_m, curva, pace_flat_s_km=None, previsto_grosseiro_s=None):
-    """Ponto único de decisão confianca alta/especulativa. Devolve dict
-    com previsto_s (só se confianca=alta), heuristica_s + heuristica_metodo
-    (só se confianca=especulativa) e confianca."""
+def _suspeito(valor_previsto, kom_tempo_s, ja_corri, margem_pct=MARGEM_SUSPEITA_PCT):
+    """Guarda-rail de sanidade: bater o KOM por uma margem grande num
+    segmento que nunca corri é mais provável ser erro do modelo do que
+    talento súbito. Não se aplica a segmentos já corridos (aí o número é
+    comparável ao meu próprio PR, não uma extrapolação às cegas)."""
+    if valor_previsto is None or not kom_tempo_s or ja_corri:
+        return False, None
+    vantagem_pct = (kom_tempo_s - valor_previsto) / kom_tempo_s * 100
+    if vantagem_pct > margem_pct:
+        return True, f"previsão bate o KOM por {vantagem_pct:.0f}% num segmento nunca corrido"
+    return False, None
+
+
+def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_corri,
+                      pace_flat_s_km=None, previsto_grosseiro_s=None):
+    """Ponto único de decisão: grupo (alta / especulativa-plano_subida /
+    especulativa-descida) + guarda-rail de suspeita.
+
+    especulativa-descida sai sempre com sem_confianca=True e suspeito=False
+    (não faz sentido aplicar o guarda-rail de suspeita a um número que já
+    sabemos estar inflacionado por falta de calibração — ver docstring do
+    módulo)."""
     if distancia_efetiva_m >= MIN_DISTANCIA_EFETIVA_M:
         previsto, metodo = prever_tempo(distancia_efetiva_m, curva)
-        return {"confianca": "alta", "previsto_s": previsto, "metodo_previsao": metodo,
-                "heuristica_s": None, "heuristica_metodo": None}
+        suspeito, motivo = _suspeito(previsto, kom_tempo_s, ja_corri)
+        return {"grupo": "alta", "sem_confianca": False,
+                "previsto_s": previsto, "metodo_previsao": metodo,
+                "heuristica_s": None, "heuristica_metodo": None,
+                "suspeito": suspeito, "suspeito_motivo": motivo}
+
     heur, metodo = heuristica_curta(distancia_efetiva_m, curva,
                                      pace_flat_s_km=pace_flat_s_km,
                                      previsto_grosseiro_s=previsto_grosseiro_s)
-    return {"confianca": "especulativa", "previsto_s": None, "metodo_previsao": None,
-            "heuristica_s": heur, "heuristica_metodo": metodo}
+    descida = avg_grade_pct is not None and avg_grade_pct < 0
+    if descida:
+        return {"grupo": "especulativa-descida", "sem_confianca": True,
+                "previsto_s": None, "metodo_previsao": None,
+                "heuristica_s": heur, "heuristica_metodo": metodo,
+                "suspeito": False, "suspeito_motivo": None}
+    suspeito, motivo = _suspeito(heur, kom_tempo_s, ja_corri)
+    return {"grupo": "especulativa-plano_subida", "sem_confianca": False,
+            "previsto_s": None, "metodo_previsao": None,
+            "heuristica_s": heur, "heuristica_metodo": metodo,
+            "suspeito": suspeito, "suspeito_motivo": motivo}
 
 
 def main():
@@ -263,7 +312,7 @@ def main():
           f"r2={curva['paceModels'][0]['r2']:.4f}")
 
     detalhes = json.load(open(args.entrada, encoding="utf-8"))
-    alta, especulativa = [], []
+    alta, plano_subida, descida, revisao_manual = [], [], [], []
     for d in detalhes:
         streams = d.get("streams") or {}
         dist_s, elev_s = streams.get("distance"), streams.get("elevation")
@@ -271,52 +320,57 @@ def main():
             print(f"  {d['nome']}: sem streams, salto.")
             continue
         efetiva = distancia_efetiva_streams(dist_s, elev_s)
-        av = avaliar_segmento(efetiva, curva, pace_flat_s_km=pace_flat_s_km,
-                               previsto_grosseiro_s=d.get("previsto_grosseiro_s"))
         kom = d.get("kom_tempo_s")
+        av = avaliar_segmento(efetiva, curva, avg_grade_pct=d.get("avgGrade"),
+                               kom_tempo_s=kom, ja_corri=d.get("ja_corri", False),
+                               pace_flat_s_km=pace_flat_s_km,
+                               previsto_grosseiro_s=d.get("previsto_grosseiro_s"))
+        valor = av["previsto_s"] if av["grupo"] == "alta" else av["heuristica_s"]
         base = {
             "segmentId": d["segmentId"],
             "nome": d["nome"],
             "distancia_m": d["distancia_m"],
             "distancia_efetiva_gap_m": round(efetiva, 1),
             "kom_tempo_s": kom,
-            "confianca": av["confianca"],
+            "grupo": av["grupo"],
+            "previsto_s": round(av["previsto_s"], 1) if av["previsto_s"] is not None else None,
+            "metodo_previsao": av["metodo_previsao"],
+            "heuristica_s": round(av["heuristica_s"], 1) if av["heuristica_s"] is not None else None,
+            "heuristica_metodo": av["heuristica_metodo"],
+            "gap_para_kom_s": round(valor - kom, 1) if (valor is not None and kom) else None,
+            "suspeito_motivo": av["suspeito_motivo"],
         }
-        if av["confianca"] == "alta":
-            previsto = av["previsto_s"]
-            base["previsto_s"] = round(previsto, 1) if previsto is not None else None
-            base["metodo_previsao"] = av["metodo_previsao"]
-            base["gap_para_kom_s"] = (round(previsto - kom, 1)
-                                       if (previsto is not None and kom) else None)
-            alta.append(base)
-            if previsto is not None:
-                print(f"  [alta] {d['nome']}: efetiva {efetiva:.0f}m -> "
-                      f"previsto {previsto:.0f}s ({av['metodo_previsao']}), KOM {kom}s")
-            else:
-                print(f"  [alta] {d['nome']}: efetiva {efetiva:.0f}m -> "
-                      f"sem previsão ({av['metodo_previsao']})")
+        tag = "SUSPEITO" if av["suspeito"] else av["grupo"]
+        if valor is not None:
+            metodo = av["metodo_previsao"] or av["heuristica_metodo"]
+            print(f"  [{tag}] {d['nome']}: efetiva {efetiva:.0f}m -> "
+                  f"{valor:.0f}s ({metodo}), KOM {kom}s")
         else:
-            heur = av["heuristica_s"]
-            base["heuristica_s"] = round(heur, 1) if heur is not None else None
-            base["heuristica_metodo"] = av["heuristica_metodo"]
-            base["heuristica_gap_para_kom_s"] = (round(heur - kom, 1)
-                                                  if (heur is not None and kom) else None)
-            especulativa.append(base)
-            if heur is not None:
-                print(f"  [especulativa] {d['nome']}: efetiva {efetiva:.0f}m -> "
-                      f"heurística {heur:.0f}s ({av['heuristica_metodo']}), KOM {kom}s")
-            else:
-                print(f"  [especulativa] {d['nome']}: efetiva {efetiva:.0f}m -> "
-                      f"sem heurística ({av['heuristica_metodo']})")
+            print(f"  [{tag}] {d['nome']}: efetiva {efetiva:.0f}m -> sem valor")
+
+        if av["suspeito"]:
+            revisao_manual.append(base)
+        elif av["grupo"] == "alta":
+            alta.append(base)
+        elif av["grupo"] == "especulativa-plano_subida":
+            plano_subida.append(base)
+        else:
+            descida.append(base)
 
     alta.sort(key=lambda x: (x["gap_para_kom_s"] is None, x["gap_para_kom_s"]))
-    especulativa.sort(key=lambda x: (x["heuristica_gap_para_kom_s"] is None,
-                                      x["heuristica_gap_para_kom_s"]))
+    plano_subida.sort(key=lambda x: (x["gap_para_kom_s"] is None, x["gap_para_kom_s"]))
+    # descida fica por ordenar de propósito — não é ranking, é "sem confiança, olha lá isto"
 
-    saida = {"confianca_alta": alta, "confianca_especulativa": especulativa}
+    saida = {
+        "confianca_alta": alta,
+        "confianca_especulativa_plano_subida": plano_subida,
+        "confianca_especulativa_descida_SEM_CONFIANCA": descida,
+        "revisao_manual": revisao_manual,
+    }
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(saida, f, ensure_ascii=False, indent=1)
-    print(f"-> {args.out} ({len(alta)} confiança alta, {len(especulativa)} especulativa)")
+    print(f"-> {args.out} ({len(alta)} alta, {len(plano_subida)} especulativa-plano/subida, "
+          f"{len(descida)} especulativa-descida SEM CONFIANÇA, {len(revisao_manual)} p/ revisão manual)")
 
 
 if __name__ == "__main__":

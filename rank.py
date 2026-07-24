@@ -13,6 +13,17 @@ Por segmento, só refaz a Fase 2 (detalhe/streams) + Fase 3 (previsão) se:
 - passaram >= --revisao-semanas desde a última análise ("revisao_periodica"
   — a minha própria capacidade evolui, não só o KOM dos outros).
 Caso contrário reaproveita o score guardado, zero pedidos novos.
+
+Output em 4 grupos (mesma lógica do gap_model.py, ver docstring lá para o
+porquê): confianca_alta, confianca_especulativa_plano_subida (ambos
+ordenados por score), confianca_especulativa_descida_SEM_CONFIANCA (não
+ordenado — sem calibração real, não usar para decidir onde ir caçar) e
+revisao_manual (score bate o KOM por >15% num segmento nunca corrido —
+suspeito de erro do modelo, não de talento súbito).
+
+NOTA: mudar a estrutura de historico.json (grupo/suspeito em vez de
+confianca) invalida entradas gravadas por versões anteriores deste
+ficheiro — apaga historico.json se tiveres um de antes desta versão.
 """
 import argparse
 import json
@@ -66,15 +77,14 @@ def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
         return None
 
     efetiva = distancia_efetiva_streams(dist_s, elev_s)
-    av = avaliar_segmento(efetiva, curva, pace_flat_s_km=pace_flat_s_km,
-                           previsto_grosseiro_s=c.get("previsto_grosseiro_s"))
     kom = det.get("kom_tempo_s")
+    av = avaliar_segmento(efetiva, curva, avg_grade_pct=det.get("avgGrade"),
+                           kom_tempo_s=kom, ja_corri=det.get("ja_corri", False),
+                           pace_flat_s_km=pace_flat_s_km,
+                           previsto_grosseiro_s=c.get("previsto_grosseiro_s"))
 
-    score = None
-    if av["confianca"] == "alta" and av["previsto_s"] is not None and kom:
-        score = round(av["previsto_s"] - kom, 1)
-    elif av["confianca"] == "especulativa" and av["heuristica_s"] is not None and kom:
-        score = round(av["heuristica_s"] - kom, 1)
+    valor = av["previsto_s"] if av["grupo"] == "alta" else av["heuristica_s"]
+    score = round(valor - kom, 1) if (valor is not None and kom) else None
 
     return {
         "segmentId": c["segmentId"],
@@ -84,11 +94,13 @@ def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
         "kom_tempo_s": kom,
         "kom_atleta": det.get("kom_atleta"),
         "ja_corri": det.get("ja_corri"),
-        "confianca": av["confianca"],
+        "grupo": av["grupo"],
         "previsto_s": round(av["previsto_s"], 1) if av["previsto_s"] is not None else None,
         "heuristica_s": round(av["heuristica_s"], 1) if av["heuristica_s"] is not None else None,
         "metodo": av["metodo_previsao"] or av["heuristica_metodo"],
         "score": score,
+        "suspeito": av["suspeito"],
+        "suspeito_motivo": av["suspeito_motivo"],
         "ultima_analise": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "motivo_recalculo": motivo,
     }
@@ -154,23 +166,31 @@ def main():
                 continue
             segmentos[str(c["segmentId"])] = entrada
             novos.append(entrada)
-            print(f"  [{motivo}] {entrada['nome']}: confiança {entrada['confianca']}, "
-                  f"score {entrada['score']}")
+            tag = "SUSPEITO" if entrada["suspeito"] else entrada["grupo"]
+            print(f"  [{motivo}/{tag}] {entrada['nome']}: score {entrada['score']}")
             if i < len(a_reanalisar) - 1:
                 time.sleep(PAGE_DELAY)
 
     guardar_historico(historico, args.historico)
 
     todos = reaproveitados + novos
-    alta = sorted((x for x in todos if x["confianca"] == "alta"),
+    revisao_manual = [x for x in todos if x.get("suspeito")]
+    resto = [x for x in todos if not x.get("suspeito")]
+    alta = sorted((x for x in resto if x["grupo"] == "alta"),
                   key=lambda x: (x["score"] is None, x["score"]))
-    especulativa = sorted((x for x in todos if x["confianca"] == "especulativa"),
+    plano_subida = sorted((x for x in resto if x["grupo"] == "especulativa-plano_subida"),
                            key=lambda x: (x["score"] is None, x["score"]))
+    descida = [x for x in resto if x["grupo"] == "especulativa-descida"]  # sem ordenar, sem confiança
 
     with open(args.out, "w", encoding="utf-8") as f:
-        json.dump({"confianca_alta": alta, "confianca_especulativa": especulativa},
-                   f, ensure_ascii=False, indent=1)
-    print(f"-> {args.out} ({len(alta)} confiança alta, {len(especulativa)} especulativa, "
+        json.dump({
+            "confianca_alta": alta,
+            "confianca_especulativa_plano_subida": plano_subida,
+            "confianca_especulativa_descida_SEM_CONFIANCA": descida,
+            "revisao_manual": revisao_manual,
+        }, f, ensure_ascii=False, indent=1)
+    print(f"-> {args.out} ({len(alta)} alta, {len(plano_subida)} especulativa-plano/subida, "
+          f"{len(descida)} especulativa-descida SEM CONFIANÇA, {len(revisao_manual)} p/ revisão manual, "
           f"{len(novos)} novo/actualizado, {len(reaproveitados)} do cache) | "
           f"histórico -> {args.historico}")
 
