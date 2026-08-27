@@ -3,8 +3,8 @@
 ponto, com pré-filtro GAP grosseiro (usa só os campos que já vêm no tile —
 distância, grade média, komElapsedTime — sem tocar em /segments/<id>).
 
-    STRAVA_SESSION=<cookie> python explore.py --lat 39.36 --lon -8.95 \
-        --raio 1.5 --pace-flat 3:40
+    STRAVA_SESSION=<cookie> python explore.py --lat <LAT> --lon <LON> \
+        --athlete-id <ID> --raio 1.5 --pace-flat 3:40
 
 --pace-flat é um pace de referência em plano (mm:ss/km) — placeholder até a
 Fase 3 trazer a curva de critical pace real do Intervals.icu (o pace
@@ -54,7 +54,6 @@ from comum import (ACTIVITY_TYPE_RUN, INTENT_DEFAULT, PAGE_DELAY, largura_tile_k
                     tiles_no_raio)
 
 MAX_TILES = 40  # cap de pedidos de tiles por corrida — cobre até ~raio 2.5km a zoom 15
-ATHLETE_ID_DEFAULT = "100300630"  # José — já público via club-koms
 
 
 def parse_pace(s):
@@ -79,8 +78,10 @@ def main():
                           "NUNCA 'popular', filtra muito)")
     ap.add_argument("--pace-flat", required=True, dest="pace_flat",
                      help="pace de referência em plano, mm:ss/km")
-    ap.add_argument("--athlete-id",
-                     default=os.environ.get("STRAVA_ATHLETE_ID", ATHLETE_ID_DEFAULT))
+    ap.add_argument("--athlete-id", default=os.environ.get("STRAVA_ATHLETE_ID"),
+                     help="ID numérico do atleta Strava — tem de ser o mesmo da sessão "
+                          "em STRAVA_SESSION (o endpoint de tiles devolve 401 se não bater "
+                          "certo). Via --athlete-id ou env STRAVA_ATHLETE_ID.")
     ap.add_argument("--top", type=int, default=40,
                      help="máx. de candidatos no output (default 40 — é o que a Fase 2 vai "
                           "processar; único critério de corte, gap_grosseiro_s só ordena)")
@@ -93,6 +94,11 @@ def main():
     cookie = os.environ.get("STRAVA_SESSION", "").strip()
     if not cookie:
         sys.exit("STRAVA_SESSION não definido.")
+
+    if not args.athlete_id:
+        sys.exit("--athlete-id (ou env STRAVA_ATHLETE_ID) não definido — obrigatório, e "
+                 "tem de corresponder ao atleta do STRAVA_SESSION (o endpoint de tiles "
+                 "devolve 401 se não bater certo).")
 
     pace_flat = parse_pace(args.pace_flat)
     s = sessao_strava(cookie)
