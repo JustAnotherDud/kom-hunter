@@ -5,6 +5,7 @@
     python tests/harness.py --update   # aceita o resultado actual como baseline
 """
 import difflib
+import hashlib
 import json
 import os
 import shutil
@@ -195,6 +196,30 @@ def run_one(name):
         print(f"[exit] {type(e).__name__}: {e} (em {tb.name})")
 
 
+def resumir_streams(txt):
+    """Troca cada lista de "streams" por número de pontos + hash dos valores,
+    para a baseline não guardar milhares de números. O resto fica igual."""
+    if '"streams"' not in txt:
+        return txt
+
+    def andar(x):
+        if isinstance(x, list):
+            for y in x:
+                andar(y)
+        elif isinstance(x, dict):
+            for k, v in x.items():
+                if k == "streams" and isinstance(v, dict):
+                    x[k] = {s: f"{len(vals)} pontos, sha256 "
+                               + hashlib.sha256(json.dumps(vals).encode()).hexdigest()[:16]
+                            for s, vals in v.items()}
+                else:
+                    andar(v)
+
+    dados = json.loads(txt)
+    andar(dados)
+    return json.dumps(dados, ensure_ascii=False, indent=1)
+
+
 def gerar():
     chunks = []
     for name, sc in SCENARIOS.items():
@@ -215,7 +240,7 @@ def gerar():
         for fn in sorted(os.listdir(wd)):
             txt = open(os.path.join(wd, fn), encoding="utf-8").read()
             if before.get(fn) != txt:
-                chunks.append(f"--- file {fn}" + NL + txt + NL)
+                chunks.append(f"--- file {fn}" + NL + resumir_streams(txt) + NL)
         shutil.rmtree(wd)
     return NL.join(chunks)
 
