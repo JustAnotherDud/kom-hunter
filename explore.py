@@ -36,9 +36,6 @@ def main():
                      help="raio em km (default 1.5). Para mais área, corre vários centros")
     ap.add_argument("--zoom", type=int, default=15,
                      help="zoom das tiles (default 15). Abaixo disso perdem-se segmentos")
-    ap.add_argument("--intent", default=INTENT_DEFAULT,
-                     help=f"parâmetro intent do tile (default '{INTENT_DEFAULT}' — "
-                          "NUNCA 'popular', filtra muito)")
     ap.add_argument("--pace-flat", required=True, dest="pace_flat",
                      help="pace de referência em plano, mm:ss/km")
     ap.add_argument("--athlete-id", default=os.environ.get("STRAVA_ATHLETE_ID"),
@@ -72,12 +69,12 @@ def main():
     area_pedida = math.pi * args.raio ** 2
     print(f"cobertura: {len(tiles)} tiles z{args.zoom} (~{largura:.2f}km/lado) = "
           f"~{area_coberta:.1f}km² cobertos vs ~{area_pedida:.1f}km² pedidos "
-          f"(raio {args.raio}km) — intent={args.intent}")
+          f"(raio {args.raio}km) — intent={INTENT_DEFAULT}")
 
     total_bruto = 0
     vistos = {}
     for i, (z, x, y) in enumerate(tiles):
-        feats = obter_tile_segmentos(s, args.athlete_id, z, x, y, intent=args.intent)
+        feats = obter_tile_segmentos(s, args.athlete_id, z, x, y)
         total_bruto += len(feats)
         for f in feats:
             p = f["properties"]

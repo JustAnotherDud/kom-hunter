@@ -67,11 +67,11 @@ def largura_tile_km(lat, zoom):
 INTENT_DEFAULT = "explore"  # "popular" devolve pelo menos 1/3 menos segmentos (testado)
 
 
-def obter_tile_segmentos(sessao, athlete_id, zoom, x, y, intent=INTENT_DEFAULT):
+def obter_tile_segmentos(sessao, athlete_id, zoom, x, y):
     """Pede um tile de segmentos e devolve a lista de features (dicts).
     Termina o processo (SystemExit) se a sessão expirou."""
     url = (f"{TILE_BASE}/{athlete_id}/{zoom}/{x}/{y}"
-           f"?intent={intent}&elevation_filter=all&surface_types=0&distance_min=0"
+           f"?intent={INTENT_DEFAULT}&elevation_filter=all&surface_types=0&distance_min=0"
            "&creator=false&starred=false&top_10=false&overall=false&verified=false")
     r = sessao.get(url, headers=HEADERS, timeout=30)
     if r.status_code == 401:
