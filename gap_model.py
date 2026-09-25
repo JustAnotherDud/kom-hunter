@@ -206,6 +206,30 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
     return av
 
 
+def avaliar_detalhe(det, curva, pace_flat_s_km, previsto_grosseiro_s):
+    """avaliar_segmento sobre uma página de detalhe, mais efetiva, valor e
+    gap_kom (valor - KOM). None se não houver streams."""
+    streams = det.get("streams") or {}
+    dist_s, elev_s = streams.get("distance"), streams.get("elevation")
+    if not dist_s or not elev_s:
+        print(f"  {det['nome']}: sem streams, salto.")
+        return None
+    efetiva = distancia_efetiva_streams(dist_s, elev_s)
+    kom = det.get("kom_tempo_s")
+    av = avaliar_segmento(efetiva, curva, avg_grade_pct=det.get("avgGrade"),
+                           kom_tempo_s=kom, ja_corri=det.get("ja_corri", False),
+                           pace_flat_s_km=pace_flat_s_km,
+                           previsto_grosseiro_s=previsto_grosseiro_s)
+    valor = av["previsto_s"] if av["grupo"] == "alta" else av["heuristica_s"]
+    av.update(efetiva=efetiva, valor=valor,
+              gap_kom=round(valor - kom, 1) if (valor is not None and kom) else None)
+    return av
+
+
+def r1(x):
+    return round(x, 1) if x is not None else None
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -236,18 +260,10 @@ def main():
     detalhes = json.load(open(args.entrada, encoding="utf-8"))
     alta, plano_subida, descida, fora_alcance, revisao_manual = [], [], [], [], []
     for d in detalhes:
-        streams = d.get("streams") or {}
-        dist_s, elev_s = streams.get("distance"), streams.get("elevation")
-        if not dist_s or not elev_s:
-            print(f"  {d['nome']}: sem streams, salto.")
+        av = avaliar_detalhe(d, curva, pace_flat_s_km, d.get("previsto_grosseiro_s"))
+        if av is None:
             continue
-        efetiva = distancia_efetiva_streams(dist_s, elev_s)
-        kom = d.get("kom_tempo_s")
-        av = avaliar_segmento(efetiva, curva, avg_grade_pct=d.get("avgGrade"),
-                               kom_tempo_s=kom, ja_corri=d.get("ja_corri", False),
-                               pace_flat_s_km=pace_flat_s_km,
-                               previsto_grosseiro_s=d.get("previsto_grosseiro_s"))
-        valor = av["previsto_s"] if av["grupo"] == "alta" else av["heuristica_s"]
+        kom, efetiva, valor = d.get("kom_tempo_s"), av["efetiva"], av["valor"]
         base = {
             "segmentId": d["segmentId"],
             "nome": d["nome"],
@@ -255,11 +271,11 @@ def main():
             "distancia_efetiva_gap_m": round(efetiva, 1),
             "kom_tempo_s": kom,
             "grupo": av["grupo"],
-            "previsto_s": round(av["previsto_s"], 1) if av["previsto_s"] is not None else None,
+            "previsto_s": r1(av["previsto_s"]),
             "metodo_previsao": av["metodo_previsao"],
-            "heuristica_s": round(av["heuristica_s"], 1) if av["heuristica_s"] is not None else None,
+            "heuristica_s": r1(av["heuristica_s"]),
             "heuristica_metodo": av["heuristica_metodo"],
-            "gap_para_kom_s": round(valor - kom, 1) if (valor is not None and kom) else None,
+            "gap_para_kom_s": av["gap_kom"],
             "suspeito_motivo": av["suspeito_motivo"],
         }
         tag = "SUSPEITO" if av["suspeito"] else av["grupo"]

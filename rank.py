@@ -17,7 +17,7 @@ import time
 from datetime import datetime, timedelta, timezone
 
 from comum import PAGE_DELAY, parse_pace, sessao_strava
-from gap_model import avaliar_segmento, carregar_env, distancia_efetiva_streams, obter_curva_gap
+from gap_model import avaliar_detalhe, carregar_env, obter_curva_gap, r1
 from segment_detail import detalhe_segmento
 
 HISTORICO_DEFAULT = "historico.json"
@@ -51,35 +51,22 @@ def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
     """Fases 2 e 3 para um candidato. Devolve a entrada de histórico, ou None
     se não houver streams."""
     det = detalhe_segmento(s, c["segmentId"])
-    streams = det.get("streams") or {}
-    dist_s, elev_s = streams.get("distance"), streams.get("elevation")
-    if not dist_s or not elev_s:
-        print(f"  {det['nome']}: sem streams, salto.")
+    av = avaliar_detalhe(det, curva, pace_flat_s_km, c.get("previsto_grosseiro_s"))
+    if av is None:
         return None
-
-    efetiva = distancia_efetiva_streams(dist_s, elev_s)
-    kom = det.get("kom_tempo_s")
-    av = avaliar_segmento(efetiva, curva, avg_grade_pct=det.get("avgGrade"),
-                           kom_tempo_s=kom, ja_corri=det.get("ja_corri", False),
-                           pace_flat_s_km=pace_flat_s_km,
-                           previsto_grosseiro_s=c.get("previsto_grosseiro_s"))
-
-    valor = av["previsto_s"] if av["grupo"] == "alta" else av["heuristica_s"]
-    score = round(valor - kom, 1) if (valor is not None and kom) else None
-
     return {
         "segmentId": c["segmentId"],
         "nome": det["nome"],
         "distancia_m": det["distancia_m"],
-        "distancia_efetiva_gap_m": round(efetiva, 1),
-        "kom_tempo_s": kom,
+        "distancia_efetiva_gap_m": round(av["efetiva"], 1),
+        "kom_tempo_s": det.get("kom_tempo_s"),
         "kom_atleta": det.get("kom_atleta"),
         "ja_corri": det.get("ja_corri"),
         "grupo": av["grupo"],
-        "previsto_s": round(av["previsto_s"], 1) if av["previsto_s"] is not None else None,
-        "heuristica_s": round(av["heuristica_s"], 1) if av["heuristica_s"] is not None else None,
+        "previsto_s": r1(av["previsto_s"]),
+        "heuristica_s": r1(av["heuristica_s"]),
         "metodo": av["metodo_previsao"] or av["heuristica_metodo"],
-        "score": score,
+        "score": av["gap_kom"],
         "suspeito": av["suspeito"],
         "suspeito_motivo": av["suspeito_motivo"],
         "ultima_analise": datetime.now(timezone.utc).isoformat(timespec="seconds"),
