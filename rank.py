@@ -125,6 +125,8 @@ def main():
         curva = obter_curva_gap(api_key, athlete_id, janela=args.janela)
 
         for i, (c, motivo) in enumerate(a_reanalisar):
+            if i:
+                time.sleep(PAGE_DELAY)
             entrada = avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo)
             if entrada is None:
                 continue
@@ -132,8 +134,6 @@ def main():
             novos.append(entrada)
             tag = "SUSPEITO" if entrada["suspeito"] else entrada["grupo"]
             print(f"  [{motivo}/{tag}] {entrada['nome']}: score {entrada['score']}")
-            if i < len(a_reanalisar) - 1:
-                time.sleep(PAGE_DELAY)
 
     guardar_historico(historico, args.historico)
 
