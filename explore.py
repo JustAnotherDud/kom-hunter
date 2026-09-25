@@ -2,8 +2,7 @@
 """explore.py: Fase 1. Procura segmentos Run perto de um ponto, só com os
 dados do tile (sem pedir /segments/<id>).
 
-    STRAVA_SESSION=<cookie> python explore.py --lat <LAT> --lon <LON> \
-        --athlete-id <ID> --raio 1.5 --pace-flat 3:40
+    python explore.py --lat <LAT> --lon <LON> --athlete-id <ID> --pace-flat 3:40
 
 Escreve candidatos.json ordenado por gap_grosseiro_s e cortado a --top.
 gap_grosseiro_s usa só a grade média e --pace-flat: ordena, nunca exclui.
@@ -20,7 +19,7 @@ import os
 import sys
 import time
 
-from comum import (ACTIVITY_TYPE_RUN, INTENT_DEFAULT, PAGE_DELAY, largura_tile_km,
+from comum import (ACTIVITY_TYPE_RUN, INTENT_DEFAULT, PAGE_DELAY, carregar_env, largura_tile_km,
                     obter_tile_segmentos, parse_pace, sessao_strava, tempo_previsto_grosseiro,
                     tiles_no_raio)
 
@@ -28,6 +27,7 @@ MAX_TILES = 40  # cap de pedidos de tiles por corrida (~raio 2.5 km a zoom 15)
 
 
 def main():
+    carregar_env()
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--lat", type=float, required=True)

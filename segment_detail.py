@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """segment_detail.py: Fase 2. Detalhe, KOM e streams de cada candidato.
 
-    STRAVA_SESSION=<cookie> python segment_detail.py --in candidatos.json --out detalhes.json
+    python segment_detail.py --in candidatos.json --out detalhes.json
 
 Cada segmento é uma página que não visitarias a navegar, por isso há
 PAGE_DELAY entre pedidos e um cap por corrida (--max, default 30).
@@ -12,7 +12,7 @@ import os
 import sys
 import time
 
-from comum import PAGE_DELAY, obter_next_data, sessao_strava
+from comum import PAGE_DELAY, carregar_env, obter_next_data, sessao_strava
 
 DEFAULT_MAX = 30
 
@@ -47,6 +47,7 @@ def detalhe_segmento(s, seg_id):
 
 
 def main():
+    carregar_env()
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--in", dest="entrada", default="candidatos.json")

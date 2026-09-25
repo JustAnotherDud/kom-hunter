@@ -2,8 +2,7 @@
 """rank.py: Fase 4. Corre as Fases 2 e 3 por segmento e guarda o resultado
 em historico.json, para não reanalisar tudo sempre.
 
-    STRAVA_SESSION=<cookie> python rank.py --in candidatos.json \
-        --out ranking.json --pace-flat 3:40
+    python rank.py --in candidatos.json --out ranking.json --pace-flat 3:40
 
 Só refaz um segmento se é novo, se o KOM mudou (o tile já o traz, não custa
 pedidos), se passaram --revisao-semanas ou, nos curtos, se --pace-flat mudou.
@@ -17,8 +16,8 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from comum import PAGE_DELAY, parse_pace, sessao_strava
-from gap_model import avaliar_detalhe, carregar_env, escrever_grupos, obter_curva_gap, r1
+from comum import PAGE_DELAY, carregar_env, parse_pace, sessao_strava
+from gap_model import avaliar_detalhe, escrever_grupos, obter_curva_gap, r1
 from segment_detail import detalhe_segmento
 
 HISTORICO_DEFAULT = "historico.json"
@@ -81,6 +80,7 @@ def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
 
 
 def main():
+    carregar_env()
     ap = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--in", dest="entrada", default="candidatos.json")
@@ -122,9 +122,8 @@ def main():
         cookie = os.environ.get("STRAVA_SESSION", "").strip()
         if not cookie:
             sys.exit("STRAVA_SESSION não definido (preciso para (re)analisar segmentos).")
-        env = carregar_env()
-        api_key = env.get("INTERVALS_ICU_API_KEY", "").strip()
-        athlete_id = env.get("INTERVALS_ICU_ATHLETE_ID", "").strip()
+        api_key = os.environ.get("INTERVALS_ICU_API_KEY", "").strip()
+        athlete_id = os.environ.get("INTERVALS_ICU_ATHLETE_ID", "").strip()
         if not api_key or not athlete_id:
             sys.exit("INTERVALS_ICU_API_KEY / INTERVALS_ICU_ATHLETE_ID não definidos.")
 

@@ -25,7 +25,7 @@ import sys
 
 import requests
 
-from comum import custo_minetti, parse_pace
+from comum import carregar_env, custo_minetti, parse_pace
 
 INTERVALS_BASE = "https://intervals.icu/api/v1"
 
@@ -33,18 +33,6 @@ FILTRO_VELOCIDADE_MAX_KMH = 24.0  # teto plausível para pace sustentado, mesmo 
 MIN_DISTANCIA_EFETIVA_M = 1000.0  # abaixo disto, sem dados credíveis na tabela
 MARGEM_SUSPEITA_PCT = 15.0  # vantagem sobre o KOM (nunca corrido) -> revisão manual
 FATOR_EXTRAPOLACAO_MAX = 1.5  # cs_model além disto x o máximo da tabela -> fora_alcance_curva
-
-
-def carregar_env(path=".env"):
-    """Lê pares CHAVE=valor de um .env simples (sem dependências extra)."""
-    env = dict(os.environ)
-    if os.path.exists(path):
-        for linha in open(path, encoding="utf-8"):
-            linha = linha.strip()
-            if linha and not linha.startswith("#") and "=" in linha:
-                k, v = linha.split("=", 1)
-                env.setdefault(k, v)
-    return env
 
 
 def obter_curva_gap(api_key, athlete_id, janela="180d", tipo="Run"):
@@ -258,6 +246,7 @@ def escrever_grupos(path, itens, chave, extra="", cauda=""):
 
 
 def main():
+    carregar_env()
     ap = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--in", dest="entrada", default="detalhes.json",
@@ -270,9 +259,8 @@ def main():
 
     pace_flat_s_km = parse_pace(args.pace_flat) if args.pace_flat else None
 
-    env = carregar_env()
-    api_key = env.get("INTERVALS_ICU_API_KEY", "").strip()
-    athlete_id = env.get("INTERVALS_ICU_ATHLETE_ID", "").strip()
+    api_key = os.environ.get("INTERVALS_ICU_API_KEY", "").strip()
+    athlete_id = os.environ.get("INTERVALS_ICU_ATHLETE_ID", "").strip()
     if not api_key or not athlete_id:
         sys.exit("INTERVALS_ICU_API_KEY / INTERVALS_ICU_ATHLETE_ID não definidos "
                   "(env ou .env local).")

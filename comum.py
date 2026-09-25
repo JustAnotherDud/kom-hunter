@@ -8,6 +8,7 @@ página de detalhe, mas a fonte de verdade é o detalhe.
 """
 import json
 import math
+import os
 import re
 
 import mapbox_vector_tile
@@ -27,6 +28,17 @@ def parse_pace(s):
     """'3:40' -> segundos por km (int)."""
     m, sec = s.split(":")
     return int(m) * 60 + int(sec)
+
+
+def carregar_env(path=".env"):
+    """Junta ao ambiente os pares CHAVE=valor de um .env simples. Uma variável
+    já definida no ambiente ganha ao ficheiro."""
+    if os.path.exists(path):
+        for linha in open(path, encoding="utf-8"):
+            linha = linha.strip()
+            if linha and not linha.startswith("#") and "=" in linha:
+                k, v = linha.split("=", 1)
+                os.environ.setdefault(k, v)
 
 
 def sessao_strava(cookie):

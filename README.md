@@ -10,12 +10,11 @@ else's data.
 
 ## Usage
 
-```bash
-STRAVA_SESSION=<cookie> python explore.py \
-    --lat <LAT> --lon <LON> --athlete-id <ID> --pace-flat 3:40
+Put the env vars (see below) in a `.env` in the folder you run from, then:
 
-STRAVA_SESSION=<cookie> python rank.py \
-    --in candidatos.json --out ranking.json --pace-flat 3:40
+```bash
+python explore.py --lat <LAT> --lon <LON> --athlete-id <ID> --pace-flat 3:40
+python rank.py --in candidatos.json --out ranking.json --pace-flat 3:40
 ```
 
 `rank.py` runs phases 2 and 3 itself. Run `segment_detail.py` or
@@ -72,8 +71,10 @@ better.
 - `STRAVA_ATHLETE_ID` or `--athlete-id`: your Strava athlete id, required by
   `explore.py`. The tile endpoint returns 401 if it does not match the session.
 - `INTERVALS_ICU_API_KEY` and `INTERVALS_ICU_ATHLETE_ID`: Basic Auth with
-  username `API_KEY`. Athlete id `0` means the key's own athlete. They can live
-  in a local `.env` (gitignored).
+  username `API_KEY`. Athlete id `0` means the key's own athlete.
+
+Every script reads `KEY=value` lines from `.env` in the current folder
+(gitignored). A variable already set in the environment wins.
 
 ## Search area (explore.py)
 
