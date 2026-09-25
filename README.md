@@ -40,7 +40,8 @@ heuristics. Use a hard effort pace, not training pace. Only tested with 3:40.
    an effective distance computed over the streams.
 4. `rank.py` runs phases 2 and 3 per segment and keeps `historico.json`. It
    only redoes a segment if it is new, its KOM changed (the tile already has
-   it, so the check is free) or `--revisao-semanas` passed (default 4).
+   it, so the check is free), `--revisao-semanas` passed (default 4) or, for
+   short segments, `--pace-flat` changed.
    `--max-novos` caps redone segments per run.
 
 ## Output groups

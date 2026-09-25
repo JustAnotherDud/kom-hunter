@@ -6,7 +6,8 @@ em historico.json, para não reanalisar tudo sempre.
         --out ranking.json --pace-flat 3:40
 
 Só refaz um segmento se é novo, se o KOM mudou (o tile já o traz, não custa
-pedidos) ou se passaram --revisao-semanas. Senão usa o score guardado.
+pedidos), se passaram --revisao-semanas ou, nos curtos, se --pace-flat mudou.
+Senão usa o score guardado.
 Output nos mesmos 5 grupos do gap_model.py.
 """
 import argparse
