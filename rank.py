@@ -94,12 +94,11 @@ def main():
     ap.add_argument("--out", default="ranking.json")
     ap.add_argument("--historico", default=HISTORICO_DEFAULT)
     ap.add_argument("--pace-flat", dest="pace_flat",
-                     help="mm:ss/km — heurística especulativa <1000m")
+                     help="mm:ss/km, para a heurística dos segmentos curtos")
     ap.add_argument("--revisao-semanas", type=int, default=REVISAO_SEMANAS_DEFAULT)
     ap.add_argument("--janela", default="180d", help="janela da curva GAP (default 180d)")
     ap.add_argument("--max-novos", type=int, default=30,
-                     help="cap de segmentos NOVOS/a-reanalisar nesta corrida "
-                          "(cache hits não contam para o cap)")
+                     help="máx. de segmentos a (re)analisar nesta corrida (default 30)")
     args = ap.parse_args()
 
     pace_flat_s_km = parse_pace(args.pace_flat) if args.pace_flat else None

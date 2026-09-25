@@ -214,8 +214,7 @@ def main():
     ap.add_argument("--out", default="previsoes.json")
     ap.add_argument("--janela", default="180d", help="janela da curva GAP (default 180d)")
     ap.add_argument("--pace-flat", dest="pace_flat",
-                     help="mm:ss/km — refina a heurística especulativa para segmentos curtos "
-                          "(opcional; sem isto usa-se previsto_grosseiro_s da Fase 1, se existir)")
+                     help="mm:ss/km, para a heurística dos segmentos curtos (opcional)")
     args = ap.parse_args()
 
     pace_flat_s_km = parse_pace(args.pace_flat) if args.pace_flat else None

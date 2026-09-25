@@ -33,27 +33,21 @@ def main():
     ap.add_argument("--lat", type=float, required=True)
     ap.add_argument("--lon", type=float, required=True)
     ap.add_argument("--raio", type=float, default=1.5,
-                     help="raio em km (default 1.5 — ver docstring: zoom=15 não escala "
-                          "bem para raios grandes, corre várias buscas em vez de subir isto)")
+                     help="raio em km (default 1.5). Para mais área, corre vários centros")
     ap.add_argument("--zoom", type=int, default=15,
-                     help="zoom das tiles (default 15 — medido: densidade real só a "
-                          "partir daqui, ver docstring)")
+                     help="zoom das tiles (default 15). Abaixo disso perdem-se segmentos")
     ap.add_argument("--intent", default=INTENT_DEFAULT,
                      help=f"parâmetro intent do tile (default '{INTENT_DEFAULT}' — "
                           "NUNCA 'popular', filtra muito)")
     ap.add_argument("--pace-flat", required=True, dest="pace_flat",
                      help="pace de referência em plano, mm:ss/km")
     ap.add_argument("--athlete-id", default=os.environ.get("STRAVA_ATHLETE_ID"),
-                     help="ID numérico do atleta Strava — tem de ser o mesmo da sessão "
-                          "em STRAVA_SESSION (o endpoint de tiles devolve 401 se não bater "
-                          "certo). Via --athlete-id ou env STRAVA_ATHLETE_ID.")
+                     help="id do atleta da STRAVA_SESSION (ou env STRAVA_ATHLETE_ID)")
     ap.add_argument("--top", type=int, default=40,
-                     help="máx. de candidatos no output (default 40 — é o que a Fase 2 vai "
-                          "processar; único critério de corte, gap_grosseiro_s só ordena)")
+                     help="máx. de candidatos no output (default 40)")
     ap.add_argument("--out", default="candidatos.json")
     ap.add_argument("--out-sem-kom", default="sem_kom.json",
-                     help="segmentos sem komElapsedTime no tile — dados em falta, "
-                          "para inspecção manual, nunca 'oportunidade livre'")
+                     help="segmentos sem komElapsedTime no tile, para ver à mão")
     args = ap.parse_args()
 
     cookie = os.environ.get("STRAVA_SESSION", "").strip()
