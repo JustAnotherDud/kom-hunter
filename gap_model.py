@@ -67,23 +67,19 @@ def obter_curva_gap(api_key, athlete_id, janela="180d", tipo="Run"):
 def filtrar_pontos_implausiveis(curva):
     """Descarta pontos com velocidade implícita acima de FILTRO_VELOCIDADE_MAX_KMH."""
     teto_ms = FILTRO_VELOCIDADE_MAX_KMH / 3.6
-    dists, tempos, acts = curva["distance"], curva["values"], curva.get("activity_id", [])
-    limpos_d, limpos_t, limpos_a = [], [], []
-    descartados = []
-    for i in range(len(dists)):
-        if tempos[i] > 0 and dists[i] / tempos[i] > teto_ms:
-            descartados.append((dists[i], tempos[i], acts[i] if i < len(acts) else "?"))
-            continue
-        limpos_d.append(dists[i])
-        limpos_t.append(tempos[i])
-        limpos_a.append(acts[i] if i < len(acts) else "?")
+    dists, acts = curva["distance"], curva.get("activity_id", [])
+    acts = acts + ["?"] * (len(dists) - len(acts))
+    limpos, descartados = [], []
+    for p in zip(dists, curva["values"], acts):
+        (descartados if p[1] > 0 and p[0] / p[1] > teto_ms else limpos).append(p)
     if descartados:
         fontes = sorted(set(a for _, _, a in descartados))
         print(f"  [aviso] {len(descartados)} pontos da curva descartados "
               f"(velocidade > {FILTRO_VELOCIDADE_MAX_KMH}km/h implausível), "
               f"de {dists[0]:.0f}m a {descartados[-1][0]:.0f}m — fonte(s): {', '.join(fontes)}")
     curva = dict(curva)
-    curva["distance"], curva["values"], curva["activity_id"] = limpos_d, limpos_t, limpos_a
+    for i, k in enumerate(("distance", "values", "activity_id")):
+        curva[k] = [p[i] for p in limpos]
     return curva
 
 
