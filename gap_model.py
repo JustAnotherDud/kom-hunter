@@ -76,7 +76,7 @@ def filtrar_pontos_implausiveis(curva):
         fontes = sorted(set(a for _, _, a in descartados))
         print(f"  [aviso] {len(descartados)} pontos da curva descartados "
               f"(velocidade > {FILTRO_VELOCIDADE_MAX_KMH}km/h implausível), "
-              f"de {dists[0]:.0f}m a {descartados[-1][0]:.0f}m — fonte(s): {', '.join(fontes)}")
+              f"de {descartados[0][0]:.0f}m a {descartados[-1][0]:.0f}m — fonte(s): {', '.join(fontes)}")
     curva = dict(curva)
     for i, k in enumerate(("distance", "values", "activity_id")):
         curva[k] = [p[i] for p in limpos]
