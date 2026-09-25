@@ -136,9 +136,9 @@ def main():
         json.dump(candidatos, f, ensure_ascii=False, indent=1)
     print(f"-> {args.out}")
 
+    with open(args.out_sem_kom, "w", encoding="utf-8") as f:
+        json.dump(sem_kom, f, ensure_ascii=False, indent=1)
     if sem_kom:
-        with open(args.out_sem_kom, "w", encoding="utf-8") as f:
-            json.dump(sem_kom, f, ensure_ascii=False, indent=1)
         print(f"-> {args.out_sem_kom} ({len(sem_kom)} segmento(s) — inspeccionar manualmente)")
         for x in sem_kom:
             print(f"   [dados em falta] {x['nome']}: {x['attemptsAllTime']} tentativas, "
