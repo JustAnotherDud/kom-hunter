@@ -1,2 +1,2 @@
-requests
-mapbox-vector-tile
+requests==2.33.1
+mapbox-vector-tile==2.2.0
