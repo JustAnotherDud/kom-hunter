@@ -35,12 +35,16 @@ def guardar_historico(historico, path):
         json.dump(historico, f, ensure_ascii=False, indent=1, sort_keys=True)
 
 
-def precisa_recalcular(entrada, kom_atual, revisao_semanas):
+def precisa_recalcular(entrada, kom_atual, revisao_semanas, pace_flat_s_km):
     """Decide se vale um pedido novo. Devolve (recalcular, motivo)."""
     if entrada is None:
         return True, "novo"
     if entrada.get("kom_tempo_s") != kom_atual:
         return True, "kom_mudou"
+    # nos curtos a heurística usa --pace-flat, por isso o pace faz parte da cache
+    if (entrada.get("grupo", "").startswith("especulativa")
+            and entrada.get("pace_flat_s_km") != pace_flat_s_km):
+        return True, "pace_mudou"
     ultima = datetime.fromisoformat(entrada["ultima_analise"])
     if datetime.now(timezone.utc) - ultima >= timedelta(weeks=revisao_semanas):
         return True, "revisao_periodica"
@@ -66,6 +70,7 @@ def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
         "previsto_s": r1(av["previsto_s"]),
         "heuristica_s": r1(av["heuristica_s"]),
         "metodo": av["metodo_previsao"] or av["heuristica_metodo"],
+        "pace_flat_s_km": pace_flat_s_km,
         "score": av["gap_kom"],
         "suspeito": av["suspeito"],
         "suspeito_motivo": av["suspeito_motivo"],
@@ -97,7 +102,8 @@ def main():
     a_reanalisar, reaproveitados = [], []
     for c in candidatos:
         entrada = segmentos.get(str(c["segmentId"]))
-        recalcular, motivo = precisa_recalcular(entrada, c["komElapsedTime"], args.revisao_semanas)
+        recalcular, motivo = precisa_recalcular(entrada, c["komElapsedTime"], args.revisao_semanas,
+                                                pace_flat_s_km)
         (a_reanalisar if recalcular else reaproveitados).append(
             (c, motivo) if recalcular else entrada)
 
