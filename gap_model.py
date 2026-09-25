@@ -144,16 +144,11 @@ def _modelo_cs(distancia_efetiva_m, curva):
 def extrapolado_demais(distancia_efetiva_m, curva, fator_max=FATOR_EXTRAPOLACAO_MAX):
     """True se a distância passa fator_max vezes o máximo da tabela. CS/D' é
     uma recta de 2 parâmetros e não aguenta ultras (fadiga)."""
-    dists = curva.get("distance") or []
-    if not dists:
-        return False
-    return distancia_efetiva_m > dists[-1] * fator_max
+    return distancia_efetiva_m > curva["distance"][-1] * fator_max
 
 
 def prever_tempo(distancia_efetiva_m, curva):
     """Previsão de confiança alta (s): tabela dentro do alcance dela, senão CS/D'."""
-    if distancia_efetiva_m < MIN_DISTANCIA_EFETIVA_M:
-        return None, "curto_demais"
     t = _interpolar_tabela(distancia_efetiva_m, curva)
     if t is not None:
         return t, "tabela"
@@ -163,8 +158,7 @@ def prever_tempo(distancia_efetiva_m, curva):
     return None, "fora_de_alcance"
 
 
-def heuristica_curta(distancia_efetiva_m, curva, avg_grade_pct=None, pace_flat_s_km=None,
-                      previsto_grosseiro_s=None):
+def heuristica_curta(distancia_efetiva_m, curva, pace_flat_s_km=None, previsto_grosseiro_s=None):
     """Estimativa para segmentos curtos, nunca física. Por ordem: pontos reais
     da curva nessa gama, distância efectiva x pace_flat, previsto_grosseiro_s
     da Fase 1. Devolve (valor ou None, metodo)."""
@@ -196,13 +190,11 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
     if distancia_efetiva_m >= MIN_DISTANCIA_EFETIVA_M:
         previsto, metodo = prever_tempo(distancia_efetiva_m, curva)
         if metodo == "cs_model" and extrapolado_demais(distancia_efetiva_m, curva):
-            return {"grupo": "fora_alcance_curva", "sem_confianca": True,
-                    "previsto_s": previsto, "metodo_previsao": metodo,
+            return {"grupo": "fora_alcance_curva", "previsto_s": previsto, "metodo_previsao": metodo,
                     "heuristica_s": None, "heuristica_metodo": None,
                     "suspeito": False, "suspeito_motivo": None}
         suspeito, motivo = _suspeito(previsto, kom_tempo_s, ja_corri)
-        return {"grupo": "alta", "sem_confianca": False,
-                "previsto_s": previsto, "metodo_previsao": metodo,
+        return {"grupo": "alta", "previsto_s": previsto, "metodo_previsao": metodo,
                 "heuristica_s": None, "heuristica_metodo": None,
                 "suspeito": suspeito, "suspeito_motivo": motivo}
 
@@ -211,13 +203,11 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
                                      previsto_grosseiro_s=previsto_grosseiro_s)
     descida = avg_grade_pct is not None and avg_grade_pct < 0
     if descida:
-        return {"grupo": "especulativa-descida", "sem_confianca": True,
-                "previsto_s": None, "metodo_previsao": None,
+        return {"grupo": "especulativa-descida", "previsto_s": None, "metodo_previsao": None,
                 "heuristica_s": heur, "heuristica_metodo": metodo,
                 "suspeito": False, "suspeito_motivo": None}
     suspeito, motivo = _suspeito(heur, kom_tempo_s, ja_corri)
-    return {"grupo": "especulativa-plano_subida", "sem_confianca": False,
-            "previsto_s": None, "metodo_previsao": None,
+    return {"grupo": "especulativa-plano_subida", "previsto_s": None, "metodo_previsao": None,
             "heuristica_s": heur, "heuristica_metodo": metodo,
             "suspeito": suspeito, "suspeito_motivo": motivo}
 
