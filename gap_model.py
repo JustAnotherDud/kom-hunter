@@ -187,29 +187,27 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
                       pace_flat_s_km=None, previsto_grosseiro_s=None):
     """Decide o grupo e aplica o guarda-rail de suspeita. descida e
     fora_alcance_curva nunca são suspeitos: o número já não tem base."""
+    av = {"previsto_s": None, "metodo_previsao": None, "heuristica_s": None,
+          "heuristica_metodo": None, "suspeito": False, "suspeito_motivo": None}
     if distancia_efetiva_m >= MIN_DISTANCIA_EFETIVA_M:
         previsto, metodo = prever_tempo(distancia_efetiva_m, curva)
+        av.update(previsto_s=previsto, metodo_previsao=metodo)
         if metodo == "cs_model" and extrapolado_demais(distancia_efetiva_m, curva):
-            return {"grupo": "fora_alcance_curva", "previsto_s": previsto, "metodo_previsao": metodo,
-                    "heuristica_s": None, "heuristica_metodo": None,
-                    "suspeito": False, "suspeito_motivo": None}
-        suspeito, motivo = _suspeito(previsto, kom_tempo_s, ja_corri)
-        return {"grupo": "alta", "previsto_s": previsto, "metodo_previsao": metodo,
-                "heuristica_s": None, "heuristica_metodo": None,
-                "suspeito": suspeito, "suspeito_motivo": motivo}
-
-    heur, metodo = heuristica_curta(distancia_efetiva_m, curva,
-                                     pace_flat_s_km=pace_flat_s_km,
-                                     previsto_grosseiro_s=previsto_grosseiro_s)
-    descida = avg_grade_pct is not None and avg_grade_pct < 0
-    if descida:
-        return {"grupo": "especulativa-descida", "previsto_s": None, "metodo_previsao": None,
-                "heuristica_s": heur, "heuristica_metodo": metodo,
-                "suspeito": False, "suspeito_motivo": None}
-    suspeito, motivo = _suspeito(heur, kom_tempo_s, ja_corri)
-    return {"grupo": "especulativa-plano_subida", "previsto_s": None, "metodo_previsao": None,
-            "heuristica_s": heur, "heuristica_metodo": metodo,
-            "suspeito": suspeito, "suspeito_motivo": motivo}
+            av["grupo"] = "fora_alcance_curva"
+            return av
+        av["grupo"] = "alta"
+    else:
+        heur, metodo = heuristica_curta(distancia_efetiva_m, curva,
+                                         pace_flat_s_km=pace_flat_s_km,
+                                         previsto_grosseiro_s=previsto_grosseiro_s)
+        av.update(heuristica_s=heur, heuristica_metodo=metodo)
+        if avg_grade_pct is not None and avg_grade_pct < 0:
+            av["grupo"] = "especulativa-descida"
+            return av
+        av["grupo"] = "especulativa-plano_subida"
+    av["suspeito"], av["suspeito_motivo"] = _suspeito(
+        av["previsto_s"] if av["grupo"] == "alta" else av["heuristica_s"], kom_tempo_s, ja_corri)
+    return av
 
 
 def main():
