@@ -25,7 +25,7 @@ import sys
 
 import requests
 
-from comum import custo_minetti
+from comum import custo_minetti, parse_pace
 
 INTERVALS_BASE = "https://intervals.icu/api/v1"
 
@@ -222,10 +222,7 @@ def main():
                           "(opcional; sem isto usa-se previsto_grosseiro_s da Fase 1, se existir)")
     args = ap.parse_args()
 
-    pace_flat_s_km = None
-    if args.pace_flat:
-        m, sec = args.pace_flat.split(":")
-        pace_flat_s_km = int(m) * 60 + int(sec)
+    pace_flat_s_km = parse_pace(args.pace_flat) if args.pace_flat else None
 
     env = carregar_env()
     api_key = env.get("INTERVALS_ICU_API_KEY", "").strip()

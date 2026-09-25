@@ -23,6 +23,12 @@ TILE_BASE = "https://cdn-1.strava.com/tiles/segments"
 ACTIVITY_TYPE_RUN = 9
 
 
+def parse_pace(s):
+    """'3:40' -> segundos por km (int)."""
+    m, sec = s.split(":")
+    return int(m) * 60 + int(sec)
+
+
 def sessao_strava(cookie):
     """requests.Session com o cookie _strava4_session já definido."""
     s = requests.Session()

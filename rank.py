@@ -16,7 +16,7 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from comum import PAGE_DELAY, sessao_strava
+from comum import PAGE_DELAY, parse_pace, sessao_strava
 from gap_model import avaliar_segmento, carregar_env, distancia_efetiva_streams, obter_curva_gap
 from segment_detail import detalhe_segmento
 
@@ -102,10 +102,7 @@ def main():
                           "(cache hits não contam para o cap)")
     args = ap.parse_args()
 
-    pace_flat_s_km = None
-    if args.pace_flat:
-        m, sec = args.pace_flat.split(":")
-        pace_flat_s_km = int(m) * 60 + int(sec)
+    pace_flat_s_km = parse_pace(args.pace_flat) if args.pace_flat else None
 
     candidatos = json.load(open(args.entrada, encoding="utf-8"))
     historico = carregar_historico(args.historico)

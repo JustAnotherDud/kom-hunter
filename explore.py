@@ -21,16 +21,10 @@ import sys
 import time
 
 from comum import (ACTIVITY_TYPE_RUN, INTENT_DEFAULT, PAGE_DELAY, largura_tile_km,
-                    obter_tile_segmentos, sessao_strava, tempo_previsto_grosseiro,
+                    obter_tile_segmentos, parse_pace, sessao_strava, tempo_previsto_grosseiro,
                     tiles_no_raio)
 
 MAX_TILES = 40  # cap de pedidos de tiles por corrida (~raio 2.5 km a zoom 15)
-
-
-def parse_pace(s):
-    """'3:40' -> segundos por km (int)."""
-    m, sec = s.split(":")
-    return int(m) * 60 + int(sec)
 
 
 def main():
