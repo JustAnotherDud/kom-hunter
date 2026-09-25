@@ -230,6 +230,29 @@ def r1(x):
     return round(x, 1) if x is not None else None
 
 
+SAIDA = {"alta": "confianca_alta",
+         "especulativa-plano_subida": "confianca_especulativa_plano_subida",
+         "especulativa-descida": "confianca_especulativa_descida_SEM_CONFIANCA",
+         "fora_alcance_curva": "fora_alcance_curva_SEM_CONFIANCA"}
+
+
+def escrever_grupos(path, itens, chave, extra="", cauda=""):
+    """Escreve os 5 grupos em path e imprime o resumo. itens: [(entrada, suspeito)].
+    Só alta e plano_subida são ordenados por chave: os outros não são ranking."""
+    g = {k: [] for k in [*SAIDA.values(), "revisao_manual"]}
+    for x, suspeito in itens:
+        g["revisao_manual" if suspeito else SAIDA[x["grupo"]]].append(x)
+    for k in ("confianca_alta", "confianca_especulativa_plano_subida"):
+        g[k].sort(key=lambda x: (x[chave] is None, x[chave]))
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(g, f, ensure_ascii=False, indent=1)
+    n = [len(v) for v in g.values()]
+    print(f"-> {path} ({n[0]} alta, {n[1]} especulativa-plano/subida, "
+          f"{n[2]} especulativa-descida SEM CONFIANÇA, "
+          f"{n[3]} fora do alcance da curva SEM CONFIANÇA, "
+          f"{n[4]} p/ revisão manual{extra}){cauda}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -258,7 +281,7 @@ def main():
           f"r2={curva['paceModels'][0]['r2']:.4f}")
 
     detalhes = json.load(open(args.entrada, encoding="utf-8"))
-    alta, plano_subida, descida, fora_alcance, revisao_manual = [], [], [], [], []
+    itens = []
     for d in detalhes:
         av = avaliar_detalhe(d, curva, pace_flat_s_km, d.get("previsto_grosseiro_s"))
         if av is None:
@@ -286,34 +309,9 @@ def main():
         else:
             print(f"  [{tag}] {d['nome']}: efetiva {efetiva:.0f}m -> sem valor")
 
-        if av["suspeito"]:
-            revisao_manual.append(base)
-        elif av["grupo"] == "alta":
-            alta.append(base)
-        elif av["grupo"] == "especulativa-plano_subida":
-            plano_subida.append(base)
-        elif av["grupo"] == "fora_alcance_curva":
-            fora_alcance.append(base)
-        else:
-            descida.append(base)
+        itens.append((base, av["suspeito"]))
 
-    alta.sort(key=lambda x: (x["gap_para_kom_s"] is None, x["gap_para_kom_s"]))
-    plano_subida.sort(key=lambda x: (x["gap_para_kom_s"] is None, x["gap_para_kom_s"]))
-    # descida e fora_alcance ficam por ordenar: sem confiança, não é ranking
-
-    saida = {
-        "confianca_alta": alta,
-        "confianca_especulativa_plano_subida": plano_subida,
-        "confianca_especulativa_descida_SEM_CONFIANCA": descida,
-        "fora_alcance_curva_SEM_CONFIANCA": fora_alcance,
-        "revisao_manual": revisao_manual,
-    }
-    with open(args.out, "w", encoding="utf-8") as f:
-        json.dump(saida, f, ensure_ascii=False, indent=1)
-    print(f"-> {args.out} ({len(alta)} alta, {len(plano_subida)} especulativa-plano/subida, "
-          f"{len(descida)} especulativa-descida SEM CONFIANÇA, "
-          f"{len(fora_alcance)} fora do alcance da curva SEM CONFIANÇA, "
-          f"{len(revisao_manual)} p/ revisão manual)")
+    escrever_grupos(args.out, itens, "gap_para_kom_s")
 
 
 if __name__ == "__main__":

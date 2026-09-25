@@ -17,7 +17,7 @@ import time
 from datetime import datetime, timedelta, timezone
 
 from comum import PAGE_DELAY, parse_pace, sessao_strava
-from gap_model import avaliar_detalhe, carregar_env, obter_curva_gap, r1
+from gap_model import avaliar_detalhe, carregar_env, escrever_grupos, obter_curva_gap, r1
 from segment_detail import detalhe_segmento
 
 HISTORICO_DEFAULT = "historico.json"
@@ -137,31 +137,9 @@ def main():
 
     guardar_historico(historico, args.historico)
 
-    todos = reaproveitados + novos
-    revisao_manual = [x for x in todos if x.get("suspeito")]
-    resto = [x for x in todos if not x.get("suspeito")]
-    alta = sorted((x for x in resto if x["grupo"] == "alta"),
-                  key=lambda x: (x["score"] is None, x["score"]))
-    plano_subida = sorted((x for x in resto if x["grupo"] == "especulativa-plano_subida"),
-                           key=lambda x: (x["score"] is None, x["score"]))
-    # descida e fora_alcance_curva ficam por ordenar: sem confiança, não é ranking
-    descida = [x for x in resto if x["grupo"] == "especulativa-descida"]
-    fora_alcance = [x for x in resto if x["grupo"] == "fora_alcance_curva"]
-
-    with open(args.out, "w", encoding="utf-8") as f:
-        json.dump({
-            "confianca_alta": alta,
-            "confianca_especulativa_plano_subida": plano_subida,
-            "confianca_especulativa_descida_SEM_CONFIANCA": descida,
-            "fora_alcance_curva_SEM_CONFIANCA": fora_alcance,
-            "revisao_manual": revisao_manual,
-        }, f, ensure_ascii=False, indent=1)
-    print(f"-> {args.out} ({len(alta)} alta, {len(plano_subida)} especulativa-plano/subida, "
-          f"{len(descida)} especulativa-descida SEM CONFIANÇA, "
-          f"{len(fora_alcance)} fora do alcance da curva SEM CONFIANÇA, "
-          f"{len(revisao_manual)} p/ revisão manual, "
-          f"{len(novos)} novo/actualizado, {len(reaproveitados)} do cache) | "
-          f"histórico -> {args.historico}")
+    escrever_grupos(args.out, [(x, x.get("suspeito")) for x in reaproveitados + novos], "score",
+                    extra=f", {len(novos)} novo/actualizado, {len(reaproveitados)} do cache",
+                    cauda=f" | histórico -> {args.historico}")
 
 
 if __name__ == "__main__":
