@@ -86,6 +86,17 @@ better.
 - It uses `intent=explore`. `intent=popular` returns at least a third fewer
   segments.
 
+## Tests
+
+```bash
+python tests/harness.py
+```
+
+Runs every script against fake Strava and Intervals.icu data
+(`tests/mocks.py`), with no network, and compares the output with
+`tests/baseline.txt`. After an intended change, check the diff and accept it
+with `python tests/harness.py --update`.
+
 ## Technical notes
 
 - Segment tiles: `cdn-1.strava.com/tiles/segments/<athleteId>/<z>/<x>/<y>`
