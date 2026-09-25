@@ -124,10 +124,14 @@ def _interpolar_tabela(distancia_efetiva_m, curva):
     return tempos[-1]
 
 
+def modelo_cs(curva):
+    """O modelo de tipo CS em paceModels, ou None."""
+    return next((m for m in curva.get("paceModels") or [] if m.get("type") == "CS"), None)
+
+
 def _modelo_cs(distancia_efetiva_m, curva):
     """Modelo critical speed: t = (distancia - D') / CS. None se distancia <= D'."""
-    modelos = curva.get("paceModels") or []
-    cs_model = next((m for m in modelos if m.get("type") == "CS"), None)
+    cs_model = modelo_cs(curva)
     if not cs_model:
         return None
     cs = cs_model["criticalSpeed"]  # m/s
@@ -274,11 +278,12 @@ def main():
                   "(env ou .env local).")
 
     curva = obter_curva_gap(api_key, athlete_id, janela=args.janela)
+    cs = modelo_cs(curva)
+    if not cs:
+        sys.exit("A curva GAP do Intervals.icu não traz modelo CS em paceModels.")
     print(f"curva GAP '{curva['label']}': {curva['days']} dias, "
           f"{len(curva['distance'])} pontos, "
-          f"CS={curva['paceModels'][0]['criticalSpeed']:.3f} m/s "
-          f"D'={curva['paceModels'][0]['dPrime']:.1f}m "
-          f"r2={curva['paceModels'][0]['r2']:.4f}")
+          f"CS={cs['criticalSpeed']:.3f} m/s D'={cs['dPrime']:.1f}m r2={cs['r2']:.4f}")
 
     detalhes = json.load(open(args.entrada, encoding="utf-8"))
     itens = []
