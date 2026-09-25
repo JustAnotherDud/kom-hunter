@@ -9,15 +9,9 @@ página de detalhe, mas a fonte de verdade é o detalhe.
 import json
 import math
 import re
-import time
-from datetime import date
-from pathlib import Path
 
 import mapbox_vector_tile
 import requests
-
-MESES = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
-         "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"}
@@ -27,40 +21,6 @@ PAGE_DELAY = 1.5
 
 TILE_BASE = "https://cdn-1.strava.com/tiles/segments"
 ACTIVITY_TYPE_RUN = 9
-
-
-def iso_date(s):
-    m = re.match(r"([A-Za-z]{3})\w* (\d+), (\d+)", s.strip())
-    return (date(int(m.group(3)), MESES[m.group(1)[:3]], int(m.group(2))).isoformat()
-            if m else s)
-
-
-def parse_tempo(s):
-    """'25s' / '2:29' / '1:20:16' -> segundos totais (int)."""
-    s = s.strip()
-    if s.endswith("s") and ":" not in s:
-        return int(s[:-1])
-    partes = [int(p) for p in s.split(":")]
-    while len(partes) < 3:
-        partes.insert(0, 0)
-    h, m, sec = partes
-    return h * 3600 + m * 60 + sec
-
-
-def format_tempo(segundos):
-    """segundos totais -> 'M:SS' ou 'H:MM:SS'."""
-    h, resto = divmod(int(segundos), 3600)
-    m, s = divmod(resto, 60)
-    return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
-
-
-def normalizar_tempo(s):
-    return format_tempo(parse_tempo(s))
-
-
-def extrair_seg_id(url):
-    m = re.search(r"/segments/(\d+)", url)
-    return m.group(1) if m else None
 
 
 def sessao_strava(cookie):
