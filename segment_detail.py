@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
-"""segment_detail.py — Fase 2: detalhe + KOM + streams para os candidatos
-já filtrados pela Fase 1.
+"""segment_detail.py: Fase 2. Detalhe, KOM e streams de cada candidato.
 
     STRAVA_SESSION=<cookie> python segment_detail.py --in candidatos.json --out detalhes.json
 
-Cada segmento aqui é uma página que provavelmente nunca visitaste na
-navegação normal (ao contrário do club-koms, que só lê páginas de atletas
-do clube) — perfil de risco diferente para deteção anti-bot. Por isso:
-mesmo PAGE_DELAY do club-koms entre pedidos, e um cap explícito por corrida
-(--max, default 30). Se sobrar candidatos, corre outra vez depois.
+Cada segmento é uma página que não visitarias a navegar, por isso há
+PAGE_DELAY entre pedidos e um cap por corrida (--max, default 30).
 """
 import argparse
 import json

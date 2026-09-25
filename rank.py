@@ -1,29 +1,13 @@
 # -*- coding: utf-8 -*-
-"""rank.py — Fase 4: orquestrador final, com histórico persistente por
-segmento (historico.json) para não reanalisar tudo sempre.
+"""rank.py: Fase 4. Corre as Fases 2 e 3 por segmento e guarda o resultado
+em historico.json, para não reanalisar tudo sempre.
 
     STRAVA_SESSION=<cookie> python rank.py --in candidatos.json \
         --out ranking.json --pace-flat 3:40
 
-Por segmento, só refaz a Fase 2 (detalhe/streams) + Fase 3 (previsão) se:
-- ainda não está em historico.json ("novo"), ou
-- o KOM mudou desde a última análise ("kom_mudou" — comparado de graça,
-  o candidatos.json da Fase 1 já traz komElapsedTime do tile, sem pedido
-  extra à Strava), ou
-- passaram >= --revisao-semanas desde a última análise ("revisao_periodica"
-  — a minha própria capacidade evolui, não só o KOM dos outros).
-Caso contrário reaproveita o score guardado, zero pedidos novos.
-
-Output em 4 grupos (mesma lógica do gap_model.py, ver docstring lá para o
-porquê): confianca_alta, confianca_especulativa_plano_subida (ambos
-ordenados por score), confianca_especulativa_descida_SEM_CONFIANCA (não
-ordenado — sem calibração real, não usar para decidir onde ir caçar) e
-revisao_manual (score bate o KOM por >15% num segmento nunca corrido —
-suspeito de erro do modelo, não de talento súbito).
-
-NOTA: mudar a estrutura de historico.json (grupo/suspeito em vez de
-confianca) invalida entradas gravadas por versões anteriores deste
-ficheiro — apaga historico.json se tiveres um de antes desta versão.
+Só refaz um segmento se é novo, se o KOM mudou (o tile já o traz, não custa
+pedidos) ou se passaram --revisao-semanas. Senão usa o score guardado.
+Output nos mesmos 5 grupos do gap_model.py.
 """
 import argparse
 import json
@@ -52,9 +36,7 @@ def guardar_historico(historico, path):
 
 
 def precisa_recalcular(entrada, kom_atual, revisao_semanas):
-    """Decide se vale a pena gastar um pedido novo. entrada=None -> sempre
-    recalcula. Comparar kom_atual não custa nada — já vem no candidatos.json
-    da Fase 1 (tile), não requer ida à Strava."""
+    """Decide se vale um pedido novo. Devolve (recalcular, motivo)."""
     if entrada is None:
         return True, "novo"
     if entrada.get("kom_tempo_s") != kom_atual:
@@ -66,9 +48,8 @@ def precisa_recalcular(entrada, kom_atual, revisao_semanas):
 
 
 def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
-    """Fase 2 + Fase 3 para um único candidato, devolve a entrada de
-    histórico já pronta a guardar (ou None se o segmento não tiver
-    streams utilizáveis)."""
+    """Fases 2 e 3 para um candidato. Devolve a entrada de histórico, ou None
+    se não houver streams."""
     det = detalhe_segmento(s, c["segmentId"])
     streams = det.get("streams") or {}
     dist_s, elev_s = streams.get("distance"), streams.get("elevation")
@@ -180,7 +161,7 @@ def main():
                   key=lambda x: (x["score"] is None, x["score"]))
     plano_subida = sorted((x for x in resto if x["grupo"] == "especulativa-plano_subida"),
                            key=lambda x: (x["score"] is None, x["score"]))
-    # descida e fora_alcance_curva ficam por ordenar de propósito — sem confiança, não são ranking
+    # descida e fora_alcance_curva ficam por ordenar: sem confiança, não é ranking
     descida = [x for x in resto if x["grupo"] == "especulativa-descida"]
     fora_alcance = [x for x in resto if x["grupo"] == "fora_alcance_curva"]
 

@@ -1,66 +1,21 @@
 # -*- coding: utf-8 -*-
-"""gap_model.py — Fase 3: previsão do meu tempo num segmento, a partir da
-curva de pace GAP do Intervals.icu (API key directa, não MCP) + distância
-efectiva calculada ponto-a-ponto sobre os streams do segmento (Fase 2).
+"""gap_model.py: Fase 3. Prevê o meu tempo num segmento a partir da curva de
+pace GAP do Intervals.icu e da distância efectiva calculada sobre os streams.
 
-Dois passos, mais precisos que o filtro grosseiro da Fase 1 (que só usava
-avgGrade):
-1. distancia_efetiva_streams() — soma o custo de Minetti grade-a-grade
-   entre pontos consecutivos do stream (não a grade média do segmento).
-2. prever_tempo() — interpola essa distância efectiva na curva GAP real
-   (Intervals.icu já devolve uma curva "distância -> melhor tempo" já
-   normalizada por grade, quando pedida com gap=true), com o modelo de
-   critical speed (CS/D') como reforço fora do alcance da tabela.
+    python gap_model.py --in detalhes.json --out previsoes.json --pace-flat 3:40
 
-Validação (24 Jul 2026):
-- 1ª tentativa contra 2 segmentos já corridos (94s, 64s, ambos <500m
-  efectivos): falhou feio (-41%, -63%). Causa: a tabela distance[]/values[]
-  do Intervals.icu, entre ~45m e ~900m, vinha inteira de UMA corrida (EDP
-  Lisbon Half Marathon 10K, 8 Mar 2026, activity i143235762) com ruído de
-  GPS no arranque — implica 41-55 km/h, fisicamente impossível.
-- Com o guarda-rail de velocidade (ver baixo), testado contra 5 segmentos
-  reais ≥1000m efectivos: erro sistemático de -15% a -35% (previsão sempre
-  mais rápida que o PR real). Decisão: NÃO corrigir — a curva GAP mede o
-  meu tecto de capacidade (melhor esforço já feito), não o ritmo casual de
-  treino, e é essa a pergunta da ferramenta ("se for a sério, consigo bater
-  o KOM?"). PRs de corridas de treino normais não são esforços máximos
-  dirigidos ao troço, por isso um viés nessa direcção é esperado.
+Grupos (ver avaliar_segmento e o README):
+- alta: efectiva >= MIN_DISTANCIA_EFETIVA_M. Tabela da curva ou modelo CS/D'.
+  Sai 15-35% mais rápido que os meus PRs e não se corrige: mede o tecto.
+- especulativa-plano_subida: mais curto, grade >= 0. Heurística, não física.
+- especulativa-descida: mais curto, grade < 0. Sem calibração, não ordena.
+- fora_alcance_curva: CS/D' além de FATOR_EXTRAPOLACAO_MAX vezes o fim da
+  tabela. Não ordena.
+Um segmento nunca corrido que bata o KOM por mais de MARGEM_SUSPEITA_PCT vai
+para revisao_manual.
 
-Duas confianças distintas no output, por decisão explícita (não fingir
-precisão que o modelo não tem para segmentos curtos):
-- confianca="alta" (efectiva >= MIN_DISTANCIA_EFETIVA_M): previsto_s vem do
-  modelo GAP (tabela interpolada ou CS/D'), sem correcção.
-- confianca="especulativa" (efectiva < MIN_DISTANCIA_EFETIVA_M): a curva
-  GAP não tem cobertura real aqui (treino de fundo não gera dados de
-  sprint estruturado — confirmado: todos os pontos <900m vinham da mesma
-  corrida contaminada). previsto_s fica None; heuristica_s usa dados reais
-  curtos que tenham sobrevivido ao filtro (se existirem) ou, na falta
-  deles, grade efectiva + pace de referência (--pace-flat) ou o
-  previsto_grosseiro_s já carregado desde a Fase 1. heuristica_metodo diz
-  sempre qual foi usado — nunca finge ser previsão física.
-
-Guarda-rail permanente (não é só para hoje): FILTRO_VELOCIDADE_MAX_KMH
-descarta pontos da tabela cuja velocidade implícita ultrapasse um teto
-fisiologicamente plausível, ANTES de qualquer cálculo — se outra corrida
-futura tiver ruído GPS parecido, isto evita engolir o ponto em silêncio
-(fica um aviso na consola).
-
-Dois guarda-rails adicionais (25 Jul 2026), depois de olhar para os números
-reais da camada especulativa:
-- A camada especulativa divide-se em "especulativa-plano_subida" (algo
-  calibrado — os 2 casos de teste com tempo real, ambos planos/subida,
-  deram -4% e -8%) e "especulativa-descida" (ZERO calibração — nenhum
-  esforço de descida real no histórico para testar, e a distância efectiva
-  reduzida pelo Minetti + --pace-flat único sobrevalorizou visivelmente
-  descidas curtas nos testes: um segmento nunca corrido saiu "mais
-  batível" que dois onde já sou o KOM). especulativa-descida NUNCA entra
-  no ranking ordenado — fica à parte, sem_confianca=True, até haver
-  esforço real de descida para calibrar.
-- MARGEM_SUSPEITA_PCT: em qualquer segmento NUNCA corrido (ja_corri=False),
-  se a previsão/heurística bater o KOM por mais dessa margem, sai do
-  ranking normal para "revisao_manual" — teste de sanidade barato, não
-  específico de descidas, para apanhar este tipo de erro automaticamente
-  da próxima vez.
+Os pontos da curva acima de FILTRO_VELOCIDADE_MAX_KMH são descartados: uma
+corrida com ruído de GPS no arranque já contaminou a tabela abaixo de 900 m.
 """
 import argparse
 import json
@@ -75,9 +30,9 @@ from comum import custo_minetti
 INTERVALS_BASE = "https://intervals.icu/api/v1"
 
 FILTRO_VELOCIDADE_MAX_KMH = 24.0  # teto plausível para pace sustentado, mesmo curto
-MIN_DISTANCIA_EFETIVA_M = 1000.0  # abaixo disto, sem dados credíveis na tabela (ver acima)
-MARGEM_SUSPEITA_PCT = 15.0  # vantagem sobre o KOM acima disto, nunca corrido, -> revisão manual
-FATOR_EXTRAPOLACAO_MAX = 1.5  # cs_model além disto × o máximo da tabela -> fora_alcance_curva
+MIN_DISTANCIA_EFETIVA_M = 1000.0  # abaixo disto, sem dados credíveis na tabela
+MARGEM_SUSPEITA_PCT = 15.0  # vantagem sobre o KOM (nunca corrido) -> revisão manual
+FATOR_EXTRAPOLACAO_MAX = 1.5  # cs_model além disto x o máximo da tabela -> fora_alcance_curva
 
 
 def carregar_env(path=".env"):
@@ -93,9 +48,8 @@ def carregar_env(path=".env"):
 
 
 def obter_curva_gap(api_key, athlete_id, janela="180d", tipo="Run"):
-    """Curva de pace GAP-normalizada do Intervals.icu (API key directa,
-    Basic Auth: username literal 'API_KEY', password a chave — confirmado
-    no fórum oficial). Devolve o dict bruto do primeiro item de 'list'."""
+    """Curva GAP do Intervals.icu (Basic Auth: user 'API_KEY', password a
+    chave). Devolve o primeiro item de 'list', já filtrado."""
     r = requests.get(
         f"{INTERVALS_BASE}/athlete/{athlete_id}/pace-curves.json",
         auth=("API_KEY", api_key),
@@ -111,9 +65,7 @@ def obter_curva_gap(api_key, athlete_id, janela="180d", tipo="Run"):
 
 
 def filtrar_pontos_implausiveis(curva):
-    """Descarta pontos da tabela distance[]/values[] cuja velocidade
-    implícita ultrapassa FILTRO_VELOCIDADE_MAX_KMH — guarda-rail contra
-    ruído de GPS/pace em atividades-fonte (ver docstring do módulo)."""
+    """Descarta pontos com velocidade implícita acima de FILTRO_VELOCIDADE_MAX_KMH."""
     teto_ms = FILTRO_VELOCIDADE_MAX_KMH / 3.6
     dists, tempos, acts = curva["distance"], curva["values"], curva.get("activity_id", [])
     limpos_d, limpos_t, limpos_a = [], [], []
@@ -139,13 +91,9 @@ PASSO_MIN_M = 5.0  # reamostra os streams a este passo mínimo antes de calcular
 
 
 def distancia_efetiva_streams(dist_stream, elev_stream, passo_min_m=PASSO_MIN_M):
-    """Distância GAP-efectiva (m), somando o custo de Minetti sobre passos
-    reamostrados a >= passo_min_m. Necessário: os streams da Strava vêm com
-    espaçamento irregular, por vezes <0.5m entre pontos — nessa escala, o
-    ruído normal de GPS/altímetro (dezenas de cm) implica grades de
-    centenas de % que o custo_minetti() do comum.py já limita, mas ainda
-    assim distorcem o resultado se não forem primeiro agregados a uma
-    distância onde a grade calculada faz sentido físico."""
+    """Distância GAP-efectiva (m): soma o custo de Minetti em passos de pelo
+    menos passo_min_m. Os streams da Strava têm pontos a menos de 0.5 m, e a
+    essa escala o ruído de elevação dá grades absurdas."""
     total = 0.0
     acc_dd, acc_de = 0.0, 0.0
     for i in range(1, len(dist_stream)):
@@ -164,8 +112,7 @@ def distancia_efetiva_streams(dist_stream, elev_stream, passo_min_m=PASSO_MIN_M)
 
 
 def _interpolar_tabela(distancia_efetiva_m, curva):
-    """Interpolação log-log na tabela distance[]/values[] da curva —
-    só válida dentro do alcance da tabela (devolve None fora dele)."""
+    """Interpolação log-log na tabela da curva. None fora do alcance dela."""
     dists = curva["distance"]
     tempos = curva["values"]
     if distancia_efetiva_m < dists[0] or distancia_efetiva_m > dists[-1]:
@@ -182,9 +129,7 @@ def _interpolar_tabela(distancia_efetiva_m, curva):
 
 
 def _modelo_cs(distancia_efetiva_m, curva):
-    """Modelo critical speed (CS/D'): t = (distancia - D') / CS.
-    Usado como reforço fora do alcance da tabela — degrada para distâncias
-    muito curtas (perto ou abaixo de D')."""
+    """Modelo critical speed: t = (distancia - D') / CS. None se distancia <= D'."""
     modelos = curva.get("paceModels") or []
     cs_model = next((m for m in modelos if m.get("type") == "CS"), None)
     if not cs_model:
@@ -192,17 +137,13 @@ def _modelo_cs(distancia_efetiva_m, curva):
     cs = cs_model["criticalSpeed"]  # m/s
     d_prime = cs_model["dPrime"]  # m
     if distancia_efetiva_m <= d_prime:
-        return None  # fora do domínio razoável do modelo
+        return None
     return (distancia_efetiva_m - d_prime) / cs
 
 
 def extrapolado_demais(distancia_efetiva_m, curva, fator_max=FATOR_EXTRAPOLACAO_MAX):
-    """True se a distância efectiva ultrapassa fator_max× o máximo real
-    observado na tabela da curva. O modelo CS/D' é uma extrapolação linear
-    de 2 parâmetros — válida perto do alcance ajustado, não numa ultra de
-    4-5h quando a tabela só viu até ~18km (visto em produção: 62km efectivo
-    vs máximo de tabela ~18km, 3.4× — critical speed não se mantém
-    constante nessa escala, fadiga/glicogénio quebram a assunção)."""
+    """True se a distância passa fator_max vezes o máximo da tabela. CS/D' é
+    uma recta de 2 parâmetros e não aguenta ultras (fadiga)."""
     dists = curva.get("distance") or []
     if not dists:
         return False
@@ -210,10 +151,7 @@ def extrapolado_demais(distancia_efetiva_m, curva, fator_max=FATOR_EXTRAPOLACAO_
 
 
 def prever_tempo(distancia_efetiva_m, curva):
-    """Previsão de confiança alta (segundos): só chamar com
-    distancia_efetiva_m >= MIN_DISTANCIA_EFETIVA_M (ver avaliar_segmento).
-    Tabela interpolada quando a distância cai no alcance observado, senão
-    o modelo CS/D' como fallback."""
+    """Previsão de confiança alta (s): tabela dentro do alcance dela, senão CS/D'."""
     if distancia_efetiva_m < MIN_DISTANCIA_EFETIVA_M:
         return None, "curto_demais"
     t = _interpolar_tabela(distancia_efetiva_m, curva)
@@ -227,17 +165,9 @@ def prever_tempo(distancia_efetiva_m, curva):
 
 def heuristica_curta(distancia_efetiva_m, curva, avg_grade_pct=None, pace_flat_s_km=None,
                       previsto_grosseiro_s=None):
-    """Estimativa para segmentos <MIN_DISTANCIA_EFETIVA_M — nunca uma
-    previsão física, sempre marcada como tal. Ordem de preferência:
-    1. Pontos reais da própria curva GAP que sobrevivam ao filtro de
-       velocidade nessa gama curta (se algum dia houver dados de sprint
-       estruturado no Intervals.icu, isto passa a usá-los automaticamente).
-    2. --pace-flat explícito × distância efectiva já calculada com os
-       streams do segmento (mais fino que a Fase 1, que só usava a grade
-       média).
-    3. previsto_grosseiro_s já carregado da Fase 1 (grade média + pace-flat
-       dado nesse momento) — pior aproximação, mas melhor que nada.
-    Devolve (valor_ou_None, metodo)."""
+    """Estimativa para segmentos curtos, nunca física. Por ordem: pontos reais
+    da curva nessa gama, distância efectiva x pace_flat, previsto_grosseiro_s
+    da Fase 1. Devolve (valor ou None, metodo)."""
     t = _interpolar_tabela(distancia_efetiva_m, curva)
     if t is not None:
         return t, "curva_gap_curta"
@@ -249,10 +179,8 @@ def heuristica_curta(distancia_efetiva_m, curva, avg_grade_pct=None, pace_flat_s
 
 
 def _suspeito(valor_previsto, kom_tempo_s, ja_corri, margem_pct=MARGEM_SUSPEITA_PCT):
-    """Guarda-rail de sanidade: bater o KOM por uma margem grande num
-    segmento que nunca corri é mais provável ser erro do modelo do que
-    talento súbito. Não se aplica a segmentos já corridos (aí o número é
-    comparável ao meu próprio PR, não uma extrapolação às cegas)."""
+    """Bater o KOM por muito num segmento nunca corrido é mais provável erro
+    do modelo. Não se aplica a segmentos já corridos."""
     if valor_previsto is None or not kom_tempo_s or ja_corri:
         return False, None
     vantagem_pct = (kom_tempo_s - valor_previsto) / kom_tempo_s * 100
@@ -263,16 +191,8 @@ def _suspeito(valor_previsto, kom_tempo_s, ja_corri, margem_pct=MARGEM_SUSPEITA_
 
 def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_corri,
                       pace_flat_s_km=None, previsto_grosseiro_s=None):
-    """Ponto único de decisão: grupo (alta / especulativa-plano_subida /
-    especulativa-descida) + guarda-rail de suspeita.
-
-    especulativa-descida e fora_alcance_curva saem sempre com
-    sem_confianca=True e suspeito=False (não faz sentido aplicar o
-    guarda-rail de suspeita a um número que já sabemos não ter base válida
-    — ver docstring do módulo). fora_alcance_curva é distinto de
-    revisao_manual: aqui o problema é a distância estar fora do domínio do
-    modelo, não a previsão em si (dentro do domínio) parecer implausível —
-    critérios diferentes, grupos diferentes."""
+    """Decide o grupo e aplica o guarda-rail de suspeita. descida e
+    fora_alcance_curva nunca são suspeitos: o número já não tem base."""
     if distancia_efetiva_m >= MIN_DISTANCIA_EFETIVA_M:
         previsto, metodo = prever_tempo(distancia_efetiva_m, curva)
         if metodo == "cs_model" and extrapolado_demais(distancia_efetiva_m, curva):
@@ -383,7 +303,7 @@ def main():
 
     alta.sort(key=lambda x: (x["gap_para_kom_s"] is None, x["gap_para_kom_s"]))
     plano_subida.sort(key=lambda x: (x["gap_para_kom_s"] is None, x["gap_para_kom_s"]))
-    # descida e fora_alcance ficam por ordenar de propósito — não é ranking, é "sem confiança, olha lá isto"
+    # descida e fora_alcance ficam por ordenar: sem confiança, não é ranking
 
     saida = {
         "confianca_alta": alta,

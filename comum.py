@@ -1,21 +1,10 @@
 # -*- coding: utf-8 -*-
-"""comum.py — utilitários partilhados por explore.py e segment_detail.py.
+"""comum.py: utilitários partilhados. Sessão Strava, tiles de segmentos
+(Mapbox Vector Tile), __NEXT_DATA__ das páginas e custo de Minetti.
 
-Parsing de tempo e headers copiados/adaptados de club-koms/comum.py.
-Acrescenta: tiles de segmentos (Mapbox Vector Tile), leitura do
-__NEXT_DATA__ das páginas Strava, e um modelo GAP grosseiro (Minetti) para
-o pré-filtro da Fase 1.
-
-Achados do reconhecimento (24 Jul 2026, ver handoff):
-- cdn-1.strava.com/tiles/segments/<athleteId>/<z>/<x>/<y> exige sessão
-  autenticada (401 sem cookie, mesmo com athleteId diferente — não é só
-  "security by obscurity" via ID na URL).
-- properties.activityType == 9 confirmado como "Run" (spot-check contra
-  metadata.activityType da página de detalhe).
-- properties.komElapsedTime do tile bate certo com
-  initialLeaderboard.leaderboard[0].elapsedTime da página de detalhe em
-  todos os spot-checks — mas o detalhe é sempre a fonte de verdade (Fase 2),
-  o tile só serve para o pré-filtro grosseiro (Fase 1).
+Os tiles exigem sessão autenticada (401 sem cookie ou com outro athleteId).
+activityType == 9 é Run. O komElapsedTime do tile bate com o leaderboard da
+página de detalhe, mas a fonte de verdade é o detalhe.
 """
 import json
 import math
@@ -33,9 +22,7 @@ MESES = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"}
 
-# mesma disciplina do club-koms/scrape.py — mas aqui os pedidos por
-# segmento não são páginas que já visitarias na navegação normal, por isso
-# convém não subir isto sem motivo.
+# pausa (s) entre pedidos à Strava
 PAGE_DELAY = 1.5
 
 TILE_BASE = "https://cdn-1.strava.com/tiles/segments"
@@ -105,18 +92,13 @@ def tiles_no_raio(lat, lon, raio_km, zoom):
 
 
 def largura_tile_km(lat, zoom):
-    """Largura aproximada (km, na longitude) de um tile a este zoom/latitude.
-    Serve só para reportar cobertura ao utilizador — ver explore.py. Medido
-    empiricamente (25 Jul 2026): a densidade real de segmentos só estabiliza
-    a partir de z15 (~19/km² em Rio Maior); a z10 media-se ~170x menos —
-    não é bug de filtro, é decimação normal de tile piramidal."""
+    """Largura aproximada (km) de um tile a este zoom e latitude. Só para
+    reportar cobertura."""
     n = 2 ** zoom
     return (360.0 / n) * 111.32 * math.cos(math.radians(lat))
 
 
-INTENT_DEFAULT = "explore"  # NUNCA "popular" — testado (25 Jul 2026): "popular" filtra
-# a menos de 2/3 dos segmentos devolvidos por qualquer outro valor ("explore", "browse",
-# "nearby", "top", "recent" deram todos o mesmo resultado, maior) no mesmo tile/zoom.
+INTENT_DEFAULT = "explore"  # "popular" devolve pelo menos 1/3 menos segmentos (testado)
 
 
 def obter_tile_segmentos(sessao, athlete_id, zoom, x, y, intent=INTENT_DEFAULT):
@@ -146,22 +128,16 @@ def obter_next_data(sessao, url):
     return json.loads(m.group(1))
 
 
-# --- modelo GAP grosseiro (Minetti et al. 2002) ---
-# Custo energético relativo de correr a um dado grade, normalizado ao custo
-# em plano. Serve só para o pré-filtro da Fase 1 (usa grade média, não o
-# perfil de elevação completo) — a Fase 3 substitui isto por streams reais
-# + curva de critical pace do Intervals.icu.
+# --- custo de Minetti et al. (2002) ---
+# Custo energético de correr a um dado grade, relativo ao plano. A Fase 1
+# usa-o com a grade média, a Fase 3 passo a passo sobre os streams.
 
-GRADE_MAX_PLAUSIVEL_PCT = 45.0  # fora disto só pode ser ruído de GPS/altímetro, não corrida real
+GRADE_MAX_PLAUSIVEL_PCT = 45.0  # fora disto é ruído de GPS/altímetro
 
 
 def custo_minetti(grade_pct):
-    # o polinómio de Minetti é de 5º grau — fora do intervalo em que foi
-    # ajustado (grades reais de corrida), explode sem sentido físico. Um
-    # passo de stream com pouca distância + ruído de elevação facilmente
-    # implica grades de centenas de %; sem isto, um único ponto ruidoso
-    # infla a distância efectiva de todo o segmento (visto em produção
-    # num segmento de 14.8km/5571 pontos, ver kom_hunter/gap_model.py).
+    # O polinómio de 5º grau explode fora das grades reais de corrida, e um
+    # passo curto de stream com ruído de elevação chega a centenas de %.
     grade_pct = max(-GRADE_MAX_PLAUSIVEL_PCT, min(GRADE_MAX_PLAUSIVEL_PCT, grade_pct))
     i = grade_pct / 100.0
     custo = 155.4 * i**5 - 30.4 * i**4 - 43.3 * i**3 + 46.3 * i**2 + 19.5 * i + 3.6
@@ -174,8 +150,6 @@ def distancia_efetiva(distancia_m, grade_pct):
 
 
 def tempo_previsto_grosseiro(distancia_m, grade_pct, pace_flat_s_por_km):
-    """Previsão grosseira (segundos), assumindo pace_flat_s_por_km fixo
-    independente da duração — placeholder até a Fase 3 trazer a curva de
-    critical pace real."""
+    """Previsão grosseira (s) com pace plano fixo. Só ordena a fila da Fase 1."""
     dist_efetiva_km = distancia_efetiva(distancia_m, grade_pct) / 1000.0
     return dist_efetiva_km * pace_flat_s_por_km

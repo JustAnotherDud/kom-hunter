@@ -1,46 +1,17 @@
 # -*- coding: utf-8 -*-
-"""explore.py — Fase 1: descoberta de segmentos Run candidatos perto de um
-ponto, com pré-filtro GAP grosseiro (usa só os campos que já vêm no tile —
-distância, grade média, komElapsedTime — sem tocar em /segments/<id>).
+"""explore.py: Fase 1. Procura segmentos Run perto de um ponto, só com os
+dados do tile (sem pedir /segments/<id>).
 
     STRAVA_SESSION=<cookie> python explore.py --lat <LAT> --lon <LON> \
         --athlete-id <ID> --raio 1.5 --pace-flat 3:40
 
---pace-flat é um pace de referência em plano (mm:ss/km) — placeholder até a
-Fase 3 trazer a curva de critical pace real do Intervals.icu (o pace
-sustentável varia com a duração do esforço; isto assume-o fixo, por isso só
-serve para descartar candidatos claramente fora de alcance, não para o
-ranking final).
+Escreve candidatos.json ordenado por gap_grosseiro_s e cortado a --top.
+gap_grosseiro_s usa só a grade média e --pace-flat: ordena, nunca exclui.
+Segmentos sem komElapsedTime no tile são dados em falta na Strava (o KOM
+existe na página) e vão para --out-sem-kom.
 
-Zoom/raio (25 Jul 2026 — medido, não escolhido às cegas): a densidade real
-de segmentos só estabiliza a partir de z15 (~19/km² em Rio Maior); a z10
-media-se ~170x menos — não falta de segmentos na zona, é decimação normal
-de tile piramidal a zoom baixo. Por isso o default é zoom=15, o que por sua
-vez limita o raio prático a ~1.5-2km dentro de um número razoável de
-pedidos (a área cresce com o quadrado do raio). PARA ÁREAS MAIORES: corre
-várias buscas com centros diferentes, não subas o raio — ver README.
-
-`intent=explore` no pedido ao tile (não "popular" — testado: "popular"
-filtra a menos de 2/3 do que qualquer outro valor devolve no mesmo tile).
-
-Escreve candidatos.json, ordenado por gap_grosseiro_s (mais exequíveis
-primeiro) e já cortado a --top — é isso que o rank.py (Fase 2-4) deve
-consumir, para não gastar um pedido por segmento em toda a zona.
-
-`gap_grosseiro_s` SÓ ORDENA a fila, nunca exclui (25 Jul 2026 — testado em
-Rio Maior: a versão antiga, que excluía com --margem, cortou 2 candidatos
-que o modelo bom (gap_model.py) depois mostrou estarem a ~2s do KOM —
-`previsto_grosseiro_s` usa só grade média, é fraco demais para decidir
-quem fica de fora). Quem entra em candidatos.json é só decidido por --top
-(cap de pedidos que a Fase 2+ vai gastar), nunca pela estimativa grosseira.
-
-Segmentos sem komElapsedTime no tile (raro, ~1% observado) NÃO são
-"oportunidade livre" — confirmado (25 Jul 2026) que é falha de cache no
-backend da Strava, não falta de tentativas: um caso testado tinha 485
-tentativas/200 atletas e um KOM real e confirmado (via segment_detail.py e
-a página web) que simplesmente não veio no tile. Ficam à parte em
---out-sem-kom, marcados como dados em falta, nunca descartados em
-silêncio.
+Zoom 15 por defeito: abaixo disso os tiles perdem segmentos. Para áreas
+grandes, corre vários centros em vez de subir --raio. Ver README.
 """
 import argparse
 import json
@@ -53,7 +24,7 @@ from comum import (ACTIVITY_TYPE_RUN, INTENT_DEFAULT, PAGE_DELAY, largura_tile_k
                     obter_tile_segmentos, sessao_strava, tempo_previsto_grosseiro,
                     tiles_no_raio)
 
-MAX_TILES = 40  # cap de pedidos de tiles por corrida — cobre até ~raio 2.5km a zoom 15
+MAX_TILES = 40  # cap de pedidos de tiles por corrida (~raio 2.5 km a zoom 15)
 
 
 def parse_pace(s):
@@ -124,7 +95,7 @@ def main():
             p = f["properties"]
             if p.get("activityType") != ACTIVITY_TYPE_RUN:
                 continue
-            vistos[p["segmentId"]] = p  # dedupe — tiles adjacentes sobrepõem-se
+            vistos[p["segmentId"]] = p  # tiles adjacentes repetem segmentos
         print(f"  tile {i + 1}/{len(tiles)} (z{z}/{x}/{y}): "
               f"{len(feats)} segmentos, {len(vistos)} Run acumulados")
         if i < len(tiles) - 1:
@@ -142,9 +113,7 @@ def main():
     for sid, p in vistos.items():
         kom = p.get("komElapsedTime")
         if not kom:
-            # dados em falta no tile, não "ninguém tentou" — ver docstring
-            # do módulo (caso confirmado: 485 tentativas, KOM real existente
-            # na página, ausente só no tile). Fica à parte p/ inspecção.
+            # dados em falta no tile, não "ninguém tentou"
             sem_kom.append({
                 "segmentId": sid,
                 "nome": p["name"],
@@ -169,9 +138,7 @@ def main():
         })
 
     total_com_kom = len(candidatos)
-    # gap_grosseiro_s só ordena a fila (mais prometedor primeiro) — quem
-    # fica de fora é decidido só por --top, nunca pela estimativa grosseira
-    # (testado: ela erra candidatos que o modelo bom mostra estarem perto).
+    # a estimativa grosseira só ordena; quem fica de fora decide-o --top
     candidatos.sort(key=lambda c: c["gap_grosseiro_s"])
     candidatos = candidatos[:args.top]
 
