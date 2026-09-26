@@ -2,11 +2,12 @@
 """rank.py: Fase 4. Corre as Fases 2 e 3 por segmento e guarda o resultado
 em historico.json, para não reanalisar tudo sempre.
 
-    python rank.py --in candidatos.json --out ranking.json --pace-flat 3:40
+    python rank.py --in candidatos.json --out ranking.json
 
 Só refaz um segmento se é novo, se o KOM mudou (o tile já o traz, não custa
-pedidos), se passaram --revisao-semanas ou, nos curtos, se --pace-flat mudou.
-Senão usa o score guardado.
+pedidos), se passaram --revisao-semanas ou, nos curtos, se o pace de reserva
+(o da curva GAP aos 1000 m) mudou. Senão usa o score guardado. Por isso pede
+a curva ao Intervals.icu em todas as corridas.
 Output nos mesmos 5 grupos do gap_model.py. Cada entrada leva ainda "top10":
 onde o tempo previsto entraria no top 10 da página de detalhe (já lida, sem
 pedidos a mais). É só informação: não muda grupos, score nem ordenação.
@@ -19,8 +20,8 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from comum import PAGE_DELAY, carregar_env, parse_pace, sessao_strava
-from gap_model import avaliar_detalhe, escrever_grupos, obter_curva_gap, r1
+from comum import PAGE_DELAY, carregar_env, sessao_strava
+from gap_model import avaliar_detalhe, escrever_grupos, obter_curva_gap, pace_reserva, r1
 from segment_detail import detalhe_segmento
 
 HISTORICO_DEFAULT = "historico.json"
@@ -88,15 +89,15 @@ def guardar_historico(historico, path):
         json.dump(historico, f, ensure_ascii=False, indent=1, sort_keys=True)
 
 
-def precisa_recalcular(entrada, kom_atual, revisao_semanas, pace_flat_s_km):
+def precisa_recalcular(entrada, kom_atual, revisao_semanas, pace_reserva_s_km):
     """Decide se vale um pedido novo. Devolve (recalcular, motivo)."""
     if entrada is None:
         return True, "novo"
     if entrada.get("kom_tempo_s") != kom_atual:
         return True, "kom_mudou"
-    # nos curtos a heurística usa --pace-flat, por isso o pace faz parte da cache
+    # nos curtos a heurística usa o pace de reserva, por isso ele faz parte da cache
     if (entrada.get("grupo", "").startswith("especulativa")
-            and entrada.get("pace_flat_s_km") != pace_flat_s_km):
+            and entrada.get("pace_reserva_s_km") != pace_reserva_s_km):
         return True, "pace_mudou"
     ultima = datetime.fromisoformat(entrada["ultima_analise"])
     if datetime.now(timezone.utc) - ultima >= timedelta(weeks=revisao_semanas):
@@ -104,11 +105,11 @@ def precisa_recalcular(entrada, kom_atual, revisao_semanas, pace_flat_s_km):
     return False, "cache"
 
 
-def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
+def avaliar_e_persistir(s, curva, c, pace_reserva_s_km, motivo):
     """Fases 2 e 3 para um candidato. Devolve a entrada de histórico, ou None
     se não houver streams."""
     det = detalhe_segmento(s, c["segmentId"])
-    av = avaliar_detalhe(det, curva, pace_flat_s_km, c.get("previsto_grosseiro_s"))
+    av = avaliar_detalhe(det, curva, pace_reserva_s_km, c.get("previsto_grosseiro_s"))
     if av is None:
         return None
     # o meu próprio tempo não conta como adversário (entradas sem athleteId ficam)
@@ -129,7 +130,7 @@ def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
         "previsto_s": r1(av["previsto_s"]),
         "heuristica_s": r1(av["heuristica_s"]),
         "metodo": av["metodo_previsao"] or av["heuristica_metodo"],
-        "pace_flat_s_km": pace_flat_s_km,
+        "pace_reserva_s_km": pace_reserva_s_km,
         "score": av["gap_kom"],
         "suspeito": av["suspeito"],
         "suspeito_motivo": av["suspeito_motivo"],
@@ -146,15 +147,18 @@ def main():
     ap.add_argument("--in", dest="entrada", default="candidatos.json")
     ap.add_argument("--out", default="ranking.json")
     ap.add_argument("--historico", default=HISTORICO_DEFAULT)
-    ap.add_argument("--pace-flat", dest="pace_flat",
-                     help="mm:ss/km, para a heurística dos segmentos curtos")
     ap.add_argument("--revisao-semanas", type=int, default=REVISAO_SEMANAS_DEFAULT)
     ap.add_argument("--janela", default="180d", help="janela da curva GAP (default 180d)")
     ap.add_argument("--max-novos", type=int, default=30,
                      help="máx. de segmentos a (re)analisar nesta corrida (default 30)")
     args = ap.parse_args()
 
-    pace_flat_s_km = parse_pace(args.pace_flat) if args.pace_flat else None
+    api_key = os.environ.get("INTERVALS_ICU_API_KEY", "").strip()
+    athlete_id = os.environ.get("INTERVALS_ICU_ATHLETE_ID", "").strip()
+    if not api_key or not athlete_id:
+        sys.exit("INTERVALS_ICU_API_KEY / INTERVALS_ICU_ATHLETE_ID não definidos.")
+    curva = obter_curva_gap(api_key, athlete_id, janela=args.janela)
+    pace_reserva_s_km = pace_reserva(curva)
 
     candidatos = json.load(open(args.entrada, encoding="utf-8"))
     historico = carregar_historico(args.historico)
@@ -164,7 +168,7 @@ def main():
     for c in candidatos:
         entrada = segmentos.get(str(c["segmentId"]))
         recalcular, motivo = precisa_recalcular(entrada, c["komElapsedTime"], args.revisao_semanas,
-                                                pace_flat_s_km)
+                                                pace_reserva_s_km)
         (a_reanalisar if recalcular else reaproveitados).append(
             (c, motivo) if recalcular else entrada)
 
@@ -182,18 +186,13 @@ def main():
         cookie = os.environ.get("STRAVA_SESSION", "").strip()
         if not cookie:
             sys.exit("STRAVA_SESSION não definido (preciso para (re)analisar segmentos).")
-        api_key = os.environ.get("INTERVALS_ICU_API_KEY", "").strip()
-        athlete_id = os.environ.get("INTERVALS_ICU_ATHLETE_ID", "").strip()
-        if not api_key or not athlete_id:
-            sys.exit("INTERVALS_ICU_API_KEY / INTERVALS_ICU_ATHLETE_ID não definidos.")
 
         s = sessao_strava(cookie)
-        curva = obter_curva_gap(api_key, athlete_id, janela=args.janela)
 
         for i, (c, motivo) in enumerate(a_reanalisar):
             if i:
                 time.sleep(PAGE_DELAY)
-            entrada = avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo)
+            entrada = avaliar_e_persistir(s, curva, c, pace_reserva_s_km, motivo)
             if entrada is None:
                 continue
             segmentos[str(c["segmentId"])] = entrada

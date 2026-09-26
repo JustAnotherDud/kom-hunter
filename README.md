@@ -13,21 +13,24 @@ else's data.
 Put the env vars (see below) in a `.env` in the folder you run from, then:
 
 ```bash
-python explore.py --lat <LAT> --lon <LON> --athlete-id <ID> --pace-flat 3:40
-python rank.py --in candidatos.json --out ranking.json --pace-flat 3:40
+python explore.py --lat <LAT> --lon <LON> --athlete-id <ID>
+python rank.py --in candidatos.json --out ranking.json
 ```
 
 `rank.py` runs phases 2 and 3 itself. Run `segment_detail.py` or
 `gap_model.py` alone only to inspect `detalhes.json` or `previsoes.json`
 without touching the history.
 
-`--pace-flat` is a flat reference pace (mm:ss/km) used only by the rough
-heuristics. Use a hard effort pace, not training pace. Only tested with 3:40.
+The rough heuristics use a fallback pace: the GAP curve pace at 1000 m, a
+hard effort rather than training pace. If the curve has no 1000 m point, it is
+interpolated from the table, then taken from the CS/D' model. With neither,
+the script stops. `explore.py`, `gap_model.py` and `rank.py` each fetch the
+curve for it (1 Intervals.icu request per run) and print the pace.
 
 ## Phases
 
 1. `explore.py` reads segment tiles around a point and keeps Run segments. A
-   rough estimate (mean grade and `--pace-flat`) sorts the queue but never
+   rough estimate (mean grade and the fallback pace) sorts the queue but never
    excludes: an older version that excluded dropped segments the real model
    placed ~2 s off the KOM. Writes `candidatos.json`, cut only by `--top`.
    Segments with no `komElapsedTime` in the tile go to `sem_kom.json`. That is
@@ -40,7 +43,8 @@ heuristics. Use a hard effort pace, not training pace. Only tested with 3:40.
 4. `rank.py` runs phases 2 and 3 per segment and keeps `historico.json`. It
    only redoes a segment if it is new, its KOM changed (the tile already has
    it, so the check is free), `--revisao-semanas` passed (default 4) or, for
-   short segments, `--pace-flat` changed.
+   short segments, the fallback pace changed. So it fetches the curve on
+   every run, even when everything is cached.
    `--max-novos` caps redone segments per run.
 
 ## Output groups
@@ -55,8 +59,9 @@ better.
   curve measures my ceiling, and that is the question here.
 - `confianca_especulativa_plano_subida`: shorter, mean grade 0 or more. The
   curve has no real sprint data, so a heuristic is used, in this order: curve
-  points that pass the speed filter, effective distance times `--pace-flat`,
-  the phase 1 estimate. Sorted. On 2 real segments: 4-8% error with 3:40.
+  points that pass the speed filter, effective distance times the fallback
+  pace, the phase 1 estimate. Sorted. On 2 real segments: 4-8% error with a
+  fixed 3:40, before the pace came from the curve.
 - `confianca_especulativa_descida_SEM_CONFIANCA`: shorter, mean grade below 0.
   No descent data to calibrate. Not sorted. Do not use it to pick targets.
 - `fora_alcance_curva_SEM_CONFIANCA`: the CS/D' model used past 1.5 times the
@@ -91,7 +96,8 @@ their next reanalysis.
 - `STRAVA_ATHLETE_ID` or `--athlete-id`: your Strava athlete id, required by
   `explore.py`. The tile endpoint returns 401 if it does not match the session.
 - `INTERVALS_ICU_API_KEY` and `INTERVALS_ICU_ATHLETE_ID`: Basic Auth with
-  username `API_KEY`. Athlete id `0` means the key's own athlete.
+  username `API_KEY`. Athlete id `0` means the key's own athlete. Required
+  by `explore.py`, `gap_model.py` and `rank.py`.
 
 Every script reads `KEY=value` lines from `.env` in the current folder
 (gitignored). A variable already set in the environment wins.

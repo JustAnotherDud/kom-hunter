@@ -1,5 +1,8 @@
 ===== explore_ok =====
 --- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
 cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (raio 0.5km) — intent=explore
 [mock] GET https://cdn-1.strava.com/tiles/segments/1/15/15568/12480?intent=explore&elevation_filter=all&surface_types=0&distance_min=0&creator=false&starred=false&top_10=false&overall=false&verified=false
   tile 1/4 (z15/15568/12480): 5 segmentos, 4 Run acumulados
@@ -30,8 +33,8 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 60.0,
   "komElapsedTime": 7000,
   "komAthleteId": 5105,
-  "previsto_grosseiro_s": 6671.8,
-  "gap_grosseiro_s": -328.2
+  "previsto_grosseiro_s": 6216.9,
+  "gap_grosseiro_s": -783.1
  },
  {
   "segmentId": 104,
@@ -41,8 +44,19 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 0.0,
   "komElapsedTime": 600,
   "komAthleteId": 5104,
-  "previsto_grosseiro_s": 330.0,
-  "gap_grosseiro_s": -270.0
+  "previsto_grosseiro_s": 307.5,
+  "gap_grosseiro_s": -292.5
+ },
+ {
+  "segmentId": 109,
+  "nome": "Longo cs",
+  "distancia_m": 18000.0,
+  "avgGrade": 0.0,
+  "elevGain": 0.0,
+  "komElapsedTime": 3900,
+  "komAthleteId": 5109,
+  "previsto_grosseiro_s": 3690.0,
+  "gap_grosseiro_s": -210.0
  },
  {
   "segmentId": 103,
@@ -52,30 +66,19 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 0.0,
   "komElapsedTime": 80,
   "komAthleteId": 5103,
-  "previsto_grosseiro_s": 83.9,
-  "gap_grosseiro_s": 3.9
+  "previsto_grosseiro_s": 78.2,
+  "gap_grosseiro_s": -1.8
  },
  {
-  "segmentId": 110,
-  "nome": "Mini",
-  "distancia_m": 150.0,
+  "segmentId": 106,
+  "nome": "Sem streams",
+  "distancia_m": 1200.0,
   "avgGrade": 1.0,
-  "elevGain": 1.5,
-  "komElapsedTime": 30,
-  "komAthleteId": 5110,
-  "previsto_grosseiro_s": 34.8,
-  "gap_grosseiro_s": 4.8
- },
- {
-  "segmentId": 102,
-  "nome": "Subida curta",
-  "distancia_m": 400.0,
-  "avgGrade": 4.0,
-  "elevGain": 16.0,
-  "komElapsedTime": 95,
-  "komAthleteId": 5102,
-  "previsto_grosseiro_s": 108.8,
-  "gap_grosseiro_s": 13.8
+  "elevGain": 12.0,
+  "komElapsedTime": 260,
+  "komAthleteId": 5106,
+  "previsto_grosseiro_s": 259.6,
+  "gap_grosseiro_s": -0.4
  }
 ]
 
@@ -94,6 +97,9 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
 
 ===== explore_all_envid =====
 --- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
 cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (raio 0.5km) — intent=explore
 [mock] GET https://cdn-1.strava.com/tiles/segments/7/15/15568/12480?intent=explore&elevation_filter=all&surface_types=0&distance_min=0&creator=false&starred=false&top_10=false&overall=false&verified=false
   tile 1/4 (z15/15568/12480): 5 segmentos, 4 Run acumulados
@@ -124,8 +130,8 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 60.0,
   "komElapsedTime": 7000,
   "komAthleteId": 5105,
-  "previsto_grosseiro_s": 6671.8,
-  "gap_grosseiro_s": -328.2
+  "previsto_grosseiro_s": 6216.9,
+  "gap_grosseiro_s": -783.1
  },
  {
   "segmentId": 104,
@@ -135,63 +141,8 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 0.0,
   "komElapsedTime": 600,
   "komAthleteId": 5104,
-  "previsto_grosseiro_s": 330.0,
-  "gap_grosseiro_s": -270.0
- },
- {
-  "segmentId": 103,
-  "nome": "Descida curta",
-  "distancia_m": 500.0,
-  "avgGrade": -5.0,
-  "elevGain": 0.0,
-  "komElapsedTime": 80,
-  "komAthleteId": 5103,
-  "previsto_grosseiro_s": 83.9,
-  "gap_grosseiro_s": 3.9
- },
- {
-  "segmentId": 110,
-  "nome": "Mini",
-  "distancia_m": 150.0,
-  "avgGrade": 1.0,
-  "elevGain": 1.5,
-  "komElapsedTime": 30,
-  "komAthleteId": 5110,
-  "previsto_grosseiro_s": 34.8,
-  "gap_grosseiro_s": 4.8
- },
- {
-  "segmentId": 102,
-  "nome": "Subida curta",
-  "distancia_m": 400.0,
-  "avgGrade": 4.0,
-  "elevGain": 16.0,
-  "komElapsedTime": 95,
-  "komAthleteId": 5102,
-  "previsto_grosseiro_s": 108.8,
-  "gap_grosseiro_s": 13.8
- },
- {
-  "segmentId": 106,
-  "nome": "Sem streams",
-  "distancia_m": 1200.0,
-  "avgGrade": 1.0,
-  "elevGain": 12.0,
-  "komElapsedTime": 260,
-  "komAthleteId": 5106,
-  "previsto_grosseiro_s": 278.6,
-  "gap_grosseiro_s": 18.6
- },
- {
-  "segmentId": 101,
-  "nome": "Plano longo",
-  "distancia_m": 2000.0,
-  "avgGrade": 0.5,
-  "elevGain": 10.0,
-  "komElapsedTime": 420,
-  "komAthleteId": 5101,
-  "previsto_grosseiro_s": 452.1,
-  "gap_grosseiro_s": 32.1
+  "previsto_grosseiro_s": 307.5,
+  "gap_grosseiro_s": -292.5
  },
  {
   "segmentId": 109,
@@ -201,8 +152,63 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 0.0,
   "komElapsedTime": 3900,
   "komAthleteId": 5109,
-  "previsto_grosseiro_s": 3960.0,
-  "gap_grosseiro_s": 60.0
+  "previsto_grosseiro_s": 3690.0,
+  "gap_grosseiro_s": -210.0
+ },
+ {
+  "segmentId": 103,
+  "nome": "Descida curta",
+  "distancia_m": 500.0,
+  "avgGrade": -5.0,
+  "elevGain": 0.0,
+  "komElapsedTime": 80,
+  "komAthleteId": 5103,
+  "previsto_grosseiro_s": 78.2,
+  "gap_grosseiro_s": -1.8
+ },
+ {
+  "segmentId": 106,
+  "nome": "Sem streams",
+  "distancia_m": 1200.0,
+  "avgGrade": 1.0,
+  "elevGain": 12.0,
+  "komElapsedTime": 260,
+  "komAthleteId": 5106,
+  "previsto_grosseiro_s": 259.6,
+  "gap_grosseiro_s": -0.4
+ },
+ {
+  "segmentId": 101,
+  "nome": "Plano longo",
+  "distancia_m": 2000.0,
+  "avgGrade": 0.5,
+  "elevGain": 10.0,
+  "komElapsedTime": 420,
+  "komAthleteId": 5101,
+  "previsto_grosseiro_s": 421.2,
+  "gap_grosseiro_s": 1.2
+ },
+ {
+  "segmentId": 110,
+  "nome": "Mini",
+  "distancia_m": 150.0,
+  "avgGrade": 1.0,
+  "elevGain": 1.5,
+  "komElapsedTime": 30,
+  "komAthleteId": 5110,
+  "previsto_grosseiro_s": 32.5,
+  "gap_grosseiro_s": 2.5
+ },
+ {
+  "segmentId": 102,
+  "nome": "Subida curta",
+  "distancia_m": 400.0,
+  "avgGrade": 4.0,
+  "elevGain": 16.0,
+  "komElapsedTime": 95,
+  "komAthleteId": 5102,
+  "previsto_grosseiro_s": 101.4,
+  "gap_grosseiro_s": 6.4
  }
 ]
 
@@ -221,6 +227,9 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
 
 ===== explore_intent =====
 --- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
 cobertura: 1 tiles z14 (~1.89km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (raio 0.5km) — intent=explore
 [mock] GET https://cdn-1.strava.com/tiles/segments/1/14/7784/6240?intent=explore&elevation_filter=all&surface_types=0&distance_min=0&creator=false&starred=false&top_10=false&overall=false&verified=false
   tile 1/1 (z14/7784/6240): 5 segmentos, 4 Run acumulados
@@ -240,8 +249,8 @@ densidade observada: 5 segmentos (todos os tipos) / ~3.6km² cobertos = ~1.4/km�
   "elevGain": 0.0,
   "komElapsedTime": 600,
   "komAthleteId": 5104,
-  "previsto_grosseiro_s": 330.0,
-  "gap_grosseiro_s": -270.0
+  "previsto_grosseiro_s": 307.5,
+  "gap_grosseiro_s": -292.5
  },
  {
   "segmentId": 103,
@@ -251,19 +260,8 @@ densidade observada: 5 segmentos (todos os tipos) / ~3.6km² cobertos = ~1.4/km�
   "elevGain": 0.0,
   "komElapsedTime": 80,
   "komAthleteId": 5103,
-  "previsto_grosseiro_s": 83.9,
-  "gap_grosseiro_s": 3.9
- },
- {
-  "segmentId": 102,
-  "nome": "Subida curta",
-  "distancia_m": 400.0,
-  "avgGrade": 4.0,
-  "elevGain": 16.0,
-  "komElapsedTime": 95,
-  "komAthleteId": 5102,
-  "previsto_grosseiro_s": 108.8,
-  "gap_grosseiro_s": 13.8
+  "previsto_grosseiro_s": 78.2,
+  "gap_grosseiro_s": -1.8
  },
  {
   "segmentId": 101,
@@ -273,8 +271,19 @@ densidade observada: 5 segmentos (todos os tipos) / ~3.6km² cobertos = ~1.4/km�
   "elevGain": 10.0,
   "komElapsedTime": 420,
   "komAthleteId": 5101,
-  "previsto_grosseiro_s": 452.1,
-  "gap_grosseiro_s": 32.1
+  "previsto_grosseiro_s": 421.2,
+  "gap_grosseiro_s": 1.2
+ },
+ {
+  "segmentId": 102,
+  "nome": "Subida curta",
+  "distancia_m": 400.0,
+  "avgGrade": 4.0,
+  "elevGain": 16.0,
+  "komElapsedTime": 95,
+  "komAthleteId": 5102,
+  "previsto_grosseiro_s": 101.4,
+  "gap_grosseiro_s": 6.4
  }
 ]
 
@@ -283,6 +292,9 @@ densidade observada: 5 segmentos (todos os tipos) / ~3.6km² cobertos = ~1.4/km�
 
 ===== explore_semkom_antigo =====
 --- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
 cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (raio 0.5km) — intent=explore
 [mock] GET https://cdn-1.strava.com/tiles/segments/1/15/15568/12480?intent=explore&elevation_filter=all&surface_types=0&distance_min=0&creator=false&starred=false&top_10=false&overall=false&verified=false
   tile 1/4 (z15/15568/12480): 5 segmentos, 4 Run acumulados
@@ -311,8 +323,8 @@ densidade observada: 10 segmentos (todos os tipos) / ~3.6km² cobertos = ~2.8/km
   "elevGain": 60.0,
   "komElapsedTime": 7000,
   "komAthleteId": 5105,
-  "previsto_grosseiro_s": 6671.8,
-  "gap_grosseiro_s": -328.2
+  "previsto_grosseiro_s": 6216.9,
+  "gap_grosseiro_s": -783.1
  },
  {
   "segmentId": 104,
@@ -322,63 +334,8 @@ densidade observada: 10 segmentos (todos os tipos) / ~3.6km² cobertos = ~2.8/km
   "elevGain": 0.0,
   "komElapsedTime": 600,
   "komAthleteId": 5104,
-  "previsto_grosseiro_s": 330.0,
-  "gap_grosseiro_s": -270.0
- },
- {
-  "segmentId": 103,
-  "nome": "Descida curta",
-  "distancia_m": 500.0,
-  "avgGrade": -5.0,
-  "elevGain": 0.0,
-  "komElapsedTime": 80,
-  "komAthleteId": 5103,
-  "previsto_grosseiro_s": 83.9,
-  "gap_grosseiro_s": 3.9
- },
- {
-  "segmentId": 110,
-  "nome": "Mini",
-  "distancia_m": 150.0,
-  "avgGrade": 1.0,
-  "elevGain": 1.5,
-  "komElapsedTime": 30,
-  "komAthleteId": 5110,
-  "previsto_grosseiro_s": 34.8,
-  "gap_grosseiro_s": 4.8
- },
- {
-  "segmentId": 102,
-  "nome": "Subida curta",
-  "distancia_m": 400.0,
-  "avgGrade": 4.0,
-  "elevGain": 16.0,
-  "komElapsedTime": 95,
-  "komAthleteId": 5102,
-  "previsto_grosseiro_s": 108.8,
-  "gap_grosseiro_s": 13.8
- },
- {
-  "segmentId": 106,
-  "nome": "Sem streams",
-  "distancia_m": 1200.0,
-  "avgGrade": 1.0,
-  "elevGain": 12.0,
-  "komElapsedTime": 260,
-  "komAthleteId": 5106,
-  "previsto_grosseiro_s": 278.6,
-  "gap_grosseiro_s": 18.6
- },
- {
-  "segmentId": 101,
-  "nome": "Plano longo",
-  "distancia_m": 2000.0,
-  "avgGrade": 0.5,
-  "elevGain": 10.0,
-  "komElapsedTime": 420,
-  "komAthleteId": 5101,
-  "previsto_grosseiro_s": 452.1,
-  "gap_grosseiro_s": 32.1
+  "previsto_grosseiro_s": 307.5,
+  "gap_grosseiro_s": -292.5
  },
  {
   "segmentId": 109,
@@ -388,8 +345,63 @@ densidade observada: 10 segmentos (todos os tipos) / ~3.6km² cobertos = ~2.8/km
   "elevGain": 0.0,
   "komElapsedTime": 3900,
   "komAthleteId": 5109,
-  "previsto_grosseiro_s": 3960.0,
-  "gap_grosseiro_s": 60.0
+  "previsto_grosseiro_s": 3690.0,
+  "gap_grosseiro_s": -210.0
+ },
+ {
+  "segmentId": 103,
+  "nome": "Descida curta",
+  "distancia_m": 500.0,
+  "avgGrade": -5.0,
+  "elevGain": 0.0,
+  "komElapsedTime": 80,
+  "komAthleteId": 5103,
+  "previsto_grosseiro_s": 78.2,
+  "gap_grosseiro_s": -1.8
+ },
+ {
+  "segmentId": 106,
+  "nome": "Sem streams",
+  "distancia_m": 1200.0,
+  "avgGrade": 1.0,
+  "elevGain": 12.0,
+  "komElapsedTime": 260,
+  "komAthleteId": 5106,
+  "previsto_grosseiro_s": 259.6,
+  "gap_grosseiro_s": -0.4
+ },
+ {
+  "segmentId": 101,
+  "nome": "Plano longo",
+  "distancia_m": 2000.0,
+  "avgGrade": 0.5,
+  "elevGain": 10.0,
+  "komElapsedTime": 420,
+  "komAthleteId": 5101,
+  "previsto_grosseiro_s": 421.2,
+  "gap_grosseiro_s": 1.2
+ },
+ {
+  "segmentId": 110,
+  "nome": "Mini",
+  "distancia_m": 150.0,
+  "avgGrade": 1.0,
+  "elevGain": 1.5,
+  "komElapsedTime": 30,
+  "komAthleteId": 5110,
+  "previsto_grosseiro_s": 32.5,
+  "gap_grosseiro_s": 2.5
+ },
+ {
+  "segmentId": 102,
+  "nome": "Subida curta",
+  "distancia_m": 400.0,
+  "avgGrade": 4.0,
+  "elevGain": 16.0,
+  "komElapsedTime": 95,
+  "komAthleteId": 5102,
+  "previsto_grosseiro_s": 101.4,
+  "gap_grosseiro_s": 6.4
  }
 ]
 
@@ -398,6 +410,9 @@ densidade observada: 10 segmentos (todos os tipos) / ~3.6km² cobertos = ~2.8/km
 
 ===== explore_dotenv =====
 --- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
 cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (raio 0.5km) — intent=explore
 [mock] GET https://cdn-1.strava.com/tiles/segments/7/15/15568/12480?intent=explore&elevation_filter=all&surface_types=0&distance_min=0&creator=false&starred=false&top_10=false&overall=false&verified=false
   tile 1/4 (z15/15568/12480): 5 segmentos, 4 Run acumulados
@@ -428,8 +443,8 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 60.0,
   "komElapsedTime": 7000,
   "komAthleteId": 5105,
-  "previsto_grosseiro_s": 6671.8,
-  "gap_grosseiro_s": -328.2
+  "previsto_grosseiro_s": 6216.9,
+  "gap_grosseiro_s": -783.1
  },
  {
   "segmentId": 104,
@@ -439,63 +454,8 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 0.0,
   "komElapsedTime": 600,
   "komAthleteId": 5104,
-  "previsto_grosseiro_s": 330.0,
-  "gap_grosseiro_s": -270.0
- },
- {
-  "segmentId": 103,
-  "nome": "Descida curta",
-  "distancia_m": 500.0,
-  "avgGrade": -5.0,
-  "elevGain": 0.0,
-  "komElapsedTime": 80,
-  "komAthleteId": 5103,
-  "previsto_grosseiro_s": 83.9,
-  "gap_grosseiro_s": 3.9
- },
- {
-  "segmentId": 110,
-  "nome": "Mini",
-  "distancia_m": 150.0,
-  "avgGrade": 1.0,
-  "elevGain": 1.5,
-  "komElapsedTime": 30,
-  "komAthleteId": 5110,
-  "previsto_grosseiro_s": 34.8,
-  "gap_grosseiro_s": 4.8
- },
- {
-  "segmentId": 102,
-  "nome": "Subida curta",
-  "distancia_m": 400.0,
-  "avgGrade": 4.0,
-  "elevGain": 16.0,
-  "komElapsedTime": 95,
-  "komAthleteId": 5102,
-  "previsto_grosseiro_s": 108.8,
-  "gap_grosseiro_s": 13.8
- },
- {
-  "segmentId": 106,
-  "nome": "Sem streams",
-  "distancia_m": 1200.0,
-  "avgGrade": 1.0,
-  "elevGain": 12.0,
-  "komElapsedTime": 260,
-  "komAthleteId": 5106,
-  "previsto_grosseiro_s": 278.6,
-  "gap_grosseiro_s": 18.6
- },
- {
-  "segmentId": 101,
-  "nome": "Plano longo",
-  "distancia_m": 2000.0,
-  "avgGrade": 0.5,
-  "elevGain": 10.0,
-  "komElapsedTime": 420,
-  "komAthleteId": 5101,
-  "previsto_grosseiro_s": 452.1,
-  "gap_grosseiro_s": 32.1
+  "previsto_grosseiro_s": 307.5,
+  "gap_grosseiro_s": -292.5
  },
  {
   "segmentId": 109,
@@ -505,8 +465,63 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "elevGain": 0.0,
   "komElapsedTime": 3900,
   "komAthleteId": 5109,
-  "previsto_grosseiro_s": 3960.0,
-  "gap_grosseiro_s": 60.0
+  "previsto_grosseiro_s": 3690.0,
+  "gap_grosseiro_s": -210.0
+ },
+ {
+  "segmentId": 103,
+  "nome": "Descida curta",
+  "distancia_m": 500.0,
+  "avgGrade": -5.0,
+  "elevGain": 0.0,
+  "komElapsedTime": 80,
+  "komAthleteId": 5103,
+  "previsto_grosseiro_s": 78.2,
+  "gap_grosseiro_s": -1.8
+ },
+ {
+  "segmentId": 106,
+  "nome": "Sem streams",
+  "distancia_m": 1200.0,
+  "avgGrade": 1.0,
+  "elevGain": 12.0,
+  "komElapsedTime": 260,
+  "komAthleteId": 5106,
+  "previsto_grosseiro_s": 259.6,
+  "gap_grosseiro_s": -0.4
+ },
+ {
+  "segmentId": 101,
+  "nome": "Plano longo",
+  "distancia_m": 2000.0,
+  "avgGrade": 0.5,
+  "elevGain": 10.0,
+  "komElapsedTime": 420,
+  "komAthleteId": 5101,
+  "previsto_grosseiro_s": 421.2,
+  "gap_grosseiro_s": 1.2
+ },
+ {
+  "segmentId": 110,
+  "nome": "Mini",
+  "distancia_m": 150.0,
+  "avgGrade": 1.0,
+  "elevGain": 1.5,
+  "komElapsedTime": 30,
+  "komAthleteId": 5110,
+  "previsto_grosseiro_s": 32.5,
+  "gap_grosseiro_s": 2.5
+ },
+ {
+  "segmentId": 102,
+  "nome": "Subida curta",
+  "distancia_m": 400.0,
+  "avgGrade": 4.0,
+  "elevGain": 16.0,
+  "komElapsedTime": 95,
+  "komAthleteId": 5102,
+  "previsto_grosseiro_s": 101.4,
+  "gap_grosseiro_s": 6.4
  }
 ]
 
@@ -522,6 +537,18 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
   "url": "https://www.strava.com/segments/107"
  }
 ]
+
+===== explore_no_icu =====
+--- stdout
+[exit] SystemExit('INTERVALS_ICU_API_KEY / INTERVALS_ICU_ATHLETE_ID não definidos (preciso da curva GAP para o pace de reserva).')
+--- stderr
+
+===== explore_curva_curta_sem_cs =====
+--- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+[exit] SystemExit('A curva GAP não cobre 1000 m (nem tabela nem modelo CS) — sem pace de reserva.')
+--- stderr
 
 ===== explore_no_session =====
 --- stdout
@@ -540,6 +567,9 @@ densidade observada: 11 segmentos (todos os tipos) / ~3.6km² cobertos = ~3.1/km
 
 ===== explore_401 =====
 --- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
 cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (raio 0.5km) — intent=explore
 [mock] GET https://cdn-1.strava.com/tiles/segments/1/15/15568/12480?intent=explore&elevation_filter=all&surface_types=0&distance_min=0&creator=false&starred=false&top_10=false&overall=false&verified=false
 [exit] SystemExit('Sessão expirada (401 no tile) — renovar STRAVA_SESSION.')
@@ -1010,6 +1040,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
   [alta] Plano longo: efetiva 2132m -> 461s (tabela), KOM 420s
   [especulativa-plano_subida] Subida curta: efetiva 509m -> 98s (curva_gap_curta), KOM 95s
   [especulativa-descida] Descida curta: efetiva 403m -> 76s (curva_gap_curta), KOM 80s
@@ -1017,7 +1048,7 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [fora_alcance_curva] Ultra: efetiva 31467m -> sem valor
   Sem streams: sem streams, salto.
   [alta] Longo cs: efetiva 18693m -> 4515s (cs_model), KOM 3900s
-  [especulativa-plano_subida] Mini: efetiva 162m -> 36s (grade_efetiva+pace_flat), KOM 30s
+  [especulativa-plano_subida] Mini: efetiva 162m -> 33s (grade_efetiva+pace_1000m), KOM 30s
 -> previsoes.json (2 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual)
 [exit] 0
 --- stderr
@@ -1078,9 +1109,9 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "grupo": "especulativa-plano_subida",
    "previsto_s": null,
    "metodo_previsao": null,
-   "heuristica_s": 35.7,
-   "heuristica_metodo": "grade_efetiva+pace_flat",
-   "gap_para_kom_s": 5.7,
+   "heuristica_s": 33.2,
+   "heuristica_metodo": "grade_efetiva+pace_1000m",
+   "gap_para_kom_s": 3.2,
    "suspeito_motivo": null
   }
  ],
@@ -1134,11 +1165,270 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
  ]
 }
 
+===== gap_sem_1000 =====
+--- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+curva GAP '180d': 180 dias, 6 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
+pace de reserva: 3:23/km (curva GAP aos 1000 m, tabela)
+  [alta] Plano longo: efetiva 2132m -> 460s (tabela), KOM 420s
+  [especulativa-plano_subida] Subida curta: efetiva 509m -> 98s (curva_gap_curta), KOM 95s
+  [especulativa-descida] Descida curta: efetiva 403m -> 76s (curva_gap_curta), KOM 80s
+  [SUSPEITO] Suspeito: efetiva 1557m -> 328s (tabela), KOM 600s
+  [fora_alcance_curva] Ultra: efetiva 31467m -> sem valor
+  Sem streams: sem streams, salto.
+  [alta] Longo cs: efetiva 18693m -> 4515s (cs_model), KOM 3900s
+  [especulativa-plano_subida] Mini: efetiva 162m -> 33s (grade_efetiva+pace_1000m), KOM 30s
+-> previsoes.json (2 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual)
+[exit] 0
+--- stderr
+
+--- file previsoes.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "grupo": "alta",
+   "previsto_s": 459.5,
+   "metodo_previsao": "tabela",
+   "heuristica_s": null,
+   "heuristica_metodo": null,
+   "gap_para_kom_s": 39.5,
+   "suspeito_motivo": null
+  },
+  {
+   "segmentId": 109,
+   "nome": "Longo cs",
+   "distancia_m": 18000.0,
+   "distancia_efetiva_gap_m": 18693.5,
+   "kom_tempo_s": 3900,
+   "grupo": "alta",
+   "previsto_s": 4515.5,
+   "metodo_previsao": "cs_model",
+   "heuristica_s": null,
+   "heuristica_metodo": null,
+   "gap_para_kom_s": 615.5,
+   "suspeito_motivo": null
+  }
+ ],
+ "confianca_especulativa_plano_subida": [
+  {
+   "segmentId": 102,
+   "nome": "Subida curta",
+   "distancia_m": 400.0,
+   "distancia_efetiva_gap_m": 508.9,
+   "kom_tempo_s": 95,
+   "grupo": "especulativa-plano_subida",
+   "previsto_s": null,
+   "metodo_previsao": null,
+   "heuristica_s": 97.6,
+   "heuristica_metodo": "curva_gap_curta",
+   "gap_para_kom_s": 2.6,
+   "suspeito_motivo": null
+  },
+  {
+   "segmentId": 110,
+   "nome": "Mini",
+   "distancia_m": 150.0,
+   "distancia_efetiva_gap_m": 162.2,
+   "kom_tempo_s": 30,
+   "grupo": "especulativa-plano_subida",
+   "previsto_s": null,
+   "metodo_previsao": null,
+   "heuristica_s": 32.9,
+   "heuristica_metodo": "grade_efetiva+pace_1000m",
+   "gap_para_kom_s": 2.9,
+   "suspeito_motivo": null
+  }
+ ],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [
+  {
+   "segmentId": 103,
+   "nome": "Descida curta",
+   "distancia_m": 500.0,
+   "distancia_efetiva_gap_m": 403.1,
+   "kom_tempo_s": 80,
+   "grupo": "especulativa-descida",
+   "previsto_s": null,
+   "metodo_previsao": null,
+   "heuristica_s": 75.6,
+   "heuristica_metodo": "curva_gap_curta",
+   "gap_para_kom_s": -4.4,
+   "suspeito_motivo": null
+  }
+ ],
+ "fora_alcance_curva_SEM_CONFIANCA": [
+  {
+   "segmentId": 105,
+   "nome": "Ultra",
+   "distancia_m": 30000.0,
+   "distancia_efetiva_gap_m": 31467.5,
+   "kom_tempo_s": 7000,
+   "grupo": "fora_alcance_curva",
+   "previsto_s": 7631.1,
+   "metodo_previsao": "cs_model",
+   "heuristica_s": null,
+   "heuristica_metodo": null,
+   "gap_para_kom_s": null,
+   "suspeito_motivo": null
+  }
+ ],
+ "revisao_manual": [
+  {
+   "segmentId": 104,
+   "nome": "Suspeito",
+   "distancia_m": 1500.0,
+   "distancia_efetiva_gap_m": 1557.2,
+   "kom_tempo_s": 600,
+   "grupo": "alta",
+   "previsto_s": 327.7,
+   "metodo_previsao": "tabela",
+   "heuristica_s": null,
+   "heuristica_metodo": null,
+   "gap_para_kom_s": -272.3,
+   "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido"
+  }
+ ]
+}
+
+===== gap_curva_curta =====
+--- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+curva GAP '180d': 180 dias, 3 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
+pace de reserva: 3:20/km (curva GAP aos 1000 m, cs_model)
+  [fora_alcance_curva] Plano longo: efetiva 2132m -> sem valor
+  [especulativa-plano_subida] Subida curta: efetiva 509m -> 98s (curva_gap_curta), KOM 95s
+  [especulativa-descida] Descida curta: efetiva 403m -> 76s (curva_gap_curta), KOM 80s
+  [fora_alcance_curva] Suspeito: efetiva 1557m -> sem valor
+  [fora_alcance_curva] Ultra: efetiva 31467m -> sem valor
+  Sem streams: sem streams, salto.
+  [fora_alcance_curva] Longo cs: efetiva 18693m -> sem valor
+  [especulativa-plano_subida] Mini: efetiva 162m -> 32s (grade_efetiva+pace_1000m), KOM 30s
+-> previsoes.json (0 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 4 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual)
+[exit] 0
+--- stderr
+
+--- file previsoes.json
+{
+ "confianca_alta": [],
+ "confianca_especulativa_plano_subida": [
+  {
+   "segmentId": 110,
+   "nome": "Mini",
+   "distancia_m": 150.0,
+   "distancia_efetiva_gap_m": 162.2,
+   "kom_tempo_s": 30,
+   "grupo": "especulativa-plano_subida",
+   "previsto_s": null,
+   "metodo_previsao": null,
+   "heuristica_s": 32.4,
+   "heuristica_metodo": "grade_efetiva+pace_1000m",
+   "gap_para_kom_s": 2.4,
+   "suspeito_motivo": null
+  },
+  {
+   "segmentId": 102,
+   "nome": "Subida curta",
+   "distancia_m": 400.0,
+   "distancia_efetiva_gap_m": 508.9,
+   "kom_tempo_s": 95,
+   "grupo": "especulativa-plano_subida",
+   "previsto_s": null,
+   "metodo_previsao": null,
+   "heuristica_s": 97.6,
+   "heuristica_metodo": "curva_gap_curta",
+   "gap_para_kom_s": 2.6,
+   "suspeito_motivo": null
+  }
+ ],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [
+  {
+   "segmentId": 103,
+   "nome": "Descida curta",
+   "distancia_m": 500.0,
+   "distancia_efetiva_gap_m": 403.1,
+   "kom_tempo_s": 80,
+   "grupo": "especulativa-descida",
+   "previsto_s": null,
+   "metodo_previsao": null,
+   "heuristica_s": 75.6,
+   "heuristica_metodo": "curva_gap_curta",
+   "gap_para_kom_s": -4.4,
+   "suspeito_motivo": null
+  }
+ ],
+ "fora_alcance_curva_SEM_CONFIANCA": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "grupo": "fora_alcance_curva",
+   "previsto_s": 476.1,
+   "metodo_previsao": "cs_model",
+   "heuristica_s": null,
+   "heuristica_metodo": null,
+   "gap_para_kom_s": null,
+   "suspeito_motivo": null
+  },
+  {
+   "segmentId": 104,
+   "nome": "Suspeito",
+   "distancia_m": 1500.0,
+   "distancia_efetiva_gap_m": 1557.2,
+   "kom_tempo_s": 600,
+   "grupo": "fora_alcance_curva",
+   "previsto_s": 335.9,
+   "metodo_previsao": "cs_model",
+   "heuristica_s": null,
+   "heuristica_metodo": null,
+   "gap_para_kom_s": null,
+   "suspeito_motivo": null
+  },
+  {
+   "segmentId": 105,
+   "nome": "Ultra",
+   "distancia_m": 30000.0,
+   "distancia_efetiva_gap_m": 31467.5,
+   "kom_tempo_s": 7000,
+   "grupo": "fora_alcance_curva",
+   "previsto_s": 7631.1,
+   "metodo_previsao": "cs_model",
+   "heuristica_s": null,
+   "heuristica_metodo": null,
+   "gap_para_kom_s": null,
+   "suspeito_motivo": null
+  },
+  {
+   "segmentId": 109,
+   "nome": "Longo cs",
+   "distancia_m": 18000.0,
+   "distancia_efetiva_gap_m": 18693.5,
+   "kom_tempo_s": 3900,
+   "grupo": "fora_alcance_curva",
+   "previsto_s": 4515.5,
+   "metodo_previsao": "cs_model",
+   "heuristica_s": null,
+   "heuristica_metodo": null,
+   "gap_para_kom_s": null,
+   "suspeito_motivo": null
+  }
+ ],
+ "revisao_manual": []
+}
+
 ===== gap_nopace =====
 --- stdout
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['90d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
   [alta] Plano longo: efetiva 2132m -> 461s (tabela), KOM 420s
   [especulativa-plano_subida] Subida curta: efetiva 509m -> 98s (curva_gap_curta), KOM 95s
   [especulativa-descida] Descida curta: efetiva 403m -> 76s (curva_gap_curta), KOM 80s
@@ -1146,7 +1436,7 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [fora_alcance_curva] Ultra: efetiva 31467m -> sem valor
   Sem streams: sem streams, salto.
   [alta] Longo cs: efetiva 18693m -> 4515s (cs_model), KOM 3900s
-  [especulativa-plano_subida] Mini: efetiva 162m -> 36s (grade_media_fase1), KOM 30s
+  [especulativa-plano_subida] Mini: efetiva 162m -> 33s (grade_efetiva+pace_1000m), KOM 30s
 -> p.json (2 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual)
 [exit] 0
 --- stderr
@@ -1207,9 +1497,9 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "grupo": "especulativa-plano_subida",
    "previsto_s": null,
    "metodo_previsao": null,
-   "heuristica_s": 36.3,
-   "heuristica_metodo": "grade_media_fase1",
-   "gap_para_kom_s": 6.3,
+   "heuristica_s": 33.2,
+   "heuristica_metodo": "grade_efetiva+pace_1000m",
+   "gap_para_kom_s": 3.2,
    "suspeito_motivo": null
   }
  ],
@@ -1268,6 +1558,7 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
   [alta] Plano longo: efetiva 2132m -> 461s (tabela), KOM 420s
   [especulativa-plano_subida] Subida curta: efetiva 509m -> 98s (curva_gap_curta), KOM 95s
   [especulativa-descida] Descida curta: efetiva 403m -> 76s (curva_gap_curta), KOM 80s
@@ -1275,7 +1566,7 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [fora_alcance_curva] Ultra: efetiva 31467m -> sem valor
   Sem streams: sem streams, salto.
   [alta] Longo cs: efetiva 18693m -> 4515s (cs_model), KOM 3900s
-  [especulativa-plano_subida] Mini: efetiva 162m -> sem valor
+  [especulativa-plano_subida] Mini: efetiva 162m -> 33s (grade_efetiva+pace_1000m), KOM 30s
 -> previsoes.json (2 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual)
 [exit] 0
 --- stderr
@@ -1336,9 +1627,9 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "grupo": "especulativa-plano_subida",
    "previsto_s": null,
    "metodo_previsao": null,
-   "heuristica_s": null,
-   "heuristica_metodo": "sem_dados",
-   "gap_para_kom_s": null,
+   "heuristica_s": 33.2,
+   "heuristica_metodo": "grade_efetiva+pace_1000m",
+   "gap_para_kom_s": 3.2,
    "suspeito_motivo": null
   }
  ],
@@ -1415,6 +1706,7 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
   [alta] Plano longo: efetiva 2132m -> 461s (tabela), KOM 420s
   [especulativa-plano_subida] Subida curta: efetiva 509m -> 98s (curva_gap_curta), KOM 95s
   [especulativa-descida] Descida curta: efetiva 403m -> 76s (curva_gap_curta), KOM 80s
@@ -1422,7 +1714,7 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [fora_alcance_curva] Ultra: efetiva 31467m -> sem valor
   Sem streams: sem streams, salto.
   [alta] Longo cs: efetiva 18693m -> 4515s (cs_model), KOM 3900s
-  [especulativa-plano_subida] Mini: efetiva 162m -> 36s (grade_media_fase1), KOM 30s
+  [especulativa-plano_subida] Mini: efetiva 162m -> 33s (grade_efetiva+pace_1000m), KOM 30s
 -> previsoes.json (2 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual)
 [exit] 0
 --- stderr
@@ -1483,9 +1775,9 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "grupo": "especulativa-plano_subida",
    "previsto_s": null,
    "metodo_previsao": null,
-   "heuristica_s": 36.3,
-   "heuristica_metodo": "grade_media_fase1",
-   "gap_para_kom_s": 6.3,
+   "heuristica_s": 33.2,
+   "heuristica_metodo": "grade_efetiva+pace_1000m",
+   "gap_para_kom_s": 3.2,
    "suspeito_motivo": null
   }
  ],
@@ -1551,6 +1843,7 @@ curva GAP '180d': 180 dias, 7 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
   [alta] Plano longo: efetiva 2132m -> 461s (tabela), KOM 420s
   [especulativa-plano_subida] Subida curta: efetiva 509m -> 98s (curva_gap_curta), KOM 95s
   [especulativa-descida] Descida curta: efetiva 403m -> 76s (curva_gap_curta), KOM 80s
@@ -1677,9 +1970,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_new =====
 --- stdout
-8 candidatos: 0 do cache, 8 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+8 candidatos: 0 do cache, 8 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)
@@ -1707,8 +2001,8 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
       top 10: 4.º, 602 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/110
-  [novo/especulativa-plano_subida] Mini: score 5.7
-      top 10: 2.º, 6 s para o lugar acima, 1 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
+  [novo/especulativa-plano_subida] Mini: score 3.2
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 -> ranking.json (2 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual, 7 novo/actualizado, 0 do cache) | histórico -> historico.json
 [exit] 0
 --- stderr
@@ -1727,7 +2021,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -1757,7 +2051,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "novo",
    "nome": "Subida curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": 2.6,
    "segmentId": 102,
@@ -1787,7 +2081,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "novo",
    "nome": "Descida curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": -4.4,
    "segmentId": 103,
@@ -1817,7 +2111,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Suspeito",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 329.5,
    "score": -270.5,
    "segmentId": 104,
@@ -1847,7 +2141,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "cs_model",
    "motivo_recalculo": "novo",
    "nome": "Ultra",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 7631.1,
    "score": null,
    "segmentId": 105,
@@ -1867,7 +2161,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "cs_model",
    "motivo_recalculo": "novo",
    "nome": "Longo cs",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 4515.5,
    "score": 615.5,
    "segmentId": 109,
@@ -1890,29 +2184,29 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "distancia_efetiva_gap_m": 162.2,
    "distancia_m": 150.0,
    "grupo": "especulativa-plano_subida",
-   "heuristica_s": 35.7,
+   "heuristica_s": 33.2,
    "ja_corri": false,
    "kom_atleta": "Atleta 0",
    "kom_tempo_s": 30,
-   "metodo": "grade_efetiva+pace_flat",
+   "metodo": "grade_efetiva+pace_1000m",
    "motivo_recalculo": "novo",
    "nome": "Mini",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
-   "score": 5.7,
+   "score": 3.2,
    "segmentId": 110,
    "suspeito": false,
    "suspeito_motivo": null,
    "top10": {
     "empatado_com": 0,
     "fora_top10": false,
-    "margem_lugar_abaixo_s": 1,
+    "margem_lugar_abaixo_s": 4,
     "n_tempos": 3,
     "posicao": 2,
-    "previsto_inteiro_s": 36,
-    "resumo": "2.º, 6 s para o lugar acima, 1 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "previsto_inteiro_s": 33,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
     "s_para_10o": null,
-    "s_para_lugar_acima": 6
+    "s_para_lugar_acima": 3
    },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   }
@@ -1934,7 +2228,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -1964,7 +2258,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 4515.5,
    "heuristica_s": null,
    "metodo": "cs_model",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 615.5,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -1996,7 +2290,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 97.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 2.6,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2024,24 +2318,24 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "ja_corri": false,
    "grupo": "especulativa-plano_subida",
    "previsto_s": null,
-   "heuristica_s": 35.7,
-   "metodo": "grade_efetiva+pace_flat",
-   "pace_flat_s_km": 220,
-   "score": 5.7,
+   "heuristica_s": 33.2,
+   "metodo": "grade_efetiva+pace_1000m",
+   "pace_reserva_s_km": 205,
+   "score": 3.2,
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
    "motivo_recalculo": "novo",
    "top10": {
-    "previsto_inteiro_s": 36,
+    "previsto_inteiro_s": 33,
     "n_tempos": 3,
     "posicao": 2,
     "empatado_com": 0,
-    "s_para_lugar_acima": 6,
-    "margem_lugar_abaixo_s": 1,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
     "fora_top10": false,
     "s_para_10o": null,
-    "resumo": "2.º, 6 s para o lugar acima, 1 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
    }
   }
  ],
@@ -2058,7 +2352,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 75.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": -4.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2090,7 +2384,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 7631.1,
    "heuristica_s": null,
    "metodo": "cs_model",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": null,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2112,7 +2406,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 329.5,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": -270.5,
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
@@ -2135,9 +2429,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_nopace_semcs =====
 --- stdout
-8 candidatos: 0 do cache, 8 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['30d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+8 candidatos: 0 do cache, 8 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)
@@ -2164,7 +2459,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [novo/alta] Longo cs: score None
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/110
-  [novo/especulativa-plano_subida] Mini: score 3.0
+  [novo/especulativa-plano_subida] Mini: score 3.2
       top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 -> ranking.json (3 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual, 7 novo/actualizado, 0 do cache) | histórico -> historico.json
 [exit] 0
@@ -2184,7 +2479,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -2214,7 +2509,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "novo",
    "nome": "Subida curta",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": 2.6,
    "segmentId": 102,
@@ -2244,7 +2539,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "novo",
    "nome": "Descida curta",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": -4.4,
    "segmentId": 103,
@@ -2274,7 +2569,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Suspeito",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": 329.5,
    "score": -270.5,
    "segmentId": 104,
@@ -2304,7 +2599,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "fora_de_alcance",
    "motivo_recalculo": "novo",
    "nome": "Ultra",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": null,
    "segmentId": 105,
@@ -2324,7 +2619,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "fora_de_alcance",
    "motivo_recalculo": "novo",
    "nome": "Longo cs",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": null,
    "segmentId": 109,
@@ -2337,16 +2632,16 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "distancia_efetiva_gap_m": 162.2,
    "distancia_m": 150.0,
    "grupo": "especulativa-plano_subida",
-   "heuristica_s": 33.0,
+   "heuristica_s": 33.2,
    "ja_corri": false,
    "kom_atleta": "Atleta 0",
    "kom_tempo_s": 30,
-   "metodo": "grade_media_fase1",
+   "metodo": "grade_efetiva+pace_1000m",
    "motivo_recalculo": "novo",
    "nome": "Mini",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
-   "score": 3.0,
+   "score": 3.2,
    "segmentId": 110,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2381,7 +2676,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2411,7 +2706,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": null,
    "metodo": "fora_de_alcance",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": null,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2431,7 +2726,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": null,
    "metodo": "fora_de_alcance",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": null,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2453,7 +2748,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 97.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": 2.6,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2481,10 +2776,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "ja_corri": false,
    "grupo": "especulativa-plano_subida",
    "previsto_s": null,
-   "heuristica_s": 33.0,
-   "metodo": "grade_media_fase1",
-   "pace_flat_s_km": null,
-   "score": 3.0,
+   "heuristica_s": 33.2,
+   "metodo": "grade_efetiva+pace_1000m",
+   "pace_reserva_s_km": 205,
+   "score": 3.2,
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
@@ -2515,7 +2810,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 75.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": -4.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2548,7 +2843,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 329.5,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": -270.5,
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
@@ -2571,10 +2866,11 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_cache_cap =====
 --- stdout
-8 candidatos: 2 do cache, 6 a (re)analisar
-  cap --max-novos=2 — só processo os primeiros 2 (candidatos.json já vem ordenado pelo gap grosseiro). Corre outra vez para o resto.
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+8 candidatos: 2 do cache, 6 a (re)analisar
+  cap --max-novos=2 — só processo os primeiros 2 (candidatos.json já vem ordenado pelo gap grosseiro). Corre outra vez para o resto.
 [mock] GET https://www.strava.com/segments/102
   [kom_mudou/especulativa-plano_subida] Subida curta: score 2.6
       top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
@@ -2618,7 +2914,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "kom_mudou",
    "nome": "Subida curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": 2.6,
    "segmentId": 102,
@@ -2648,7 +2944,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "novo",
    "nome": "Descida curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": -4.4,
    "segmentId": 103,
@@ -2795,7 +3091,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 97.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 2.6,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2827,7 +3123,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 75.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": -4.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -2871,9 +3167,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_revisao =====
 --- stdout
-8 candidatos: 4 do cache, 4 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+8 candidatos: 2 do cache, 6 a (re)analisar
 [mock] GET https://www.strava.com/segments/102
   [kom_mudou/especulativa-plano_subida] Subida curta: score 2.6
       top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
@@ -2886,9 +3183,16 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [revisao_periodica/SUSPEITO] Suspeito: score -270.5
       top 10: 1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
+[mock] GET https://www.strava.com/segments/105
+  [pace_mudou/fora_alcance_curva] Ultra: score None
+[mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/106
   Sem streams: sem streams, salto.
--> ranking.json (1 alta, 2 especulativa-plano/subida, 2 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 2 p/ revisão manual, 3 novo/actualizado, 4 do cache) | histórico -> h.json
+[mock] sleep 1.5
+[mock] GET https://www.strava.com/segments/110
+  [pace_mudou/especulativa-plano_subida] Mini: score 3.2
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
+-> ranking.json (1 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 2 p/ revisão manual, 5 novo/actualizado, 2 do cache) | histórico -> h.json
 [exit] 0
 --- stderr
 
@@ -2924,7 +3228,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "kom_mudou",
    "nome": "Subida curta",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": 2.6,
    "segmentId": 102,
@@ -2954,7 +3258,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "novo",
    "nome": "Descida curta",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": -4.4,
    "segmentId": 103,
@@ -2984,7 +3288,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "revisao_periodica",
    "nome": "Suspeito",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": 329.5,
    "score": -270.5,
    "segmentId": 104,
@@ -3004,22 +3308,24 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "105": {
-   "distancia_efetiva_gap_m": 1.0,
+   "distancia_efetiva_gap_m": 31467.5,
    "distancia_m": 30000.0,
-   "grupo": "especulativa-descida",
+   "grupo": "fora_alcance_curva",
    "heuristica_s": null,
    "ja_corri": false,
-   "kom_atleta": "X",
+   "kom_atleta": "Atleta 0",
    "kom_tempo_s": 7000,
-   "metodo": "tabela",
-   "motivo_recalculo": "novo",
+   "metodo": "cs_model",
+   "motivo_recalculo": "pace_mudou",
    "nome": "Ultra",
-   "previsto_s": 1.0,
-   "score": -3.0,
+   "pace_reserva_s_km": 205,
+   "previsto_s": 7631.1,
+   "score": null,
    "segmentId": 105,
    "suspeito": false,
    "suspeito_motivo": null,
-   "ultima_analise": "2026-09-24T10:00:00+00:00"
+   "top10": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "109": {
    "distancia_efetiva_gap_m": 1.0,
@@ -3040,22 +3346,34 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "ultima_analise": "2026-09-24T10:00:00+00:00"
   },
   "110": {
-   "distancia_efetiva_gap_m": 1.0,
+   "distancia_efetiva_gap_m": 162.2,
    "distancia_m": 150.0,
    "grupo": "especulativa-plano_subida",
-   "heuristica_s": null,
+   "heuristica_s": 33.2,
    "ja_corri": false,
-   "kom_atleta": "X",
+   "kom_atleta": "Atleta 0",
    "kom_tempo_s": 30,
-   "metodo": "tabela",
-   "motivo_recalculo": "novo",
+   "metodo": "grade_efetiva+pace_1000m",
+   "motivo_recalculo": "pace_mudou",
    "nome": "Mini",
-   "previsto_s": 1.0,
-   "score": 2.0,
+   "pace_reserva_s_km": 205,
+   "previsto_s": null,
+   "score": 3.2,
    "segmentId": 110,
    "suspeito": false,
    "suspeito_motivo": null,
-   "ultima_analise": "2026-09-24T10:00:00+00:00"
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 33,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "999": {
    "distancia_efetiva_gap_m": 1.0,
@@ -3102,24 +3420,6 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
  ],
  "confianca_especulativa_plano_subida": [
   {
-   "segmentId": 110,
-   "nome": "Mini",
-   "distancia_m": 150.0,
-   "distancia_efetiva_gap_m": 1.0,
-   "kom_tempo_s": 30,
-   "kom_atleta": "X",
-   "ja_corri": false,
-   "grupo": "especulativa-plano_subida",
-   "previsto_s": 1.0,
-   "heuristica_s": null,
-   "metodo": "tabela",
-   "score": 2.0,
-   "suspeito": false,
-   "suspeito_motivo": null,
-   "ultima_analise": "2026-09-24T10:00:00+00:00",
-   "motivo_recalculo": "novo"
-  },
-  {
    "segmentId": 102,
    "nome": "Subida curta",
    "distancia_m": 400.0,
@@ -3131,7 +3431,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 97.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": 2.6,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -3148,27 +3448,39 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
     "s_para_10o": null,
     "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
    }
+  },
+  {
+   "segmentId": 110,
+   "nome": "Mini",
+   "distancia_m": 150.0,
+   "distancia_efetiva_gap_m": 162.2,
+   "kom_tempo_s": 30,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "especulativa-plano_subida",
+   "previsto_s": null,
+   "heuristica_s": 33.2,
+   "metodo": "grade_efetiva+pace_1000m",
+   "pace_reserva_s_km": 205,
+   "score": 3.2,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "pace_mudou",
+   "top10": {
+    "previsto_inteiro_s": 33,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "confianca_especulativa_descida_SEM_CONFIANCA": [
-  {
-   "segmentId": 105,
-   "nome": "Ultra",
-   "distancia_m": 30000.0,
-   "distancia_efetiva_gap_m": 1.0,
-   "kom_tempo_s": 7000,
-   "kom_atleta": "X",
-   "ja_corri": false,
-   "grupo": "especulativa-descida",
-   "previsto_s": 1.0,
-   "heuristica_s": null,
-   "metodo": "tabela",
-   "score": -3.0,
-   "suspeito": false,
-   "suspeito_motivo": null,
-   "ultima_analise": "2026-09-24T10:00:00+00:00",
-   "motivo_recalculo": "novo"
-  },
   {
    "segmentId": 103,
    "nome": "Descida curta",
@@ -3181,7 +3493,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 75.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": -4.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -3200,7 +3512,28 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    }
   }
  ],
- "fora_alcance_curva_SEM_CONFIANCA": [],
+ "fora_alcance_curva_SEM_CONFIANCA": [
+  {
+   "segmentId": 105,
+   "nome": "Ultra",
+   "distancia_m": 30000.0,
+   "distancia_efetiva_gap_m": 31467.5,
+   "kom_tempo_s": 7000,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "fora_alcance_curva",
+   "previsto_s": 7631.1,
+   "heuristica_s": null,
+   "metodo": "cs_model",
+   "pace_reserva_s_km": 205,
+   "score": null,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "pace_mudou",
+   "top10": null
+  }
+ ],
  "revisao_manual": [
   {
    "segmentId": 109,
@@ -3232,7 +3565,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 329.5,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": -270.5,
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
@@ -3255,6 +3588,9 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_all_cached =====
 --- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
 2 candidatos: 2 do cache, 0 a (re)analisar
 -> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 0 novo/actualizado, 2 do cache) | histórico -> historico.json
 [exit] 0
@@ -3351,9 +3687,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_pace_mudou =====
 --- stdout
-4 candidatos: 2 do cache, 2 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+4 candidatos: 1 do cache, 3 a (re)analisar
 [mock] GET https://www.strava.com/segments/102
   [pace_mudou/especulativa-plano_subida] Subida curta: score 2.6
       top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
@@ -3361,7 +3698,11 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 [mock] GET https://www.strava.com/segments/103
   [pace_mudou/especulativa-descida] Descida curta: score -4.4
       top 10: 1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
--> ranking.json (1 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 2 novo/actualizado, 2 do cache) | histórico -> historico.json
+[mock] sleep 1.5
+[mock] GET https://www.strava.com/segments/110
+  [pace_mudou/especulativa-plano_subida] Mini: score 3.2
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
+-> ranking.json (1 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 3 novo/actualizado, 1 do cache) | histórico -> historico.json
 [exit] 0
 --- stderr
 
@@ -3379,7 +3720,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 200,
+   "pace_reserva_s_km": 200,
    "previsto_s": 1.0,
    "score": -3.0,
    "segmentId": 101,
@@ -3398,7 +3739,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "pace_mudou",
    "nome": "Subida curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": 2.6,
    "segmentId": 102,
@@ -3428,7 +3769,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "curva_gap_curta",
    "motivo_recalculo": "pace_mudou",
    "nome": "Descida curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": null,
    "score": -4.4,
    "segmentId": 103,
@@ -3448,23 +3789,34 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "110": {
-   "distancia_efetiva_gap_m": 1.0,
+   "distancia_efetiva_gap_m": 162.2,
    "distancia_m": 150.0,
    "grupo": "especulativa-plano_subida",
-   "heuristica_s": null,
+   "heuristica_s": 33.2,
    "ja_corri": false,
-   "kom_atleta": "X",
+   "kom_atleta": "Atleta 0",
    "kom_tempo_s": 30,
-   "metodo": "tabela",
-   "motivo_recalculo": "novo",
+   "metodo": "grade_efetiva+pace_1000m",
+   "motivo_recalculo": "pace_mudou",
    "nome": "Mini",
-   "pace_flat_s_km": 220,
-   "previsto_s": 1.0,
-   "score": -3.0,
+   "pace_reserva_s_km": 205,
+   "previsto_s": null,
+   "score": 3.2,
    "segmentId": 110,
    "suspeito": false,
    "suspeito_motivo": null,
-   "ultima_analise": "2026-09-24T10:00:00+00:00"
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 33,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
   }
  }
 }
@@ -3489,29 +3841,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-24T10:00:00+00:00",
    "motivo_recalculo": "novo",
-   "pace_flat_s_km": 200
+   "pace_reserva_s_km": 200
   }
  ],
  "confianca_especulativa_plano_subida": [
-  {
-   "segmentId": 110,
-   "nome": "Mini",
-   "distancia_m": 150.0,
-   "distancia_efetiva_gap_m": 1.0,
-   "kom_tempo_s": 30,
-   "kom_atleta": "X",
-   "ja_corri": false,
-   "grupo": "especulativa-plano_subida",
-   "previsto_s": 1.0,
-   "heuristica_s": null,
-   "metodo": "tabela",
-   "score": -3.0,
-   "suspeito": false,
-   "suspeito_motivo": null,
-   "ultima_analise": "2026-09-24T10:00:00+00:00",
-   "motivo_recalculo": "novo",
-   "pace_flat_s_km": 220
-  },
   {
    "segmentId": 102,
    "nome": "Subida curta",
@@ -3524,7 +3857,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 97.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 2.6,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -3532,6 +3865,36 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "motivo_recalculo": "pace_mudou",
    "top10": {
     "previsto_inteiro_s": 98,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
+  },
+  {
+   "segmentId": 110,
+   "nome": "Mini",
+   "distancia_m": 150.0,
+   "distancia_efetiva_gap_m": 162.2,
+   "kom_tempo_s": 30,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "especulativa-plano_subida",
+   "previsto_s": null,
+   "heuristica_s": 33.2,
+   "metodo": "grade_efetiva+pace_1000m",
+   "pace_reserva_s_km": 205,
+   "score": 3.2,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "pace_mudou",
+   "top10": {
+    "previsto_inteiro_s": 33,
     "n_tempos": 3,
     "posicao": 2,
     "empatado_com": 0,
@@ -3556,7 +3919,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": null,
    "heuristica_s": 75.6,
    "metodo": "curva_gap_curta",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": -4.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -3581,10 +3944,11 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_dotenv =====
 --- stdout
-8 candidatos: 0 do cache, 8 a (re)analisar
-  cap --max-novos=1 — só processo os primeiros 1 (candidatos.json já vem ordenado pelo gap grosseiro). Corre outra vez para o resto.
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+8 candidatos: 0 do cache, 8 a (re)analisar
+  cap --max-novos=1 — só processo os primeiros 1 (candidatos.json já vem ordenado pelo gap grosseiro). Corre outra vez para o resto.
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)
@@ -3606,7 +3970,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -3643,7 +4007,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": null,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -3670,21 +4034,24 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_no_session =====
 --- stdout
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
 8 candidatos: 0 do cache, 8 a (re)analisar
 [exit] SystemExit('STRAVA_SESSION não definido (preciso para (re)analisar segmentos).')
 --- stderr
 
 ===== rank_no_icu =====
 --- stdout
-8 candidatos: 0 do cache, 8 a (re)analisar
 [exit] SystemExit('INTERVALS_ICU_API_KEY / INTERVALS_ICU_ATHLETE_ID não definidos.')
 --- stderr
 
 ===== rank_top10_dentro =====
 --- stdout
-1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo
@@ -3706,7 +4073,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -3743,7 +4110,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -3770,9 +4137,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_top10_empate =====
 --- stdout
-1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 4.º empatado com 1 tempo(s), 3 s para o lugar acima, 9 s de margem para o lugar abaixo
@@ -3794,7 +4162,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -3831,7 +4199,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -3858,9 +4226,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_top10_fora =====
 --- stdout
-1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: fora do top 10, 6 s para o 10.º
@@ -3882,7 +4251,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -3919,7 +4288,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -3946,9 +4315,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_top10_incompleto =====
 --- stdout
-1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 5.º, 11 s para o lugar acima, sem lugar abaixo, top 10 incompleto (4 tempos)
@@ -3970,7 +4340,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -4007,7 +4377,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -4034,9 +4404,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_top10_eu_dentro =====
 --- stdout
-1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo, sem o meu tempo
@@ -4058,7 +4429,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -4095,7 +4466,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -4122,9 +4493,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_top10_eu_incerto =====
 --- stdout
-1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 10.º ou fora do top 10, 6 s para o lugar acima (o 11.º não vem na página), sem o meu tempo
@@ -4146,7 +4518,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -4183,7 +4555,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,
@@ -4210,9 +4582,10 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 
 ===== rank_top10_ids_sem_eu =====
 --- stdout
-1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
+1 candidatos: 0 do cache, 1 a (re)analisar
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
       top 10: 4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo
@@ -4234,7 +4607,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "metodo": "tabela",
    "motivo_recalculo": "novo",
    "nome": "Plano longo",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "previsto_s": 461.4,
    "score": 41.4,
    "segmentId": 101,
@@ -4271,7 +4644,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "previsto_s": 461.4,
    "heuristica_s": null,
    "metodo": "tabela",
-   "pace_flat_s_km": 220,
+   "pace_reserva_s_km": 205,
    "score": 41.4,
    "suspeito": false,
    "suspeito_motivo": null,

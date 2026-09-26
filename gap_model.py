@@ -2,12 +2,13 @@
 """gap_model.py: Fase 3. Prevê o meu tempo num segmento a partir da curva de
 pace GAP do Intervals.icu e da distância efectiva calculada sobre os streams.
 
-    python gap_model.py --in detalhes.json --out previsoes.json --pace-flat 3:40
+    python gap_model.py --in detalhes.json --out previsoes.json
 
 Grupos (ver avaliar_segmento e o README):
 - alta: efectiva >= MIN_DISTANCIA_EFETIVA_M. Tabela da curva ou modelo CS/D'.
   Sai 15-35% mais rápido que os meus PRs e não se corrige: mede o tecto.
 - especulativa-plano_subida: mais curto, grade >= 0. Heurística, não física.
+  Fora da curva usa o pace de reserva: o da curva aos PACE_RESERVA_DIST_M.
 - especulativa-descida: mais curto, grade < 0. Sem calibração, não ordena.
 - fora_alcance_curva: CS/D' além de FATOR_EXTRAPOLACAO_MAX vezes o fim da
   tabela. Não ordena.
@@ -25,7 +26,7 @@ import sys
 
 import requests
 
-from comum import carregar_env, custo_minetti, parse_pace
+from comum import carregar_env, custo_minetti, fmt_pace
 
 INTERVALS_BASE = "https://intervals.icu/api/v1"
 
@@ -33,6 +34,7 @@ FILTRO_VELOCIDADE_MAX_KMH = 24.0  # teto plausível para pace sustentado, mesmo 
 MIN_DISTANCIA_EFETIVA_M = 1000.0  # abaixo disto, sem dados credíveis na tabela
 MARGEM_SUSPEITA_PCT = 15.0  # vantagem sobre o KOM (nunca corrido) -> revisão manual
 FATOR_EXTRAPOLACAO_MAX = 1.5  # cs_model além disto x o máximo da tabela -> fora_alcance_curva
+PACE_RESERVA_DIST_M = 1000.0  # esforço forte, não pace de treino
 
 
 def obter_curva_gap(api_key, athlete_id, janela="180d", tipo="Run"):
@@ -146,15 +148,31 @@ def prever_tempo(distancia_efetiva_m, curva):
     return None, "fora_de_alcance"
 
 
-def heuristica_curta(distancia_efetiva_m, curva, pace_flat_s_km=None, previsto_grosseiro_s=None):
+def pace_reserva(curva, dist_m=PACE_RESERVA_DIST_M):
+    """Pace de reserva (s/km, inteiro, para a chave de cache não mudar por
+    décimas): o pace da curva GAP aos dist_m. Interpola a tabela; se ela não
+    chega lá, usa CS/D'. Sem nenhum dos dois termina o processo: essa curva
+    também não serve para os longos."""
+    t, fonte = _interpolar_tabela(dist_m, curva), "tabela"
+    if t is None:
+        t, fonte = _modelo_cs(dist_m, curva), "cs_model"
+    if t is None:
+        raise SystemExit(f"A curva GAP não cobre {dist_m:.0f} m (nem tabela nem modelo CS) — "
+                          "sem pace de reserva.")
+    pace = round(t / dist_m * 1000)
+    print(f"pace de reserva: {fmt_pace(pace)}/km (curva GAP aos {dist_m:.0f} m, {fonte})")
+    return pace
+
+
+def heuristica_curta(distancia_efetiva_m, curva, pace_reserva_s_km=None, previsto_grosseiro_s=None):
     """Estimativa para segmentos curtos, nunca física. Por ordem: pontos reais
-    da curva nessa gama, distância efectiva x pace_flat, previsto_grosseiro_s
-    da Fase 1. Devolve (valor ou None, metodo)."""
+    da curva nessa gama, distância efectiva x pace de reserva,
+    previsto_grosseiro_s da Fase 1. Devolve (valor ou None, metodo)."""
     t = _interpolar_tabela(distancia_efetiva_m, curva)
     if t is not None:
         return t, "curva_gap_curta"
-    if pace_flat_s_km is not None:
-        return distancia_efetiva_m / 1000.0 * pace_flat_s_km, "grade_efetiva+pace_flat"
+    if pace_reserva_s_km is not None:
+        return distancia_efetiva_m / 1000.0 * pace_reserva_s_km, "grade_efetiva+pace_1000m"
     if previsto_grosseiro_s is not None:
         return previsto_grosseiro_s, "grade_media_fase1"
     return None, "sem_dados"
@@ -172,7 +190,7 @@ def _suspeito(valor_previsto, kom_tempo_s, ja_corri, margem_pct=MARGEM_SUSPEITA_
 
 
 def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_corri,
-                      pace_flat_s_km=None, previsto_grosseiro_s=None):
+                      pace_reserva_s_km=None, previsto_grosseiro_s=None):
     """Decide o grupo e aplica o guarda-rail de suspeita. descida e
     fora_alcance_curva nunca são suspeitos: o número já não tem base."""
     av = {"previsto_s": None, "metodo_previsao": None, "heuristica_s": None,
@@ -186,7 +204,7 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
         av["grupo"] = "alta"
     else:
         heur, metodo = heuristica_curta(distancia_efetiva_m, curva,
-                                         pace_flat_s_km=pace_flat_s_km,
+                                         pace_reserva_s_km=pace_reserva_s_km,
                                          previsto_grosseiro_s=previsto_grosseiro_s)
         av.update(heuristica_s=heur, heuristica_metodo=metodo)
         if avg_grade_pct is not None and avg_grade_pct < 0:
@@ -198,7 +216,7 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
     return av
 
 
-def avaliar_detalhe(det, curva, pace_flat_s_km, previsto_grosseiro_s):
+def avaliar_detalhe(det, curva, pace_reserva_s_km, previsto_grosseiro_s):
     """avaliar_segmento sobre uma página de detalhe, mais efetiva, valor e
     gap_kom (valor - KOM). None se não houver streams."""
     streams = det.get("streams") or {}
@@ -210,7 +228,7 @@ def avaliar_detalhe(det, curva, pace_flat_s_km, previsto_grosseiro_s):
     kom = det.get("kom_tempo_s")
     av = avaliar_segmento(efetiva, curva, avg_grade_pct=det.get("avgGrade"),
                            kom_tempo_s=kom, ja_corri=det.get("ja_corri", False),
-                           pace_flat_s_km=pace_flat_s_km,
+                           pace_reserva_s_km=pace_reserva_s_km,
                            previsto_grosseiro_s=previsto_grosseiro_s)
     valor = av["previsto_s"] if av["grupo"] == "alta" else av["heuristica_s"]
     av.update(efetiva=efetiva, valor=valor,
@@ -253,11 +271,7 @@ def main():
                      help="output do segment_detail.py (precisa de 'streams' por segmento)")
     ap.add_argument("--out", default="previsoes.json")
     ap.add_argument("--janela", default="180d", help="janela da curva GAP (default 180d)")
-    ap.add_argument("--pace-flat", dest="pace_flat",
-                     help="mm:ss/km, para a heurística dos segmentos curtos (opcional)")
     args = ap.parse_args()
-
-    pace_flat_s_km = parse_pace(args.pace_flat) if args.pace_flat else None
 
     api_key = os.environ.get("INTERVALS_ICU_API_KEY", "").strip()
     athlete_id = os.environ.get("INTERVALS_ICU_ATHLETE_ID", "").strip()
@@ -272,11 +286,12 @@ def main():
     print(f"curva GAP '{curva['label']}': {curva['days']} dias, "
           f"{len(curva['distance'])} pontos, "
           f"CS={cs['criticalSpeed']:.3f} m/s D'={cs['dPrime']:.1f}m r2={cs['r2']:.4f}")
+    pace_reserva_s_km = pace_reserva(curva)
 
     detalhes = json.load(open(args.entrada, encoding="utf-8"))
     itens = []
     for d in detalhes:
-        av = avaliar_detalhe(d, curva, pace_flat_s_km, d.get("previsto_grosseiro_s"))
+        av = avaliar_detalhe(d, curva, pace_reserva_s_km, d.get("previsto_grosseiro_s"))
         if av is None:
             continue
         kom, efetiva, valor = d.get("kom_tempo_s"), av["efetiva"], av["valor"]

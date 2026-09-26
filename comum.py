@@ -24,10 +24,9 @@ TILE_BASE = "https://cdn-1.strava.com/tiles/segments"
 ACTIVITY_TYPE_RUN = 9
 
 
-def parse_pace(s):
-    """'3:40' -> segundos por km (int)."""
-    m, sec = s.split(":")
-    return int(m) * 60 + int(sec)
+def fmt_pace(s_por_km):
+    """206 -> '3:26'."""
+    return f"{s_por_km // 60}:{s_por_km % 60:02d}"
 
 
 def carregar_env(path=".env"):
@@ -127,7 +126,7 @@ def distancia_efetiva(distancia_m, grade_pct):
     return distancia_m * custo_minetti(grade_pct)
 
 
-def tempo_previsto_grosseiro(distancia_m, grade_pct, pace_flat_s_por_km):
-    """Previsão grosseira (s) com pace plano fixo. Só ordena a fila da Fase 1."""
+def tempo_previsto_grosseiro(distancia_m, grade_pct, pace_s_por_km):
+    """Previsão grosseira (s) com um pace fixo. Só ordena a fila da Fase 1."""
     dist_efetiva_km = distancia_efetiva(distancia_m, grade_pct) / 1000.0
-    return dist_efetiva_km * pace_flat_s_por_km
+    return dist_efetiva_km * pace_s_por_km

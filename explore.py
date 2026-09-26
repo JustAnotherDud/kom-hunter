@@ -2,10 +2,11 @@
 """explore.py: Fase 1. Procura segmentos Run perto de um ponto, só com os
 dados do tile (sem pedir /segments/<id>).
 
-    python explore.py --lat <LAT> --lon <LON> --athlete-id <ID> --pace-flat 3:40
+    python explore.py --lat <LAT> --lon <LON> --athlete-id <ID>
 
 Escreve candidatos.json ordenado por gap_grosseiro_s e cortado a --top.
-gap_grosseiro_s usa só a grade média e --pace-flat: ordena, nunca exclui.
+gap_grosseiro_s usa só a grade média e o pace de reserva (o da curva GAP do
+Intervals.icu aos 1000 m, 1 pedido): ordena, nunca exclui.
 Segmentos sem komElapsedTime no tile são dados em falta na Strava (o KOM
 existe na página) e vão para --out-sem-kom.
 
@@ -20,8 +21,8 @@ import sys
 import time
 
 from comum import (ACTIVITY_TYPE_RUN, INTENT_DEFAULT, PAGE_DELAY, carregar_env, largura_tile_km,
-                    obter_tile_segmentos, parse_pace, sessao_strava, tempo_previsto_grosseiro,
-                    tiles_no_raio)
+                    obter_tile_segmentos, sessao_strava, tempo_previsto_grosseiro, tiles_no_raio)
+from gap_model import obter_curva_gap, pace_reserva
 
 MAX_TILES = 40  # cap de pedidos de tiles por corrida (~raio 2.5 km a zoom 15)
 
@@ -36,8 +37,7 @@ def main():
                      help="raio em km (default 1.5). Para mais área, corre vários centros")
     ap.add_argument("--zoom", type=int, default=15,
                      help="zoom das tiles (default 15). Abaixo disso perdem-se segmentos")
-    ap.add_argument("--pace-flat", required=True, dest="pace_flat",
-                     help="pace de referência em plano, mm:ss/km")
+    ap.add_argument("--janela", default="180d", help="janela da curva GAP (default 180d)")
     ap.add_argument("--athlete-id", default=os.environ.get("STRAVA_ATHLETE_ID"),
                      help="id do atleta da STRAVA_SESSION (ou env STRAVA_ATHLETE_ID)")
     ap.add_argument("--top", type=int, default=40,
@@ -56,13 +56,19 @@ def main():
                  "tem de corresponder ao atleta do STRAVA_SESSION (o endpoint de tiles "
                  "devolve 401 se não bater certo).")
 
-    pace_flat = parse_pace(args.pace_flat)
-    s = sessao_strava(cookie)
-
     tiles = tiles_no_raio(args.lat, args.lon, args.raio, args.zoom)
     if len(tiles) > MAX_TILES:
         sys.exit(f"{len(tiles)} tiles (> {MAX_TILES}) para este raio/zoom — "
                   "reduz --raio (não subas --zoom para compensar) ou corre em vários centros.")
+
+    api_key = os.environ.get("INTERVALS_ICU_API_KEY", "").strip()
+    icu_athlete_id = os.environ.get("INTERVALS_ICU_ATHLETE_ID", "").strip()
+    if not api_key or not icu_athlete_id:
+        sys.exit("INTERVALS_ICU_API_KEY / INTERVALS_ICU_ATHLETE_ID não definidos "
+                 "(preciso da curva GAP para o pace de reserva).")
+    # antes dos tiles: se a curva falhar, não gasto pedidos à Strava
+    pace = pace_reserva(obter_curva_gap(api_key, icu_athlete_id, janela=args.janela))
+    s = sessao_strava(cookie)
 
     largura = largura_tile_km(args.lat, args.zoom)
     area_coberta = len(tiles) * largura ** 2
@@ -109,7 +115,7 @@ def main():
                 "url": f"https://www.strava.com/segments/{sid}",
             })
             continue
-        previsto = tempo_previsto_grosseiro(p["distance"], p["avgGrade"], pace_flat)
+        previsto = tempo_previsto_grosseiro(p["distance"], p["avgGrade"], pace)
         candidatos.append({
             "segmentId": sid,
             "nome": p["name"],

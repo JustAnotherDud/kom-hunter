@@ -71,24 +71,29 @@ def h_entry(sid, kom, when, **kw):
 
 
 SESSION = {"STRAVA_SESSION": "cookie"}
-EXP = ["explore.py", "--lat", "39.36", "--lon", "-8.95", "--raio", "0.5", "--pace-flat", "3:40"]
+EXP = ["explore.py", "--lat", "39.36", "--lon", "-8.95", "--raio", "0.5"]
 
 SCENARIOS = {
-    "explore_ok": dict(script=EXP + ["--athlete-id", "1", "--top", "5"], env=SESSION),
+    "explore_ok": dict(script=EXP + ["--athlete-id", "1", "--top", "5"], env=SESSION,
+                       dotenv=ENV_ICU),
     "explore_all_envid": dict(script=EXP + ["--top", "40", "--out", "c.json"],
-                              env={**SESSION, "STRAVA_ATHLETE_ID": "7"}),
+                              env={**SESSION, "STRAVA_ATHLETE_ID": "7"}, dotenv=ENV_ICU),
     "explore_intent": dict(script=EXP + ["--athlete-id", "1", "--zoom", "14"],
-                           env=SESSION),
+                           env=SESSION, dotenv=ENV_ICU),
     "explore_semkom_antigo": dict(script=EXP + ["--athlete-id", "1"], env=SESSION,
-                                  mode={"sem_107": 1},
+                                  dotenv=ENV_ICU, mode={"sem_107": 1},
                                   files={"sem_kom.json": [{"segmentId": 1, "velho": True}]}),
     "explore_dotenv": dict(script=EXP, env={"STRAVA_ATHLETE_ID": "7"},
-                           dotenv="STRAVA_SESSION=cookie\nSTRAVA_ATHLETE_ID=1\n"),
+                           dotenv="STRAVA_SESSION=cookie\nSTRAVA_ATHLETE_ID=1\n" + ENV_ICU),
+    "explore_no_icu": dict(script=EXP + ["--athlete-id", "1"], env=SESSION),
+    "explore_curva_curta_sem_cs": dict(script=EXP + ["--athlete-id", "1"], env=SESSION,
+                                       dotenv=ENV_ICU, mode={"curva_curta": 1, "sem_cs": 1}),
     "explore_no_session": dict(script=EXP + ["--athlete-id", "1"], env={}),
     "explore_no_athlete": dict(script=EXP, env=SESSION),
     "explore_too_many": dict(script=["explore.py", "--lat", "39.36", "--lon", "-8.95", "--raio", "5",
-                                     "--pace-flat", "3:40", "--athlete-id", "1"], env=SESSION),
-    "explore_401": dict(script=EXP + ["--athlete-id", "1"], env=SESSION, mode={"tile401": 1}),
+                                     "--athlete-id", "1"], env=SESSION),
+    "explore_401": dict(script=EXP + ["--athlete-id", "1"], env=SESSION, dotenv=ENV_ICU,
+                        mode={"tile401": 1}),
     "detail_ok": dict(script=["segment_detail.py", "--max", "3"], env=SESSION,
                       files={"candidatos.json": candidatos_fixos()}),
     "detail_all_nc": dict(script=["segment_detail.py", "--so-nao-corridos", "--out", "d.json"],
@@ -102,8 +107,14 @@ SCENARIOS = {
                           files={"candidatos.json": candidatos_fixos()}),
     "detail_no_session": dict(script=["segment_detail.py"], env={},
                               files={"candidatos.json": candidatos_fixos()}),
-    "gap_pace": dict(script=["gap_model.py", "--pace-flat", "3:40"], dotenv=ENV_ICU,
+    "gap_pace": dict(script=["gap_model.py"], dotenv=ENV_ICU,
                      files={"detalhes.json": detalhes_fixos()}),
+    # a curva sem o ponto dos 1000 m: pace de reserva interpolado entre 800 e 5000 m
+    "gap_sem_1000": dict(script=["gap_model.py"], dotenv=ENV_ICU, mode={"sem_1000": 1},
+                         files={"detalhes.json": detalhes_fixos()}),
+    # a tabela acaba nos 800 m: pace de reserva pelo modelo CS
+    "gap_curva_curta": dict(script=["gap_model.py"], dotenv=ENV_ICU, mode={"curva_curta": 1},
+                            files={"detalhes.json": detalhes_fixos()}),
     "gap_nopace": dict(script=["gap_model.py", "--janela", "90d", "--out", "p.json"], dotenv=ENV_ICU,
                        files={"detalhes.json": detalhes_fixos()}),
     "gap_semdados": dict(script=["gap_model.py"], env={"INTERVALS_ICU_API_KEY": "k",
@@ -120,12 +131,12 @@ SCENARIOS = {
                          files={"detalhes.json": detalhes_fixos()}),
     "gap_ruido_meio": dict(script=["gap_model.py"], dotenv=ENV_ICU, mode={"ruido_meio": 1},
                            files={"detalhes.json": detalhes_fixos()}),
-    "rank_new": dict(script=["rank.py", "--pace-flat", "3:40"], env=SESSION, dotenv=ENV_ICU,
+    "rank_new": dict(script=["rank.py"], env=SESSION, dotenv=ENV_ICU,
                      files={"candidatos.json": candidatos_fixos()}),
     "rank_nopace_semcs": dict(script=["rank.py", "--janela", "30d"], env=SESSION, dotenv=ENV_ICU,
                               mode={"sem_cs": 1}, files={"candidatos.json": candidatos_fixos()}),
     "rank_cache_cap": dict(
-        script=["rank.py", "--pace-flat", "3:40", "--max-novos", "2", "--historico", "h.json",
+        script=["rank.py", "--max-novos", "2", "--historico", "h.json",
                 "--revisao-semanas", "3", "--out", "r.json"],
         env=SESSION, dotenv=ENV_ICU,
         files={"candidatos.json": candidatos_fixos(),
@@ -142,24 +153,24 @@ SCENARIOS = {
                })}),
     "rank_revisao": None,
     "rank_all_cached": dict(
-        script=["rank.py"], env={},
+        script=["rank.py"], env={}, dotenv=ENV_ICU,
         files={"candidatos.json": [c for c in candidatos_fixos() if c["segmentId"] in (101, 110)],
                "historico.json": {"segmentos": {
                    "101": h_entry(101, 420, "2026-09-20T10:00:00+00:00", score=5.0),
                    "110": h_entry(110, 30, "2026-09-24T10:00:00+00:00",
                                   grupo="fora_alcance_curva")}}}),
     "rank_pace_mudou": dict(
-        script=["rank.py", "--pace-flat", "3:40"], env=SESSION, dotenv=ENV_ICU,
+        script=["rank.py"], env=SESSION, dotenv=ENV_ICU,
         files={"candidatos.json": [c for c in candidatos_fixos()
                                    if c["segmentId"] in (101, 102, 103, 110)],
                "historico.json": hist({
-                   101: h_entry(101, 420, "2026-09-24T10:00:00+00:00", pace_flat_s_km=200),
+                   101: h_entry(101, 420, "2026-09-24T10:00:00+00:00", pace_reserva_s_km=200),
                    102: h_entry(102, 95, "2026-09-24T10:00:00+00:00",
                                 grupo="especulativa-plano_subida"),
                    103: h_entry(103, 80, "2026-09-24T10:00:00+00:00",
-                                grupo="especulativa-descida", pace_flat_s_km=210),
+                                grupo="especulativa-descida", pace_reserva_s_km=210),
                    110: h_entry(110, 30, "2026-09-24T10:00:00+00:00",
-                                grupo="especulativa-plano_subida", pace_flat_s_km=220),
+                                grupo="especulativa-plano_subida", pace_reserva_s_km=220),
                })}),
     "rank_dotenv": dict(script=["rank.py", "--max-novos", "1"],
                         dotenv=ENV_ICU + "STRAVA_SESSION=cookie\n",
@@ -179,7 +190,7 @@ LB_101 = {
 }
 for _k, _lb in LB_101.items():
     SCENARIOS[f"rank_top10_{_k}"] = dict(
-        script=["rank.py", "--pace-flat", "3:40"], env=SESSION, dotenv=ENV_ICU,
+        script=["rank.py"], env=SESSION, dotenv=ENV_ICU,
         mode={"leaderboard": {101: _lb}},
         files={"candidatos.json": [c for c in candidatos_fixos() if c["segmentId"] == 101]})
 
@@ -194,7 +205,7 @@ LB_EU_INCERTO = [(420, 7000), (425, 7001), (430, 1), (435, 7003), (440, 7004),
 for _k, _lb in (("eu_dentro", LB_EU_DENTRO), ("eu_incerto", LB_EU_INCERTO),
                 ("ids_sem_eu", LB_COM_IDS)):
     SCENARIOS[f"rank_top10_{_k}"] = dict(
-        script=["rank.py", "--pace-flat", "3:40"],
+        script=["rank.py"],
         env={**SESSION, "STRAVA_ATHLETE_ID": "1"}, dotenv=ENV_ICU,
         mode={"leaderboard": {101: _lb}},
         files={"candidatos.json": [c for c in candidatos_fixos() if c["segmentId"] == 101]})

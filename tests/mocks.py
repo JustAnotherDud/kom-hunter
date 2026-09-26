@@ -142,6 +142,13 @@ def install_mocks(mode):
         c = json.loads(json.dumps(CURVA))
         if mode.get("sem_cs"):
             c["paceModels"] = []
+        if mode.get("sem_1000"):
+            i = c["distance"].index(1000)
+            for k in ("distance", "values", "activity_id"):
+                del c[k][i]
+        if mode.get("curva_curta"):
+            for k in ("distance", "values", "activity_id"):
+                c[k] = c[k][:4]  # acaba nos 800 m
         if mode.get("ruido_meio"):
             c["distance"] = [50] + c["distance"]
             c["values"] = [20] + c["values"]
