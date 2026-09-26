@@ -77,6 +77,7 @@ already reads, so there are no extra requests.
   seconds to cut to match the 10th.
 - Fewer than 10 times: `n_tempos` says how many, and a time slower than all
   of them still gets a place, with no place below.
+- Your own entry (`athleteId` equal to `STRAVA_ATHLETE_ID`) is left out; slower than the other 9 of a full top 10 reads as 10th or out.
 
 It compares whole seconds, as Strava records them. No percentages or
 probabilities: the model is not calibrated. It does not change groups, score

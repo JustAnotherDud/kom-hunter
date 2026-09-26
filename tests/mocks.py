@@ -45,12 +45,19 @@ def tile_props(sid):
 
 
 def next_data(sid, tempos=None):
-    """tempos: substitui o leaderboard por defeito (3 tempos a partir do KOM)."""
+    """tempos: substitui o leaderboard por defeito (3 tempos a partir do KOM).
+    Um item (tempo, athleteId) acrescenta athleteId e athleteIdStr à entrada."""
     nome, dist, grade, kom, at, ja, has_streams = SEGS[sid]
     if tempos is None:
         tempos = [] if not kom else [kom + 7 * r for r in range(3)]
-    lb = [{"rank": r + 1, "displayName": f"Atleta {r}", "elapsedTime": t}
-          for r, t in enumerate(tempos)]
+    lb = []
+    for r, t in enumerate(tempos):
+        e = {"rank": r + 1, "displayName": f"Atleta {r}"}
+        if isinstance(t, (tuple, list)):
+            t, aid = t
+            e.update(athleteId=aid, athleteIdStr=str(aid))
+        e["elapsedTime"] = t
+        lb.append(e)
     pp = {
         "metadata": {"name": nome, "activityType": "Run", "displayLocation": "Algures"},
         "measurements": {"distance": float(dist), "avgGrade": grade, "elevGain": 5.0,

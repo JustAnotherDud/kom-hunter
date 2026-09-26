@@ -4031,3 +4031,363 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
  "fora_alcance_curva_SEM_CONFIANCA": [],
  "revisao_manual": []
 }
+
+===== rank_top10_eu_dentro =====
+--- stdout
+1 candidatos: 0 do cache, 1 a (re)analisar
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+[mock] GET https://www.strava.com/segments/101
+  [novo/alta] Plano longo: score 41.4
+      top 10: 4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo, sem o meu tempo
+-> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 1 novo/actualizado, 0 do cache) | histórico -> historico.json
+[exit] 0
+--- stderr
+
+--- file historico.json
+{
+ "segmentos": {
+  "101": {
+   "distancia_efetiva_gap_m": 2132.1,
+   "distancia_m": 2000.0,
+   "grupo": "alta",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "Atleta 0",
+   "kom_tempo_s": 420,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Plano longo",
+   "pace_flat_s_km": 220,
+   "previsto_s": 461.4,
+   "score": 41.4,
+   "segmentId": 101,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 3,
+    "n_tempos": 9,
+    "posicao": 4,
+    "previsto_inteiro_s": 461,
+    "resumo": "4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo, sem o meu tempo",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
+  }
+ }
+}
+
+--- file ranking.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "alta",
+   "previsto_s": 461.4,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "pace_flat_s_km": 220,
+   "score": 41.4,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 9,
+    "posicao": 4,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 3,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo, sem o meu tempo"
+   }
+  }
+ ],
+ "confianca_especulativa_plano_subida": [],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [],
+ "fora_alcance_curva_SEM_CONFIANCA": [],
+ "revisao_manual": []
+}
+
+===== rank_top10_eu_incerto =====
+--- stdout
+1 candidatos: 0 do cache, 1 a (re)analisar
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+[mock] GET https://www.strava.com/segments/101
+  [novo/alta] Plano longo: score 41.4
+      top 10: 10.º ou fora do top 10, 6 s para o lugar acima (o 11.º não vem na página), sem o meu tempo
+-> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 1 novo/actualizado, 0 do cache) | histórico -> historico.json
+[exit] 0
+--- stderr
+
+--- file historico.json
+{
+ "segmentos": {
+  "101": {
+   "distancia_efetiva_gap_m": 2132.1,
+   "distancia_m": 2000.0,
+   "grupo": "alta",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "Atleta 0",
+   "kom_tempo_s": 420,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Plano longo",
+   "pace_flat_s_km": 220,
+   "previsto_s": 461.4,
+   "score": 41.4,
+   "segmentId": 101,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": null,
+    "margem_lugar_abaixo_s": null,
+    "n_tempos": 9,
+    "posicao": null,
+    "previsto_inteiro_s": 461,
+    "resumo": "10.º ou fora do top 10, 6 s para o lugar acima (o 11.º não vem na página), sem o meu tempo",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 6
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
+  }
+ }
+}
+
+--- file ranking.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "alta",
+   "previsto_s": 461.4,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "pace_flat_s_km": 220,
+   "score": 41.4,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 9,
+    "posicao": null,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 6,
+    "margem_lugar_abaixo_s": null,
+    "fora_top10": null,
+    "s_para_10o": null,
+    "resumo": "10.º ou fora do top 10, 6 s para o lugar acima (o 11.º não vem na página), sem o meu tempo"
+   }
+  }
+ ],
+ "confianca_especulativa_plano_subida": [],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [],
+ "fora_alcance_curva_SEM_CONFIANCA": [],
+ "revisao_manual": []
+}
+
+===== rank_top10_ids_sem_eu =====
+--- stdout
+1 candidatos: 0 do cache, 1 a (re)analisar
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+[mock] GET https://www.strava.com/segments/101
+  [novo/alta] Plano longo: score 41.4
+      top 10: 4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo
+-> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 1 novo/actualizado, 0 do cache) | histórico -> historico.json
+[exit] 0
+--- stderr
+
+--- file historico.json
+{
+ "segmentos": {
+  "101": {
+   "distancia_efetiva_gap_m": 2132.1,
+   "distancia_m": 2000.0,
+   "grupo": "alta",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "Atleta 0",
+   "kom_tempo_s": 420,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Plano longo",
+   "pace_flat_s_km": 220,
+   "previsto_s": 461.4,
+   "score": 41.4,
+   "segmentId": 101,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 3,
+    "n_tempos": 10,
+    "posicao": 4,
+    "previsto_inteiro_s": 461,
+    "resumo": "4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
+  }
+ }
+}
+
+--- file ranking.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "alta",
+   "previsto_s": 461.4,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "pace_flat_s_km": 220,
+   "score": 41.4,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 10,
+    "posicao": 4,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 3,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo"
+   }
+  }
+ ],
+ "confianca_especulativa_plano_subida": [],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [],
+ "fora_alcance_curva_SEM_CONFIANCA": [],
+ "revisao_manual": []
+}
+
+===== detail_athlete_id =====
+--- stdout
+8 candidatos > cap 1 — só processo os primeiros 1 (já vêm ordenados pelo gap grosseiro da Fase 1). Corre outra vez para o resto.
+[mock] GET https://www.strava.com/segments/101
+  1/1: Plano longo — KOM 420s, já corri: False
+-> detalhes.json
+[exit] 0
+--- stderr
+
+--- file detalhes.json
+[
+ {
+  "segmentId": 101,
+  "nome": "Plano longo",
+  "tipo": "Run",
+  "localizacao": "Algures",
+  "distancia_m": 2000.0,
+  "avgGrade": 0.5,
+  "elevGain": 5.0,
+  "elevLow": 90.0,
+  "elevHigh": 120.0,
+  "kom_tempo_s": 420,
+  "kom_atleta": "Atleta 0",
+  "leaderboard_top10": [
+   {
+    "rank": 1,
+    "atleta": "Atleta 0",
+    "tempo_s": 420,
+    "athleteId": 7000
+   },
+   {
+    "rank": 2,
+    "atleta": "Atleta 1",
+    "tempo_s": 445,
+    "athleteId": 7001
+   },
+   {
+    "rank": 3,
+    "atleta": "Atleta 2",
+    "tempo_s": 458,
+    "athleteId": 7002
+   },
+   {
+    "rank": 4,
+    "atleta": "Atleta 3",
+    "tempo_s": 460,
+    "athleteId": 1
+   },
+   {
+    "rank": 5,
+    "atleta": "Atleta 4",
+    "tempo_s": 464,
+    "athleteId": 7004
+   },
+   {
+    "rank": 6,
+    "atleta": "Atleta 5",
+    "tempo_s": 470,
+    "athleteId": 7005
+   },
+   {
+    "rank": 7,
+    "atleta": "Atleta 6",
+    "tempo_s": 476,
+    "athleteId": 7006
+   },
+   {
+    "rank": 8,
+    "atleta": "Atleta 7",
+    "tempo_s": 483,
+    "athleteId": 7007
+   },
+   {
+    "rank": 9,
+    "atleta": "Atleta 8",
+    "tempo_s": 490,
+    "athleteId": 7008
+   },
+   {
+    "rank": 10,
+    "atleta": "Atleta 9",
+    "tempo_s": 498,
+    "athleteId": 7009
+   }
+  ],
+  "ja_corri": false,
+  "athleteEffortCount": 0,
+  "meu_pr_s": null,
+  "streams": {
+   "distance": "851 pontos, sha256 d01e1be1ec4eb0fc",
+   "elevation": "851 pontos, sha256 c68120fb1ef64c09"
+  },
+  "previsto_grosseiro_s": 440.0
+ }
+]

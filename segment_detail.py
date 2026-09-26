@@ -36,7 +36,8 @@ def detalhe_segmento(s, seg_id):
         "kom_tempo_s": leaderboard[0]["elapsedTime"] if leaderboard else None,
         "kom_atleta": leaderboard[0]["displayName"] if leaderboard else None,
         "leaderboard_top10": [
-            {"rank": l["rank"], "atleta": l["displayName"], "tempo_s": l["elapsedTime"]}
+            {"rank": l["rank"], "atleta": l["displayName"], "tempo_s": l["elapsedTime"],
+             **({"athleteId": l["athleteId"]} if "athleteId" in l else {})}
             for l in leaderboard
         ],
         "ja_corri": pp.get("athleteEffortCount", 0) > 0,

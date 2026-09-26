@@ -183,6 +183,25 @@ for _k, _lb in LB_101.items():
         mode={"leaderboard": {101: _lb}},
         files={"candidatos.json": [c for c in candidatos_fixos() if c["segmentId"] == 101]})
 
+# o meu tempo (athleteId 1 = STRAVA_ATHLETE_ID) dentro do top 10 não conta.
+# Com ids, 460 é o meu: sem ele, 461 fica em 4.º (com ele seria 5.º).
+LB_COM_IDS = [(t, 7000 + i) for i, t in enumerate(LB_101["dentro"])]
+LB_EU_DENTRO = [(420, 7000), (445, 7001), (458, 7002), (460, 1), (464, 7004),
+                (470, 7005), (476, 7006), (483, 7007), (490, 7008), (498, 7009)]
+# mais lento que os outros 9: 10.º ou 11.º, o 11.º não vem na página
+LB_EU_INCERTO = [(420, 7000), (425, 7001), (430, 1), (435, 7003), (440, 7004),
+                 (445, 7005), (448, 7006), (450, 7007), (452, 7008), (455, 7009)]
+for _k, _lb in (("eu_dentro", LB_EU_DENTRO), ("eu_incerto", LB_EU_INCERTO),
+                ("ids_sem_eu", LB_COM_IDS)):
+    SCENARIOS[f"rank_top10_{_k}"] = dict(
+        script=["rank.py", "--pace-flat", "3:40"],
+        env={**SESSION, "STRAVA_ATHLETE_ID": "1"}, dotenv=ENV_ICU,
+        mode={"leaderboard": {101: _lb}},
+        files={"candidatos.json": [c for c in candidatos_fixos() if c["segmentId"] == 101]})
+SCENARIOS["detail_athlete_id"] = dict(
+    script=["segment_detail.py", "--max", "1"], env=SESSION,
+    mode={"leaderboard": {101: LB_EU_DENTRO}}, files={"candidatos.json": candidatos_fixos()})
+
 SCENARIOS["rank_revisao"] = dict(SCENARIOS["rank_cache_cap"],
                                  script=["rank.py", "--historico", "h.json", "--revisao-semanas", "3"])
 

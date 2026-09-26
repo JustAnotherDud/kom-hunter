@@ -28,24 +28,35 @@ REVISAO_SEMANAS_DEFAULT = 4
 TOP_N = 10
 
 
-def posicao_top10(previsto_s, tempos):
+def posicao_top10(previsto_s, tempos, completo=None, sem_o_meu=False):
     """Onde o tempo previsto entraria no top 10 do leaderboard. Compara em
     segundos inteiros, como a Strava regista. Só informa: não mexe no grupo
-    nem no score. None sem previsão ou sem tempos."""
+    nem no score. None sem previsão ou sem tempos.
+    tempos: os dos outros atletas. completo: se o top 10 da página estava
+    cheio (por defeito, 10 tempos). Sem o meu tempo, um top 10 cheio deixa 9
+    e o 11.º não vem na página."""
     if previsto_s is None or not tempos:
         return None
     tempos = sorted(tempos)[:TOP_N]
+    if completo is None:
+        completo = len(tempos) == TOP_N
     p = int(math.floor(previsto_s + 0.5))
     mais_rapidos = [t for t in tempos if t < p]
     mais_lentos = [t for t in tempos if t > p]
     empatados = len(tempos) - len(mais_rapidos) - len(mais_lentos)
-    completo = len(tempos) == TOP_N
+    sufixo = ", sem o meu tempo" if sem_o_meu else ""
     out = {"previsto_inteiro_s": p, "n_tempos": len(tempos), "posicao": None,
            "empatado_com": empatados, "s_para_lugar_acima": None,
            "margem_lugar_abaixo_s": None, "fora_top10": False, "s_para_10o": None}
     if completo and not mais_lentos and not empatados:
+        if len(tempos) < TOP_N:
+            # mais lento que os outros 9: 10.º ou 11.º, depende do 11.º
+            out.update(fora_top10=None, s_para_lugar_acima=p - tempos[-1],
+                       resumo=f"10.º ou fora do top 10, {p - tempos[-1]} s para o lugar "
+                              f"acima (o 11.º não vem na página){sufixo}")
+            return out
         out.update(fora_top10=True, s_para_10o=p - tempos[-1],
-                   resumo=f"fora do top 10, {p - tempos[-1]} s para o 10.º")
+                   resumo=f"fora do top 10, {p - tempos[-1]} s para o 10.º{sufixo}")
         return out
     out["posicao"] = len(mais_rapidos) + 1
     partes = [f"{out['posicao']}.º"
@@ -62,7 +73,7 @@ def posicao_top10(previsto_s, tempos):
         partes.append("sem lugar abaixo")
     if not completo:
         partes.append(f"top 10 incompleto ({len(tempos)} tempos)")
-    out["resumo"] = ", ".join(partes)
+    out["resumo"] = ", ".join(partes) + sufixo
     return out
 
 
@@ -100,7 +111,12 @@ def avaliar_e_persistir(s, curva, c, pace_flat_s_km, motivo):
     av = avaliar_detalhe(det, curva, pace_flat_s_km, c.get("previsto_grosseiro_s"))
     if av is None:
         return None
-    top10 = posicao_top10(r1(av["valor"]), [l["tempo_s"] for l in det.get("leaderboard_top10", [])])
+    # o meu próprio tempo não conta como adversário (entradas sem athleteId ficam)
+    lb = det.get("leaderboard_top10", [])
+    meu_id = os.environ.get("STRAVA_ATHLETE_ID", "").strip()
+    outros = [l for l in lb if not meu_id or str(l.get("athleteId")) != meu_id]
+    top10 = posicao_top10(r1(av["valor"]), [l["tempo_s"] for l in outros],
+                          completo=len(lb) >= TOP_N, sem_o_meu=len(outros) < len(lb))
     return {
         "segmentId": c["segmentId"],
         "nome": det["nome"],
