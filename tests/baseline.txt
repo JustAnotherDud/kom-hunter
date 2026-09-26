@@ -4031,3 +4031,197 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
  "fora_alcance_curva_SEM_CONFIANCA": [],
  "revisao_manual": []
 }
+
+===== rank_top10_detalhes_cache =====
+--- stdout
+4 candidatos: 4 do cache, 0 a (re)analisar
+  top10 de detalhes.json para 1 entrada(s) do cache
+-> ranking.json (1 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 0 novo/actualizado, 4 do cache) | histórico -> historico.json
+[exit] 0
+--- stderr
+
+--- file historico.json
+{
+ "segmentos": {
+  "101": {
+   "distancia_efetiva_gap_m": 1.0,
+   "distancia_m": 2000.0,
+   "grupo": "alta",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "X",
+   "kom_tempo_s": 420,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Plano longo",
+   "previsto_s": 461.4,
+   "score": -3.0,
+   "segmentId": 101,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 3,
+    "n_tempos": 10,
+    "posicao": 4,
+    "previsto_inteiro_s": 461,
+    "resumo": "4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
+   "ultima_analise": "2026-09-24T10:00:00+00:00"
+  },
+  "102": {
+   "distancia_efetiva_gap_m": 1.0,
+   "distancia_m": 400.0,
+   "grupo": "especulativa-plano_subida",
+   "heuristica_s": 97.6,
+   "ja_corri": false,
+   "kom_atleta": "X",
+   "kom_tempo_s": 95,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Subida curta",
+   "previsto_s": null,
+   "score": -3.0,
+   "segmentId": 102,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-24T10:00:00+00:00"
+  },
+  "103": {
+   "distancia_efetiva_gap_m": 1.0,
+   "distancia_m": 500.0,
+   "grupo": "especulativa-descida",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "X",
+   "kom_tempo_s": 80,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Descida curta",
+   "previsto_s": 1.0,
+   "score": -3.0,
+   "segmentId": 103,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": null,
+   "ultima_analise": "2026-09-24T10:00:00+00:00"
+  },
+  "110": {
+   "distancia_efetiva_gap_m": 1.0,
+   "distancia_m": 150.0,
+   "grupo": "especulativa-plano_subida",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "X",
+   "kom_tempo_s": 30,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Mini",
+   "previsto_s": 1.0,
+   "score": -3.0,
+   "segmentId": 110,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-24T10:00:00+00:00"
+  }
+ }
+}
+
+--- file ranking.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 1.0,
+   "kom_tempo_s": 420,
+   "kom_atleta": "X",
+   "ja_corri": false,
+   "grupo": "alta",
+   "previsto_s": 461.4,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "score": -3.0,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-24T10:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 10,
+    "posicao": 4,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 3,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo"
+   }
+  }
+ ],
+ "confianca_especulativa_plano_subida": [
+  {
+   "segmentId": 102,
+   "nome": "Subida curta",
+   "distancia_m": 400.0,
+   "distancia_efetiva_gap_m": 1.0,
+   "kom_tempo_s": 95,
+   "kom_atleta": "X",
+   "ja_corri": false,
+   "grupo": "especulativa-plano_subida",
+   "previsto_s": null,
+   "heuristica_s": 97.6,
+   "metodo": "tabela",
+   "score": -3.0,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-24T10:00:00+00:00",
+   "motivo_recalculo": "novo"
+  },
+  {
+   "segmentId": 110,
+   "nome": "Mini",
+   "distancia_m": 150.0,
+   "distancia_efetiva_gap_m": 1.0,
+   "kom_tempo_s": 30,
+   "kom_atleta": "X",
+   "ja_corri": false,
+   "grupo": "especulativa-plano_subida",
+   "previsto_s": 1.0,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "score": -3.0,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-24T10:00:00+00:00",
+   "motivo_recalculo": "novo"
+  }
+ ],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [
+  {
+   "segmentId": 103,
+   "nome": "Descida curta",
+   "distancia_m": 500.0,
+   "distancia_efetiva_gap_m": 1.0,
+   "kom_tempo_s": 80,
+   "kom_atleta": "X",
+   "ja_corri": false,
+   "grupo": "especulativa-descida",
+   "previsto_s": 1.0,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "score": -3.0,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-24T10:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": null
+  }
+ ],
+ "fora_alcance_curva_SEM_CONFIANCA": [],
+ "revisao_manual": []
+}

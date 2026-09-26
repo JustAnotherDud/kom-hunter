@@ -183,6 +183,34 @@ for _k, _lb in LB_101.items():
         mode={"leaderboard": {101: _lb}},
         files={"candidatos.json": [c for c in candidatos_fixos() if c["segmentId"] == 101]})
 
+# cache sem top10: 101 tem detalhe com o mesmo KOM (preenche), 102 tem detalhe
+# com outro KOM (não preenche), 110 não tem detalhe, 103 já tem top10 (fica).
+# Sem STRAVA_SESSION: prova que não há pedidos.
+_det = {d["segmentId"]: d for d in detalhes_fixos()}
+SCENARIOS["rank_top10_detalhes_cache"] = dict(
+    script=["rank.py"], env={},
+    files={"candidatos.json": [c for c in candidatos_fixos()
+                               if c["segmentId"] in (101, 102, 103, 110)],
+           "detalhes.json": [
+               dict(_det[101], leaderboard_top10=[
+                   {"rank": i + 1, "atleta": f"A{i}", "tempo_s": t}
+                   for i, t in enumerate(LB_101["dentro"])]),
+               dict(_det[102], kom_tempo_s=90, leaderboard_top10=[
+                   {"rank": 1, "atleta": "A0", "tempo_s": 90}]),
+               dict(_det[103], leaderboard_top10=[
+                   {"rank": 1, "atleta": "A0", "tempo_s": 80}]),
+           ],
+           "historico.json": hist({
+               101: h_entry(101, 420, "2026-09-24T10:00:00+00:00", previsto_s=461.4),
+               102: h_entry(102, 95, "2026-09-24T10:00:00+00:00",
+                            grupo="especulativa-plano_subida", previsto_s=None,
+                            heuristica_s=97.6),
+               103: h_entry(103, 80, "2026-09-24T10:00:00+00:00",
+                            grupo="especulativa-descida", top10=None),
+               110: h_entry(110, 30, "2026-09-24T10:00:00+00:00",
+                            grupo="especulativa-plano_subida"),
+           })})
+
 SCENARIOS["rank_revisao"] = dict(SCENARIOS["rank_cache_cap"],
                                  script=["rank.py", "--historico", "h.json", "--revisao-semanas", "3"])
 
