@@ -66,26 +66,6 @@ def posicao_top10(previsto_s, tempos):
     return out
 
 
-def top10_de_detalhes(path, entradas):
-    """Preenche "top10" nas entradas do cache que não o têm, a partir do
-    leaderboard_top10 de um detalhes.json já existente (segment_detail.py).
-    Sem pedidos. Só usa o detalhe se o KOM bater com o da entrada. Devolve
-    quantas preencheu."""
-    if not os.path.exists(path):
-        return 0
-    detalhes = {d["segmentId"]: d for d in json.load(open(path, encoding="utf-8"))}
-    n = 0
-    for e in entradas:
-        d = detalhes.get(e["segmentId"])
-        if ("top10" in e or not d or "leaderboard_top10" not in d
-                or d.get("kom_tempo_s") != e.get("kom_tempo_s")):
-            continue
-        valor = e.get("previsto_s") if e.get("grupo") == "alta" else e.get("heuristica_s")
-        e["top10"] = posicao_top10(valor, [l["tempo_s"] for l in d["leaderboard_top10"]])
-        n += 1
-    return n
-
-
 def carregar_historico(path):
     if os.path.exists(path):
         return json.load(open(path, encoding="utf-8"))
@@ -150,8 +130,6 @@ def main():
     ap.add_argument("--in", dest="entrada", default="candidatos.json")
     ap.add_argument("--out", default="ranking.json")
     ap.add_argument("--historico", default=HISTORICO_DEFAULT)
-    ap.add_argument("--detalhes", default="detalhes.json",
-                     help="se existir, dá o top10 às entradas do cache que não o têm")
     ap.add_argument("--pace-flat", dest="pace_flat",
                      help="mm:ss/km, para a heurística dos segmentos curtos")
     ap.add_argument("--revisao-semanas", type=int, default=REVISAO_SEMANAS_DEFAULT)
@@ -176,9 +154,6 @@ def main():
 
     print(f"{len(candidatos)} candidatos: {len(reaproveitados)} do cache, "
           f"{len(a_reanalisar)} a (re)analisar")
-    n_top10 = top10_de_detalhes(args.detalhes, reaproveitados)
-    if n_top10:
-        print(f"  top10 de {args.detalhes} para {n_top10} entrada(s) do cache")
 
     if len(a_reanalisar) > args.max_novos:
         print(f"  cap --max-novos={args.max_novos} — só processo os primeiros "

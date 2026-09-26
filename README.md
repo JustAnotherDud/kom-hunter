@@ -80,10 +80,8 @@ already reads, so there are no extra requests.
 
 It compares whole seconds, as Strava records them. No percentages or
 probabilities: the model is not calibrated. It does not change groups, score
-or sorting. Cached entries from an older `historico.json` get it from
-`detalhes.json` (`--detalhes`, from a `segment_detail.py` run) when that file
-has the segment with the same KOM, with no requests. Otherwise they show it
-only after their next reanalysis. `rank.py` never writes `detalhes.json`.
+or sorting. Entries reused from an older `historico.json` show it only after
+their next reanalysis.
 
 ## Env vars
 
