@@ -170,6 +170,18 @@ SCENARIOS = {
                         files={"candidatos.json": candidatos_fixos()}),
 }
 
+# top 10 previsto: o segmento 101 prevê 461.4 s (461 inteiro), KOM 420
+LB_101 = {
+    "dentro": [420, 445, 458, 464, 470, 476, 483, 490, 498, 505],  # 4.º
+    "empate": [420, 445, 458, 461, 470, 476, 483, 490, 498, 505],  # 4.º empatado
+    "fora": [420, 425, 430, 435, 440, 445, 448, 450, 452, 455],  # 6 s para o 10.º
+    "incompleto": [420, 430, 445, 450],  # 5.º, sem lugar abaixo
+}
+for _k, _lb in LB_101.items():
+    SCENARIOS[f"rank_top10_{_k}"] = dict(
+        script=["rank.py", "--pace-flat", "3:40"], env=SESSION, dotenv=ENV_ICU,
+        mode={"leaderboard": {101: _lb}},
+        files={"candidatos.json": [c for c in candidatos_fixos() if c["segmentId"] == 101]})
 
 SCENARIOS["rank_revisao"] = dict(SCENARIOS["rank_cache_cap"],
                                  script=["rank.py", "--historico", "h.json", "--revisao-semanas", "3"])

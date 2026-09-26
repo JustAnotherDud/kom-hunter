@@ -1682,15 +1682,19 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
+      top 10: 4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/102
   [novo/especulativa-plano_subida] Subida curta: score 2.6
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/103
   [novo/especulativa-descida] Descida curta: score -4.4
+      top 10: 1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/104
   [novo/SUSPEITO] Suspeito: score -270.5
+      top 10: 1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/105
   [novo/fora_alcance_curva] Ultra: score None
@@ -1700,9 +1704,11 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/109
   [novo/alta] Longo cs: score 615.5
+      top 10: 4.º, 602 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/110
   [novo/especulativa-plano_subida] Mini: score 5.7
+      top 10: 2.º, 6 s para o lugar acima, 1 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 -> ranking.json (2 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 1 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual, 7 novo/actualizado, 0 do cache) | histórico -> historico.json
 [exit] 0
 --- stderr
@@ -1727,6 +1733,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 101,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": null,
+    "n_tempos": 3,
+    "posicao": 4,
+    "previsto_inteiro_s": 461,
+    "resumo": "4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 27
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "102": {
@@ -1746,6 +1763,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 102,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 98,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "103": {
@@ -1765,6 +1793,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 103,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 1,
+    "previsto_inteiro_s": 76,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": null
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "104": {
@@ -1784,6 +1823,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 104,
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 270,
+    "n_tempos": 3,
+    "posicao": 1,
+    "previsto_inteiro_s": 330,
+    "resumo": "1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": null
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "105": {
@@ -1803,6 +1853,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 105,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "109": {
@@ -1822,6 +1873,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 109,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": null,
+    "n_tempos": 3,
+    "posicao": 4,
+    "previsto_inteiro_s": 4516,
+    "resumo": "4.º, 602 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 602
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "110": {
@@ -1841,6 +1903,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 110,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 1,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 36,
+    "resumo": "2.º, 6 s para o lugar acima, 1 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 6
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   }
  }
@@ -1866,7 +1939,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 3,
+    "posicao": 4,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 27,
+    "margem_lugar_abaixo_s": null,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   },
   {
    "segmentId": 109,
@@ -1885,7 +1969,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 4516,
+    "n_tempos": 3,
+    "posicao": 4,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 602,
+    "margem_lugar_abaixo_s": null,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º, 602 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "confianca_especulativa_plano_subida": [
@@ -1906,7 +2001,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 98,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   },
   {
    "segmentId": 110,
@@ -1925,7 +2031,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 36,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 6,
+    "margem_lugar_abaixo_s": 1,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 6 s para o lugar acima, 1 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "confianca_especulativa_descida_SEM_CONFIANCA": [
@@ -1946,7 +2063,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 76,
+    "n_tempos": 3,
+    "posicao": 1,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "fora_alcance_curva_SEM_CONFIANCA": [
@@ -1967,7 +2095,8 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": null
   }
  ],
  "revisao_manual": [
@@ -1988,7 +2117,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 330,
+    "n_tempos": 3,
+    "posicao": 1,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": 270,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ]
 }
@@ -2000,15 +2140,19 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
+      top 10: 4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/102
   [novo/especulativa-plano_subida] Subida curta: score 2.6
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/103
   [novo/especulativa-descida] Descida curta: score -4.4
+      top 10: 1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/104
   [novo/SUSPEITO] Suspeito: score -270.5
+      top 10: 1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/105
   [novo/alta] Ultra: score None
@@ -2021,6 +2165,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/110
   [novo/especulativa-plano_subida] Mini: score 3.0
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 -> ranking.json (3 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual, 7 novo/actualizado, 0 do cache) | histórico -> historico.json
 [exit] 0
 --- stderr
@@ -2045,6 +2190,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 101,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": null,
+    "n_tempos": 3,
+    "posicao": 4,
+    "previsto_inteiro_s": 461,
+    "resumo": "4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 27
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "102": {
@@ -2064,6 +2220,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 102,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 98,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "103": {
@@ -2083,6 +2250,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 103,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 1,
+    "previsto_inteiro_s": 76,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": null
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "104": {
@@ -2102,6 +2280,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 104,
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 270,
+    "n_tempos": 3,
+    "posicao": 1,
+    "previsto_inteiro_s": 330,
+    "resumo": "1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": null
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "105": {
@@ -2121,6 +2310,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 105,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "109": {
@@ -2140,6 +2330,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 109,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "110": {
@@ -2159,6 +2350,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 110,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 33,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   }
  }
@@ -2184,7 +2386,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 3,
+    "posicao": 4,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 27,
+    "margem_lugar_abaixo_s": null,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   },
   {
    "segmentId": 105,
@@ -2203,7 +2416,8 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": null
   },
   {
    "segmentId": 109,
@@ -2222,7 +2436,8 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": null
   }
  ],
  "confianca_especulativa_plano_subida": [
@@ -2243,7 +2458,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 98,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   },
   {
    "segmentId": 110,
@@ -2262,7 +2488,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 33,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "confianca_especulativa_descida_SEM_CONFIANCA": [
@@ -2283,7 +2520,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 76,
+    "n_tempos": 3,
+    "posicao": 1,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "fora_alcance_curva_SEM_CONFIANCA": [],
@@ -2305,7 +2553,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 330,
+    "n_tempos": 3,
+    "posicao": 1,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": 270,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ]
 }
@@ -2318,9 +2577,11 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 [mock] GET https://www.strava.com/segments/102
   [kom_mudou/especulativa-plano_subida] Subida curta: score 2.6
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/103
   [novo/especulativa-descida] Descida curta: score -4.4
+      top 10: 1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 -> r.json (1 alta, 1 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 1 p/ revisão manual, 2 novo/actualizado, 2 do cache) | histórico -> h.json
 [exit] 0
 --- stderr
@@ -2363,6 +2624,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 102,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 98,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "103": {
@@ -2382,6 +2654,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 103,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 1,
+    "previsto_inteiro_s": 76,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": null
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "104": {
@@ -2517,7 +2800,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "kom_mudou"
+   "motivo_recalculo": "kom_mudou",
+   "top10": {
+    "previsto_inteiro_s": 98,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "confianca_especulativa_descida_SEM_CONFIANCA": [
@@ -2538,7 +2832,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 76,
+    "n_tempos": 3,
+    "posicao": 1,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "fora_alcance_curva_SEM_CONFIANCA": [],
@@ -2571,12 +2876,15 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 [mock] GET https://www.strava.com/segments/102
   [kom_mudou/especulativa-plano_subida] Subida curta: score 2.6
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/103
   [novo/especulativa-descida] Descida curta: score -4.4
+      top 10: 1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/104
   [revisao_periodica/SUSPEITO] Suspeito: score -270.5
+      top 10: 1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/106
   Sem streams: sem streams, salto.
@@ -2622,6 +2930,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 102,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 98,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "103": {
@@ -2641,6 +2960,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 103,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 1,
+    "previsto_inteiro_s": 76,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": null
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "104": {
@@ -2660,6 +2990,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 104,
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 270,
+    "n_tempos": 3,
+    "posicao": 1,
+    "previsto_inteiro_s": 330,
+    "resumo": "1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": null
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "105": {
@@ -2795,7 +3136,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "kom_mudou"
+   "motivo_recalculo": "kom_mudou",
+   "top10": {
+    "previsto_inteiro_s": 98,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "confianca_especulativa_descida_SEM_CONFIANCA": [
@@ -2834,7 +3186,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 76,
+    "n_tempos": 3,
+    "posicao": 1,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "fora_alcance_curva_SEM_CONFIANCA": [],
@@ -2874,7 +3237,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": true,
    "suspeito_motivo": "previsão bate o KOM por 45% num segmento nunca corrido",
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "revisao_periodica"
+   "motivo_recalculo": "revisao_periodica",
+   "top10": {
+    "previsto_inteiro_s": 330,
+    "n_tempos": 3,
+    "posicao": 1,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": 270,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "1.º, sem lugar acima, 270 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ]
 }
@@ -2982,9 +3356,11 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 [mock] GET https://www.strava.com/segments/102
   [pace_mudou/especulativa-plano_subida] Subida curta: score 2.6
+      top 10: 2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 [mock] sleep 1.5
 [mock] GET https://www.strava.com/segments/103
   [pace_mudou/especulativa-descida] Descida curta: score -4.4
+      top 10: 1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)
 -> ranking.json (1 alta, 2 especulativa-plano/subida, 1 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 2 novo/actualizado, 2 do cache) | histórico -> historico.json
 [exit] 0
 --- stderr
@@ -3028,6 +3404,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 102,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 2,
+    "previsto_inteiro_s": 98,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "103": {
@@ -3047,6 +3434,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 103,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 4,
+    "n_tempos": 3,
+    "posicao": 1,
+    "previsto_inteiro_s": 76,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": null
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   },
   "110": {
@@ -3131,7 +3529,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "pace_mudou"
+   "motivo_recalculo": "pace_mudou",
+   "top10": {
+    "previsto_inteiro_s": 98,
+    "n_tempos": 3,
+    "posicao": 2,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "2.º, 3 s para o lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "confianca_especulativa_descida_SEM_CONFIANCA": [
@@ -3152,7 +3561,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "pace_mudou"
+   "motivo_recalculo": "pace_mudou",
+   "top10": {
+    "previsto_inteiro_s": 76,
+    "n_tempos": 3,
+    "posicao": 1,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": 4,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "1.º, sem lugar acima, 4 s de margem para o lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "fora_alcance_curva_SEM_CONFIANCA": [],
@@ -3167,6 +3587,7 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
 [mock] GET https://www.strava.com/segments/101
   [novo/alta] Plano longo: score 41.4
+      top 10: 4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)
 -> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 1 novo/actualizado, 0 do cache) | histórico -> historico.json
 [exit] 0
 --- stderr
@@ -3191,6 +3612,17 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "segmentId": 101,
    "suspeito": false,
    "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": null,
+    "n_tempos": 3,
+    "posicao": 4,
+    "previsto_inteiro_s": 461,
+    "resumo": "4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 27
+   },
    "ultima_analise": "2026-09-25T12:00:00+00:00"
   }
  }
@@ -3216,7 +3648,18 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
    "suspeito": false,
    "suspeito_motivo": null,
    "ultima_analise": "2026-09-25T12:00:00+00:00",
-   "motivo_recalculo": "novo"
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 3,
+    "posicao": 4,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 27,
+    "margem_lugar_abaixo_s": null,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º, 27 s para o lugar acima, sem lugar abaixo, top 10 incompleto (3 tempos)"
+   }
   }
  ],
  "confianca_especulativa_plano_subida": [],
@@ -3236,3 +3679,355 @@ curva GAP '180d': 180 dias, 8 pontos, CS=4.100 m/s D'=180.0m r2=0.9987
 8 candidatos: 0 do cache, 8 a (re)analisar
 [exit] SystemExit('INTERVALS_ICU_API_KEY / INTERVALS_ICU_ATHLETE_ID não definidos.')
 --- stderr
+
+===== rank_top10_dentro =====
+--- stdout
+1 candidatos: 0 do cache, 1 a (re)analisar
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+[mock] GET https://www.strava.com/segments/101
+  [novo/alta] Plano longo: score 41.4
+      top 10: 4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo
+-> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 1 novo/actualizado, 0 do cache) | histórico -> historico.json
+[exit] 0
+--- stderr
+
+--- file historico.json
+{
+ "segmentos": {
+  "101": {
+   "distancia_efetiva_gap_m": 2132.1,
+   "distancia_m": 2000.0,
+   "grupo": "alta",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "Atleta 0",
+   "kom_tempo_s": 420,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Plano longo",
+   "pace_flat_s_km": 220,
+   "previsto_s": 461.4,
+   "score": 41.4,
+   "segmentId": 101,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 3,
+    "n_tempos": 10,
+    "posicao": 4,
+    "previsto_inteiro_s": 461,
+    "resumo": "4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
+  }
+ }
+}
+
+--- file ranking.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "alta",
+   "previsto_s": 461.4,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "pace_flat_s_km": 220,
+   "score": 41.4,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 10,
+    "posicao": 4,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 3,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º, 3 s para o lugar acima, 3 s de margem para o lugar abaixo"
+   }
+  }
+ ],
+ "confianca_especulativa_plano_subida": [],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [],
+ "fora_alcance_curva_SEM_CONFIANCA": [],
+ "revisao_manual": []
+}
+
+===== rank_top10_empate =====
+--- stdout
+1 candidatos: 0 do cache, 1 a (re)analisar
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+[mock] GET https://www.strava.com/segments/101
+  [novo/alta] Plano longo: score 41.4
+      top 10: 4.º empatado com 1 tempo(s), 3 s para o lugar acima, 9 s de margem para o lugar abaixo
+-> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 1 novo/actualizado, 0 do cache) | histórico -> historico.json
+[exit] 0
+--- stderr
+
+--- file historico.json
+{
+ "segmentos": {
+  "101": {
+   "distancia_efetiva_gap_m": 2132.1,
+   "distancia_m": 2000.0,
+   "grupo": "alta",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "Atleta 0",
+   "kom_tempo_s": 420,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Plano longo",
+   "pace_flat_s_km": 220,
+   "previsto_s": 461.4,
+   "score": 41.4,
+   "segmentId": 101,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 1,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": 9,
+    "n_tempos": 10,
+    "posicao": 4,
+    "previsto_inteiro_s": 461,
+    "resumo": "4.º empatado com 1 tempo(s), 3 s para o lugar acima, 9 s de margem para o lugar abaixo",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 3
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
+  }
+ }
+}
+
+--- file ranking.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "alta",
+   "previsto_s": 461.4,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "pace_flat_s_km": 220,
+   "score": 41.4,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 10,
+    "posicao": 4,
+    "empatado_com": 1,
+    "s_para_lugar_acima": 3,
+    "margem_lugar_abaixo_s": 9,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "4.º empatado com 1 tempo(s), 3 s para o lugar acima, 9 s de margem para o lugar abaixo"
+   }
+  }
+ ],
+ "confianca_especulativa_plano_subida": [],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [],
+ "fora_alcance_curva_SEM_CONFIANCA": [],
+ "revisao_manual": []
+}
+
+===== rank_top10_fora =====
+--- stdout
+1 candidatos: 0 do cache, 1 a (re)analisar
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+[mock] GET https://www.strava.com/segments/101
+  [novo/alta] Plano longo: score 41.4
+      top 10: fora do top 10, 6 s para o 10.º
+-> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 1 novo/actualizado, 0 do cache) | histórico -> historico.json
+[exit] 0
+--- stderr
+
+--- file historico.json
+{
+ "segmentos": {
+  "101": {
+   "distancia_efetiva_gap_m": 2132.1,
+   "distancia_m": 2000.0,
+   "grupo": "alta",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "Atleta 0",
+   "kom_tempo_s": 420,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Plano longo",
+   "pace_flat_s_km": 220,
+   "previsto_s": 461.4,
+   "score": 41.4,
+   "segmentId": 101,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": true,
+    "margem_lugar_abaixo_s": null,
+    "n_tempos": 10,
+    "posicao": null,
+    "previsto_inteiro_s": 461,
+    "resumo": "fora do top 10, 6 s para o 10.º",
+    "s_para_10o": 6,
+    "s_para_lugar_acima": null
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
+  }
+ }
+}
+
+--- file ranking.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "alta",
+   "previsto_s": 461.4,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "pace_flat_s_km": 220,
+   "score": 41.4,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 10,
+    "posicao": null,
+    "empatado_com": 0,
+    "s_para_lugar_acima": null,
+    "margem_lugar_abaixo_s": null,
+    "fora_top10": true,
+    "s_para_10o": 6,
+    "resumo": "fora do top 10, 6 s para o 10.º"
+   }
+  }
+ ],
+ "confianca_especulativa_plano_subida": [],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [],
+ "fora_alcance_curva_SEM_CONFIANCA": [],
+ "revisao_manual": []
+}
+
+===== rank_top10_incompleto =====
+--- stdout
+1 candidatos: 0 do cache, 1 a (re)analisar
+[mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
+  [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
+[mock] GET https://www.strava.com/segments/101
+  [novo/alta] Plano longo: score 41.4
+      top 10: 5.º, 11 s para o lugar acima, sem lugar abaixo, top 10 incompleto (4 tempos)
+-> ranking.json (1 alta, 0 especulativa-plano/subida, 0 especulativa-descida SEM CONFIANÇA, 0 fora do alcance da curva SEM CONFIANÇA, 0 p/ revisão manual, 1 novo/actualizado, 0 do cache) | histórico -> historico.json
+[exit] 0
+--- stderr
+
+--- file historico.json
+{
+ "segmentos": {
+  "101": {
+   "distancia_efetiva_gap_m": 2132.1,
+   "distancia_m": 2000.0,
+   "grupo": "alta",
+   "heuristica_s": null,
+   "ja_corri": false,
+   "kom_atleta": "Atleta 0",
+   "kom_tempo_s": 420,
+   "metodo": "tabela",
+   "motivo_recalculo": "novo",
+   "nome": "Plano longo",
+   "pace_flat_s_km": 220,
+   "previsto_s": 461.4,
+   "score": 41.4,
+   "segmentId": 101,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "top10": {
+    "empatado_com": 0,
+    "fora_top10": false,
+    "margem_lugar_abaixo_s": null,
+    "n_tempos": 4,
+    "posicao": 5,
+    "previsto_inteiro_s": 461,
+    "resumo": "5.º, 11 s para o lugar acima, sem lugar abaixo, top 10 incompleto (4 tempos)",
+    "s_para_10o": null,
+    "s_para_lugar_acima": 11
+   },
+   "ultima_analise": "2026-09-25T12:00:00+00:00"
+  }
+ }
+}
+
+--- file ranking.json
+{
+ "confianca_alta": [
+  {
+   "segmentId": 101,
+   "nome": "Plano longo",
+   "distancia_m": 2000.0,
+   "distancia_efetiva_gap_m": 2132.1,
+   "kom_tempo_s": 420,
+   "kom_atleta": "Atleta 0",
+   "ja_corri": false,
+   "grupo": "alta",
+   "previsto_s": 461.4,
+   "heuristica_s": null,
+   "metodo": "tabela",
+   "pace_flat_s_km": 220,
+   "score": 41.4,
+   "suspeito": false,
+   "suspeito_motivo": null,
+   "ultima_analise": "2026-09-25T12:00:00+00:00",
+   "motivo_recalculo": "novo",
+   "top10": {
+    "previsto_inteiro_s": 461,
+    "n_tempos": 4,
+    "posicao": 5,
+    "empatado_com": 0,
+    "s_para_lugar_acima": 11,
+    "margem_lugar_abaixo_s": null,
+    "fora_top10": false,
+    "s_para_10o": null,
+    "resumo": "5.º, 11 s para o lugar acima, sem lugar abaixo, top 10 incompleto (4 tempos)"
+   }
+  }
+ ],
+ "confianca_especulativa_plano_subida": [],
+ "confianca_especulativa_descida_SEM_CONFIANCA": [],
+ "fora_alcance_curva_SEM_CONFIANCA": [],
+ "revisao_manual": []
+}
