@@ -37,7 +37,6 @@ def detalhes_fixos():
              "avgGrade": pp["measurements"]["avgGrade"],
              "kom_tempo_s": SEGS[sid][3], "ja_corri": SEGS[sid][5],
              "streams": pp.get("streams", {})}
-        d["previsto_grosseiro_s"] = round(SEGS[sid][1] / 1000 * 220 * 1.1, 1)
         out.append(d)
     return out
 

@@ -74,7 +74,6 @@ def main():
     detalhes = []
     for i, c in enumerate(candidatos):
         det = detalhe_segmento(s, c["segmentId"])
-        det["previsto_grosseiro_s"] = c.get("previsto_grosseiro_s")
         detalhes.append(det)
         print(f"  {i + 1}/{len(candidatos)}: {det['nome']} — "
               f"KOM {det['kom_tempo_s']}s, já corri: {det['ja_corri']}")

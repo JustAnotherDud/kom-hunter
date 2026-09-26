@@ -627,8 +627,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "851 pontos, sha256 d01e1be1ec4eb0fc",
    "elevation": "851 pontos, sha256 c68120fb1ef64c09"
-  },
-  "previsto_grosseiro_s": 440.0
+  }
  },
  {
   "segmentId": 102,
@@ -665,8 +664,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "172 pontos, sha256 f1ad29ea63aadc22",
    "elevation": "172 pontos, sha256 35708c564ff27749"
-  },
-  "previsto_grosseiro_s": 88.0
+  }
  },
  {
   "segmentId": 103,
@@ -703,8 +701,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "214 pontos, sha256 f7dc4fd434586954",
    "elevation": "214 pontos, sha256 d1d53771c2f2e866"
-  },
-  "previsto_grosseiro_s": 110.0
+  }
  }
 ]
 
@@ -775,8 +772,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "851 pontos, sha256 d01e1be1ec4eb0fc",
    "elevation": "851 pontos, sha256 c68120fb1ef64c09"
-  },
-  "previsto_grosseiro_s": 440.0
+  }
  },
  {
   "segmentId": 103,
@@ -813,8 +809,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "214 pontos, sha256 f7dc4fd434586954",
    "elevation": "214 pontos, sha256 d1d53771c2f2e866"
-  },
-  "previsto_grosseiro_s": 110.0
+  }
  },
  {
   "segmentId": 104,
@@ -851,8 +846,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "639 pontos, sha256 1c92a09c55400659",
    "elevation": "639 pontos, sha256 9768897da5df1f7d"
-  },
-  "previsto_grosseiro_s": 330.0
+  }
  },
  {
   "segmentId": 105,
@@ -889,8 +883,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "12751 pontos, sha256 d62a60859bda0454",
    "elevation": "12751 pontos, sha256 6b624e454765f8d4"
-  },
-  "previsto_grosseiro_s": 6600.0
+  }
  },
  {
   "segmentId": 106,
@@ -924,8 +917,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "ja_corri": false,
   "athleteEffortCount": 0,
   "meu_pr_s": null,
-  "streams": {},
-  "previsto_grosseiro_s": 264.0
+  "streams": {}
  },
  {
   "segmentId": 110,
@@ -962,8 +954,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "65 pontos, sha256 6f8f3521aaadafac",
    "elevation": "65 pontos, sha256 033e6a8bd090d140"
-  },
-  "previsto_grosseiro_s": 33.0
+  }
  }
 ]
 
@@ -1025,8 +1016,7 @@ cobertura: 4 tiles z15 (~0.95km/lado) = ~3.6km² cobertos vs ~0.8km² pedidos (r
   "streams": {
    "distance": "851 pontos, sha256 d01e1be1ec4eb0fc",
    "elevation": "851 pontos, sha256 c68120fb1ef64c09"
-  },
-  "previsto_grosseiro_s": 440.0
+  }
  }
 ]
 
@@ -4760,7 +4750,6 @@ pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
   "streams": {
    "distance": "851 pontos, sha256 d01e1be1ec4eb0fc",
    "elevation": "851 pontos, sha256 c68120fb1ef64c09"
-  },
-  "previsto_grosseiro_s": 440.0
+  }
  }
 ]
