@@ -59,8 +59,8 @@ better.
   curve measures my ceiling, and that is the question here.
 - `confianca_especulativa_plano_subida`: shorter, mean grade 0 or more. The
   curve has no real sprint data, so a heuristic is used, in this order: curve
-  points that pass the speed filter, effective distance times the fallback
-  pace, the phase 1 estimate. Sorted. On 2 real segments: 4-8% error with a
+  points that pass the speed filter, else effective distance times the
+  fallback pace. Sorted. On 2 real segments: 4-8% error with a
   fixed 3:40, before the pace came from the curve.
 - `confianca_especulativa_descida_SEM_CONFIANCA`: shorter, mean grade below 0.
   No descent data to calibrate. Not sorted. Do not use it to pick targets.

@@ -164,18 +164,13 @@ def pace_reserva(curva, dist_m=PACE_RESERVA_DIST_M):
     return pace
 
 
-def heuristica_curta(distancia_efetiva_m, curva, pace_reserva_s_km=None, previsto_grosseiro_s=None):
-    """Estimativa para segmentos curtos, nunca física. Por ordem: pontos reais
-    da curva nessa gama, distância efectiva x pace de reserva,
-    previsto_grosseiro_s da Fase 1. Devolve (valor ou None, metodo)."""
+def heuristica_curta(distancia_efetiva_m, curva, pace_reserva_s_km):
+    """Estimativa para segmentos curtos, nunca física: pontos reais da curva
+    nessa gama, senão distância efectiva x pace de reserva. Devolve (valor, metodo)."""
     t = _interpolar_tabela(distancia_efetiva_m, curva)
     if t is not None:
         return t, "curva_gap_curta"
-    if pace_reserva_s_km is not None:
-        return distancia_efetiva_m / 1000.0 * pace_reserva_s_km, "grade_efetiva+pace_1000m"
-    if previsto_grosseiro_s is not None:
-        return previsto_grosseiro_s, "grade_media_fase1"
-    return None, "sem_dados"
+    return distancia_efetiva_m / 1000.0 * pace_reserva_s_km, "grade_efetiva+pace_1000m"
 
 
 def _suspeito(valor_previsto, kom_tempo_s, ja_corri, margem_pct=MARGEM_SUSPEITA_PCT):
@@ -190,7 +185,7 @@ def _suspeito(valor_previsto, kom_tempo_s, ja_corri, margem_pct=MARGEM_SUSPEITA_
 
 
 def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_corri,
-                      pace_reserva_s_km=None, previsto_grosseiro_s=None):
+                      pace_reserva_s_km):
     """Decide o grupo e aplica o guarda-rail de suspeita. descida e
     fora_alcance_curva nunca são suspeitos: o número já não tem base."""
     av = {"previsto_s": None, "metodo_previsao": None, "heuristica_s": None,
@@ -203,9 +198,7 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
             return av
         av["grupo"] = "alta"
     else:
-        heur, metodo = heuristica_curta(distancia_efetiva_m, curva,
-                                         pace_reserva_s_km=pace_reserva_s_km,
-                                         previsto_grosseiro_s=previsto_grosseiro_s)
+        heur, metodo = heuristica_curta(distancia_efetiva_m, curva, pace_reserva_s_km)
         av.update(heuristica_s=heur, heuristica_metodo=metodo)
         if avg_grade_pct is not None and avg_grade_pct < 0:
             av["grupo"] = "especulativa-descida"
@@ -216,7 +209,7 @@ def avaliar_segmento(distancia_efetiva_m, curva, avg_grade_pct, kom_tempo_s, ja_
     return av
 
 
-def avaliar_detalhe(det, curva, pace_reserva_s_km, previsto_grosseiro_s):
+def avaliar_detalhe(det, curva, pace_reserva_s_km):
     """avaliar_segmento sobre uma página de detalhe, mais efetiva, valor e
     gap_kom (valor - KOM). None se não houver streams."""
     streams = det.get("streams") or {}
@@ -228,8 +221,7 @@ def avaliar_detalhe(det, curva, pace_reserva_s_km, previsto_grosseiro_s):
     kom = det.get("kom_tempo_s")
     av = avaliar_segmento(efetiva, curva, avg_grade_pct=det.get("avgGrade"),
                            kom_tempo_s=kom, ja_corri=det.get("ja_corri", False),
-                           pace_reserva_s_km=pace_reserva_s_km,
-                           previsto_grosseiro_s=previsto_grosseiro_s)
+                           pace_reserva_s_km=pace_reserva_s_km)
     valor = av["previsto_s"] if av["grupo"] == "alta" else av["heuristica_s"]
     av.update(efetiva=efetiva, valor=valor,
               gap_kom=round(valor - kom, 1) if (valor is not None and kom) else None)
@@ -291,7 +283,7 @@ def main():
     detalhes = json.load(open(args.entrada, encoding="utf-8"))
     itens = []
     for d in detalhes:
-        av = avaliar_detalhe(d, curva, pace_reserva_s_km, d.get("previsto_grosseiro_s"))
+        av = avaliar_detalhe(d, curva, pace_reserva_s_km)
         if av is None:
             continue
         kom, efetiva, valor = d.get("kom_tempo_s"), av["efetiva"], av["valor"]

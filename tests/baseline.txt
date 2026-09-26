@@ -1423,7 +1423,7 @@ pace de reserva: 3:20/km (curva GAP aos 1000 m, cs_model)
  "revisao_manual": []
 }
 
-===== gap_nopace =====
+===== gap_janela_out =====
 --- stdout
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['90d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
@@ -1553,7 +1553,7 @@ pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
  ]
 }
 
-===== gap_semdados =====
+===== gap_icu_env =====
 --- stdout
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['180d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA
@@ -2427,7 +2427,7 @@ pace de reserva: 3:25/km (curva GAP aos 1000 m, tabela)
  ]
 }
 
-===== rank_nopace_semcs =====
+===== rank_janela_sem_cs =====
 --- stdout
 [mock] GET https://intervals.icu/api/v1/athlete/0/pace-curves.json auth=('API_KEY', 'k') params={'curves': ['30d'], 'type': 'Run', 'gap': 'true'}
   [aviso] 1 pontos da curva descartados (velocidade > 24.0km/h implausível), de 100m a 100m — fonte(s): iA

@@ -26,7 +26,7 @@ NL = chr(10)
 ENV_ICU = "INTERVALS_ICU_API_KEY=k\nINTERVALS_ICU_ATHLETE_ID=0\n"
 
 
-def detalhes_fixos(sem_prev=False):
+def detalhes_fixos():
     out = []
     for sid in SEGS:
         if not SEGS[sid][3] or SEGS[sid][4] != 9:
@@ -37,8 +37,7 @@ def detalhes_fixos(sem_prev=False):
              "avgGrade": pp["measurements"]["avgGrade"],
              "kom_tempo_s": SEGS[sid][3], "ja_corri": SEGS[sid][5],
              "streams": pp.get("streams", {})}
-        if not sem_prev:
-            d["previsto_grosseiro_s"] = round(SEGS[sid][1] / 1000 * 220 * 1.1, 1)
+        d["previsto_grosseiro_s"] = round(SEGS[sid][1] / 1000 * 220 * 1.1, 1)
         out.append(d)
     return out
 
@@ -115,11 +114,11 @@ SCENARIOS = {
     # a tabela acaba nos 800 m: pace de reserva pelo modelo CS
     "gap_curva_curta": dict(script=["gap_model.py"], dotenv=ENV_ICU, mode={"curva_curta": 1},
                             files={"detalhes.json": detalhes_fixos()}),
-    "gap_nopace": dict(script=["gap_model.py", "--janela", "90d", "--out", "p.json"], dotenv=ENV_ICU,
+    "gap_janela_out": dict(script=["gap_model.py", "--janela", "90d", "--out", "p.json"], dotenv=ENV_ICU,
                        files={"detalhes.json": detalhes_fixos()}),
-    "gap_semdados": dict(script=["gap_model.py"], env={"INTERVALS_ICU_API_KEY": "k",
+    "gap_icu_env": dict(script=["gap_model.py"], env={"INTERVALS_ICU_API_KEY": "k",
                                                        "INTERVALS_ICU_ATHLETE_ID": "0"},
-                         files={"detalhes.json": detalhes_fixos(sem_prev=True)}),
+                         files={"detalhes.json": detalhes_fixos()}),
     "gap_no_env": dict(script=["gap_model.py"], files={"detalhes.json": detalhes_fixos()}),
     "gap_curva_vazia": dict(script=["gap_model.py"], dotenv=ENV_ICU, mode={"curva_vazia": 1},
                             files={"detalhes.json": detalhes_fixos()}),
@@ -133,7 +132,7 @@ SCENARIOS = {
                            files={"detalhes.json": detalhes_fixos()}),
     "rank_new": dict(script=["rank.py"], env=SESSION, dotenv=ENV_ICU,
                      files={"candidatos.json": candidatos_fixos()}),
-    "rank_nopace_semcs": dict(script=["rank.py", "--janela", "30d"], env=SESSION, dotenv=ENV_ICU,
+    "rank_janela_sem_cs": dict(script=["rank.py", "--janela", "30d"], env=SESSION, dotenv=ENV_ICU,
                               mode={"sem_cs": 1}, files={"candidatos.json": candidatos_fixos()}),
     "rank_cache_cap": dict(
         script=["rank.py", "--max-novos", "2", "--historico", "h.json",

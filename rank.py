@@ -109,7 +109,7 @@ def avaliar_e_persistir(s, curva, c, pace_reserva_s_km, motivo):
     """Fases 2 e 3 para um candidato. Devolve a entrada de histórico, ou None
     se não houver streams."""
     det = detalhe_segmento(s, c["segmentId"])
-    av = avaliar_detalhe(det, curva, pace_reserva_s_km, c.get("previsto_grosseiro_s"))
+    av = avaliar_detalhe(det, curva, pace_reserva_s_km)
     if av is None:
         return None
     # o meu próprio tempo não conta como adversário (entradas sem athleteId ficam)
