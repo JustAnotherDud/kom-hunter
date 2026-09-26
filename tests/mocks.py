@@ -44,10 +44,13 @@ def tile_props(sid):
     return p
 
 
-def next_data(sid):
+def next_data(sid, tempos=None):
+    """tempos: substitui o leaderboard por defeito (3 tempos a partir do KOM)."""
     nome, dist, grade, kom, at, ja, has_streams = SEGS[sid]
-    lb = [] if not kom else [
-        {"rank": r + 1, "displayName": f"Atleta {r}", "elapsedTime": kom + 7 * r} for r in range(3)]
+    if tempos is None:
+        tempos = [] if not kom else [kom + 7 * r for r in range(3)]
+    lb = [{"rank": r + 1, "displayName": f"Atleta {r}", "elapsedTime": t}
+          for r, t in enumerate(tempos)]
     pp = {
         "metadata": {"name": nome, "activityType": "Run", "displayLocation": "Algures"},
         "measurements": {"distance": float(dist), "avgGrade": grade, "elevGain": 5.0,
@@ -122,7 +125,7 @@ def install_mocks(mode):
         if mode.get("nonext"):
             return Resp(200, text="<html></html>", url=url)
         html = ('<html><script id="__NEXT_DATA__" type="application/json">'
-                + json.dumps(next_data(sid)) + "</script></html>")
+                + json.dumps(next_data(sid, mode.get("leaderboard", {}).get(sid))) + "</script></html>")
         return Resp(200, text=html, url=url)
 
     def req_get(url, auth=None, params=None, timeout=None, **kw):

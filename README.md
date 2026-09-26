@@ -64,6 +64,25 @@ better.
 - `revisao_manual`: a never-run segment whose prediction beats the KOM by more
   than 15% (`MARGEM_SUSPEITA_PCT`). More likely a model error than talent.
 
+## Predicted top 10 position (rank.py)
+
+Each `rank.py` entry also has `top10`: where the predicted time would land in
+the segment's top 10. The leaderboard comes from the detail page phase 2
+already reads, so there are no extra requests.
+
+- `posicao`: predicted place (1 is the KOM). `empatado_com` counts equal times.
+- `s_para_lugar_acima`: seconds to cut to match the next faster time.
+- `margem_lugar_abaixo_s`: seconds of margin over the next slower time.
+- Slower than a full top 10: `fora_top10` is true and `s_para_10o` is the
+  seconds to cut to match the 10th.
+- Fewer than 10 times: `n_tempos` says how many, and a time slower than all
+  of them still gets a place, with no place below.
+
+It compares whole seconds, as Strava records them. No percentages or
+probabilities: the model is not calibrated. It does not change groups, score
+or sorting. Entries reused from an older `historico.json` show it only after
+their next reanalysis.
+
 ## Env vars
 
 - `STRAVA_SESSION`: the `_strava4_session` cookie (DevTools, Application,
